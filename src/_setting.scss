@@ -1,10 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:wght@400;600');
+
+$gap: 10px;
+
 $navbar-app-height: 5vh;
 $navbar-board-height: 6vh;
 $board-content-height: 88vh;
 
-$gap: 10px;
 $board-bg-color: #0079bf;
+$app-main-text-color: #333;
 
 $common-element-bg: rgba(255, 255, 255, .24);
 
+$column-border-radius: 5px;
