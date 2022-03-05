@@ -5,22 +5,23 @@ $column-footer-height: 36px;
 $column-border-radius: 5px;
 
 $list-bg-color: #ebecf0;
+$column-height: calc(#{$board-content-height} - #{$gap * 2});
 
 .columns {
     flex: 0 0 auto;
     width: 300px;
-    height: calc(100% - #{$gap});
-    &:not(:first-child) {
-      margin-left: $gap;
-    }
+    height: $column-height;
     
+    
+    margin-left: $gap;
+
     > * {
       background-color: $list-bg-color;
       color: #333;
       padding: 0 8px;
     }
 
-    header {
+    header.column-drag-handle {
       padding-left: 15px;
       height: $column-header-height;
       line-height: $column-header-height;
@@ -28,6 +29,7 @@ $list-bg-color: #ebecf0;
       font-weight: bold;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
+      cursor: all-scroll;
     }
 
     footer {
@@ -38,10 +40,9 @@ $list-bg-color: #ebecf0;
       border-bottom-right-radius: $column-border-radius;
     }
 
-    ul.card-list {
-      list-style-type: none;
+    .card-list {
       margin: 0;
-      max-height: calc(100% - #{$column-header-height} - #{$column-footer-height});
+      max-height: calc(#{$column-height} - #{$column-header-height} - #{$column-footer-height});
       overflow-y: auto;
 
       &::-webkit-scrollbar {
@@ -54,9 +55,24 @@ $list-bg-color: #ebecf0;
 
       &::-webkit-scrollbar-thumb {
         background-color: darken($list-bg-color, $amount: 15);
-        border-right: 5px solid $list-bg-color;
+        border-right: 3px solid $list-bg-color;
+        border-radius: 4px;
+      }
+      .card-ghost {
+        transition: transform 0.18s ease;
+        transform: rotateZ(5deg)
+      }
+      
+      .card-ghost-drop{
+        transition: transform 0.18s ease-in-out;
+        transform: rotateZ(0deg)
       }
 
+      .cards-drop-preview {
+        background-color: rgba(150, 150, 200, 0.1);
+        border: 1px dashed #abc;
+        margin: 5px;
+      }
 
      
     }
