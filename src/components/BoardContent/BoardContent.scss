@@ -63,6 +63,7 @@
       border-radius: $column-border-radius;
       .input-enter-new-column {
         margin: 5px 0;
+        border-color: $input-border-color;
       }
 
       .cancle-new-column {
