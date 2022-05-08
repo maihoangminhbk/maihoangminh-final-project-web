@@ -13,11 +13,15 @@ function BoardContent() {
   const [board, setBoard] = useState({})
   const [columns, setColumns] = useState({})
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
+  const toogleOpenNewColumnForm = () => {
+    setOpenNewColumnForm(!openNewColumnForm)
+  }
 
   const newColumnInputRef = useRef(null)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
   const onNewColumnTitleChange = useCallback((e) => setNewColumnTitle(e.target.value), [])
+
 
   useEffect(() => {
     const boardFromDB = initialData.boards.find(board => board.id = 'board-1')
@@ -66,9 +70,6 @@ function BoardContent() {
     }
   }
 
-  const toogleOpenNewColumnForm = () => {
-    setOpenNewColumnForm(!openNewColumnForm)
-  }
   const addNewColumn = () => {
     if (!newColumnTitle) {
       newColumnInputRef.current.focus()
@@ -116,8 +117,10 @@ function BoardContent() {
     newBoard.columns = newColumns
     setColumns(newColumns)
     setBoard(newBoard)
+    console.log(newColumns)
 
   }
+
 
   return (
     <div className="board-content">
@@ -134,7 +137,11 @@ function BoardContent() {
       >
         {columns.map((column, index) => (
           <Draggable key={index}>
-            <Column column={column} onCardDrop={onCardDrop} onUpdateColumn={onUpdateColumn}/>
+            <Column
+              column={column}
+              onCardDrop={onCardDrop}
+              onUpdateColumn={onUpdateColumn}
+            />
           </Draggable>
         ))}
       </Container>
@@ -160,7 +167,7 @@ function BoardContent() {
               onKeyDown={e => (e.key === 'Enter' && addNewColumn())}
             />
             <Button variant="success" size='sm' onClick={addNewColumn}>Add Column</Button>
-            <span className='cancle-new-column' onClick={toogleOpenNewColumnForm}><i className='fa fa-trash icon'></i></span>
+            <span className='cancel-icon' onClick={toogleOpenNewColumnForm}><i className='fa fa-trash icon'></i></span>
           </Col>
         </Row>
         }

@@ -37,6 +37,7 @@ body {
   [type=email].form-control:focus, 
   [type=tel].form-control:focus, 
   [contenteditable].form-control:focus {
+    border: 1px solid $input-border-color;
     box-shadow: inset 0 -1px 0 #ddd;
 
 }
@@ -53,7 +54,19 @@ body {
   cursor: pointer;
   &:focus {
     background-color: white;
-    border: 1px solid $input-border-color;
+    
+  }
+}
+
+.cancel-icon {
+  margin-left: $gap;
+  cursor: pointer;
+  color: $alert-danger;
+  i {
+    font-size: 18px;
+    &:hover {
+      color: darken($alert-danger, 10);
+    } 
   }
 }
   
