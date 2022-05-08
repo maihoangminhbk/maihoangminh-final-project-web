@@ -1,7 +1,7 @@
 @import '_setting.scss';
 
 $column-header-height: 36px;
-$column-footer-height: 36px;
+$column-footer-height: 40px;
 
 $column-height: calc(#{$board-content-height} - #{$gap * 2});
 
@@ -82,6 +82,10 @@ $column-height: calc(#{$board-content-height} - #{$gap * 2});
         }
 
       }
+      // .add_new_card_actions {
+      //   margin-bottom: $gap;
+        
+      // }
     }
 
     .card-list {
@@ -121,6 +125,16 @@ $column-height: calc(#{$board-content-height} - #{$gap * 2});
         width: 3000px;
 
       }
+
+      .add_new_card_area {
+        .textarea-enter-new-card {
+          min-height: 54px;
+          max-height: 162px;
+  
+        }
+      }
+      
+
 
      
     }

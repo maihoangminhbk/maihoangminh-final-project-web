@@ -66,17 +66,17 @@
         border-color: $input-border-color;
       }
 
-      .cancle-new-column {
-        margin-left: $gap;
-        cursor: pointer;
-        color: $alert-danger;
-        i {
-          font-size: 18px;
-          &:hover {
-            color: darken($alert-danger, 10);
-          } 
-        }
-      }
+      // .cancel-new-column {
+      //   margin-left: $gap;
+      //   cursor: pointer;
+      //   color: $alert-danger;
+      //   i {
+      //     font-size: 18px;
+      //     &:hover {
+      //       color: darken($alert-danger, 10);
+      //     } 
+      //   }
+      // }
     }
     
   }
