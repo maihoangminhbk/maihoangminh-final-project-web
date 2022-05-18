@@ -7,7 +7,7 @@ import { mapOrder } from 'utilities/sorts'
 import { applyDrag } from 'utilities/dragDrop'
 import { Container as BootstrapContainer, Row, Col, Form, Button } from 'react-bootstrap'
 import { useCallback } from 'react'
-import { fetchBoardDetails } from 'actions/APICall'
+import { fetchBoardDetails, createNewColumn } from 'actions/APICall'
 
 function BoardContent() {
   const [board, setBoard] = useState({})
@@ -78,27 +78,30 @@ function BoardContent() {
     }
 
     const newColumnToAdd = {
-      id: Math.random().toString(36).substring(2, 5),
       boardId: board._id,
-      title: newColumnTitle.trim(),
-      cardOrder: [],
-      cards: []
+      title: newColumnTitle.trim()
     }
 
-    let newColumns = [...columns]
-    newColumns.push(newColumnToAdd)
 
-    let newBoard = { ...board }
-    newBoard.columnOrder = newColumns.map(c => c._id)
-    newBoard.columns = newColumns
-    setColumns(newColumns)
-    setBoard(newBoard)
-    setNewColumnTitle('')
-    toogleOpenNewColumnForm()
+    // Call API
+    createNewColumn(newColumnToAdd).then(column => {
+      let newColumns = [...columns]
+      newColumns.push(column)
+
+
+      let newBoard = { ...board }
+      newBoard.columnOrder = newColumns.map(c => c._id)
+      newBoard.columns = newColumns
+      setColumns(newColumns)
+      setBoard(newBoard)
+      setNewColumnTitle('')
+      toogleOpenNewColumnForm()
+    })
+
 
   }
 
-  const onUpdateColumn = (newColumnToUpdate) => {
+  const onUpdateColumnState = (newColumnToUpdate) => {
 
     const columnIdToUpdate = newColumnToUpdate._id
 
@@ -118,7 +121,6 @@ function BoardContent() {
     newBoard.columns = newColumns
     setColumns(newColumns)
     setBoard(newBoard)
-    console.log(newColumns)
 
   }
 
@@ -141,7 +143,7 @@ function BoardContent() {
             <Column
               column={column}
               onCardDrop={onCardDrop}
-              onUpdateColumn={onUpdateColumn}
+              onUpdateColumnState={onUpdateColumnState}
             />
           </Draggable>
         ))}
