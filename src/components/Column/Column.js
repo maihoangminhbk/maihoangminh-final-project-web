@@ -9,7 +9,7 @@ import ConfirmModal from 'components/Common/ConfirmModal'
 import { mapOrder } from 'utilities/sorts'
 import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
 import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/contentEditable'
-import { createNewCard, updateNewColumn } from 'actions/APICall'
+import { createNewCard, updateColumn } from 'actions/APICall'
 
 
 function Column(props) {
@@ -53,7 +53,7 @@ function Column(props) {
       }
 
       // Call API update column
-      updateNewColumn(newColumn._id, newColumn).then(updatedColumn => {
+      updateColumn(newColumn._id, newColumn).then(updatedColumn => {
 
         onUpdateColumnState(updatedColumn)
       })
@@ -74,7 +74,7 @@ function Column(props) {
         title : columnTitle
       }
       // Call API update column
-      updateNewColumn(newColumn._id, newColumn).then(updatedColumn => {
+      updateColumn(newColumn._id, newColumn).then(updatedColumn => {
         updatedColumn.cards = newColumn.cards
         onUpdateColumnState(updatedColumn)
       })

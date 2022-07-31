@@ -12,7 +12,16 @@ body {
 .trello-maihoangminh-master {
   height: 100vh;
   overflow-y: hidden;
-  background-color: $board-bg-color;
+  background-color: white;
+  // background-image: url('actions/images/background.jpg');
+  // backdrop-filter: brightness(30%);
+  // backdrop-filter: blur(5px);
+
+  background:linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('actions/images/background.jpg');
+  background-size: cover;
+  background-position: 50%;
+  
+  // background-image: url('https://trello-backgrounds.s3.amazonaws.com/53baf533e697a982248cd73f/2048x2048/22ec03aab9d36ea49139c569a62bb079/shutterstock_134707556.jpg');
   color: $app-main-text-color;
   .icon {
     font-size: 14px;

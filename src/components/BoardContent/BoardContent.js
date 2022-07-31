@@ -2,16 +2,19 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Container, Draggable } from 'react-smooth-dnd'
 import './BoardContent.scss'
 import Column from 'components/Column/Column'
-import { isEmpty } from 'lodash'
+import { isEmpty, cloneDeep } from 'lodash'
 import { mapOrder } from 'utilities/sorts'
 import { applyDrag } from 'utilities/dragDrop'
 import { Container as BootstrapContainer, Row, Col, Form, Button } from 'react-bootstrap'
 import { useCallback } from 'react'
-import { fetchBoardDetails, createNewColumn } from 'actions/APICall'
+import { createBoard, fetchBoardDetails, createColumn, updateBoard, updateColumn, updateCard } from 'actions/APICall'
+import { Bars } from 'react-loading-icons'
+import { FaBars } from 'react-icons/fa'
 
-function BoardContent() {
+function BoardContent({ handleToggleSidebar, boardId }) {
   const [board, setBoard] = useState({})
   const [columns, setColumns] = useState({})
+  const [boardIdSaved, setBoardIdSaved] = useState('')
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toogleOpenNewColumnForm = () => {
     setOpenNewColumnForm(!openNewColumnForm)
@@ -20,19 +23,29 @@ function BoardContent() {
   const newColumnInputRef = useRef(null)
 
   const [newColumnTitle, setNewColumnTitle] = useState('')
+
+  const [newBoardTitle, setNewBoardTitle] = useState('')
   const onNewColumnTitleChange = useCallback((e) => setNewColumnTitle(e.target.value), [])
+  const onNewBoardTitleChange = useCallback((e) => setNewBoardTitle(e.target.value), [])
 
-
+  console.log('boardcontent - global - boardId', boardId)
   useEffect(() => {
-    const boardId = '627f6e4204994af3b43a899f'
-    fetchBoardDetails(boardId).then(board => {
+    // const boardId = '62d92931b79a7a225262240a'
+    // const boardId = localStorage.getItem('boardId')
+    console.log('boardcontent - usereffect - boardId', boardId)
+    setBoardIdSaved(boardId)
 
-      setColumns(mapOrder(board.columns, board.columnOrder, '_id'))
-      setBoard(board)
-    })
+    if (boardId) {
+      const boardIdJson = boardId
 
-  }, [])
+      console.log('boardcontent - usereffect - boardId', boardId)
+      // const boardIdJson = JSON.parse(boardId)
+      getBoardById(boardIdJson)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [boardId])
 
+  // console.log('Vao user effext dau tien board content test')
   useEffect(() => {
     if (newColumnInputRef && newColumnInputRef.current) {
       newColumnInputRef.current.focus()
@@ -40,29 +53,121 @@ function BoardContent() {
     }
   }, [openNewColumnForm])
 
-  if (isEmpty(board)) {
-    return <div className="not-found">Board not found!</div>
+  const createNewBoard = () => {
+    const data = {
+      title: newBoardTitle
+    }
+    console.log('TEST createNewBoard', newBoardTitle)
+    createBoard(data).then(createdBoard => {
+      console.log('baord content - createboard', createBoard)
+      const createdBoardId = createdBoard._id
+      console.log('createdBoardId', createdBoardId)
+      localStorage.setItem('boardId', JSON.stringify(createdBoardId))
+      setBoardIdSaved(createdBoard._id)
+      getBoardById(createdBoardId)
+    })
+
+    // const createdBoard = createBoard(data)
+    // console.log('createdBoard', createdBoard)
   }
 
-  const onColumnDrop = (dropResult) => {
-    let newColumns = [...columns]
-    newColumns = applyDrag(newColumns, dropResult)
-    setColumns(newColumns)
+  const getBoardById = async (boardId) => {
 
-    let newBoard = { ...board }
+    await fetchBoardDetails(boardId).then(board => {
+
+      setBoard(board)
+      console.log('Check 2')
+      setColumns(mapOrder(board.columns, board.columnOrder, '_id'))
+      console.log('Check 3')
+      setBoardIdSaved(boardId)
+
+    })
+  }
+
+  const boardNotFoundCase = () => {
+
+    return (
+      <div className='board-content'>
+        <div className="not-found">Board not found!</div>
+        <br></br>
+        <div className='enter-new-column'>
+          <Form.Control
+            className='input-enter-new-column'
+            size="sm" type="text"
+            placeholder="Enter new board title..."
+            // ref={newColumnInputRef}
+            value={newBoardTitle}
+            onChange={onNewBoardTitleChange}
+            onKeyDown={e => (e.key === 'Enter' && createNewBoard())}
+          />
+          <Button variant="success" size='sm' onClick={createNewBoard}>Add Column</Button>
+          {/* <span className='cancel-icon' onClick={toogleOpenNewColumnForm}><i className='fa fa-trash icon'></i></span> */}
+        </div>
+      </div>
+    )
+
+
+  }
+
+
+  const onColumnDrop = (dropResult) => {
+    let newColumns = cloneDeep(columns)
+    newColumns = applyDrag(newColumns, dropResult)
+
+
+    let newBoard = cloneDeep(board)
     newBoard.columnOrder = newColumns.map(c => c._id)
     newBoard.columns = newColumns
+
     setBoard(newBoard)
+    setColumns(newColumns)
+
+    // Call API update column order in board detail
+    updateBoard(newBoard._id, { columnOrder: newBoard.columnOrder }).catch(() => {
+      setColumns(columns)
+      setBoard(board)
+    }
+    )
   }
 
   const onCardDrop = (columnId, dropResult) => {
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
-      let newColumns = [...columns]
+      let newColumns = cloneDeep(columns)
+
       let currentColumn = newColumns.find(c => c._id === columnId)
       currentColumn.cards = applyDrag(currentColumn.cards, dropResult)
       currentColumn.cardOrder = currentColumn.cards.map(i => i._id)
 
       setColumns(newColumns)
+
+      /**
+       * Action: Move card inside its column
+       * - Call API update card order
+       */
+      if (dropResult.removedIndex !== null && dropResult.addedIndex !== null) {
+        updateColumn(currentColumn._id, currentColumn).catch(() => setColumns(columns))
+
+
+      } else {
+        /**
+         * Action: Move card between two columns
+         * - Call API update card order
+         * - Call API update column id in current card
+         */
+        updateColumn(currentColumn._id, currentColumn).catch(() => setColumns(columns))
+
+        if (dropResult.addedIndex !== null) {
+          let currentCard = cloneDeep(dropResult.payload)
+          currentCard.columnId = currentColumn._id
+
+          // Call API update column id in current card
+          updateCard(currentCard._id, currentCard)
+        }
+
+
+      }
+
+
       let newBoard = { ...board }
       newBoard.columns = newColumns
       newBoard.columnOrder = newColumns.map(c => c._id)
@@ -84,7 +189,7 @@ function BoardContent() {
 
 
     // Call API
-    createNewColumn(newColumnToAdd).then(column => {
+    createColumn(newColumnToAdd).then(column => {
       let newColumns = [...columns]
       newColumns.push(column)
 
@@ -124,9 +229,21 @@ function BoardContent() {
 
   }
 
+  // console.log('boardIdSaved', boardIdSaved)
+  // if (isEmpty(boardIdSaved)) {
+  //   return boardNotFoundCase()
+  // }
+
+  if (isEmpty(board)) {
+    return <Bars speed={1.} />
+  }
 
   return (
     <div className="board-content">
+      {console.log('test2')}
+      <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
+        <FaBars />
+      </div>
       <Container
         orientation="horizontal"
         onDrop={onColumnDrop}
@@ -138,7 +255,8 @@ function BoardContent() {
           className: 'columns-drop-preview'
         }}
       >
-        {columns.map((column, index) => (
+        {columns instanceof Array && columns.map((column, index) => (
+
           <Draggable key={index}>
             <Column
               column={column}
@@ -146,7 +264,10 @@ function BoardContent() {
               onUpdateColumnState={onUpdateColumnState}
             />
           </Draggable>
-        ))}
+        ))
+
+        }
+
       </Container>
       <BootstrapContainer className='trello-maihoangminh-container'>
         {!openNewColumnForm &&

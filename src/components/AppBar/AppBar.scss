@@ -1,11 +1,152 @@
 @import '_setting.scss';
-$appbar-bg-color: #0067a3;
+$appbar-bg-color: hsl(311,13.7%,35.8%);
 
 .navbar-app {
     height: $navbar-app-height;
-    padding-left: $gap;
+    min-height: 50px;
+    padding: 0 $gap;
     display: flex;
     align-items: center;
     background-color: $appbar-bg-color;
+    color: aliceblue;
+    .minhmai-trello-container {
+        max-width: 100%;
+        .app-actions {
+            display: inline-flex;
+            height: 100%;
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            div.item {
+                min-width: 40px;
+                max-width: 300px;
+                padding: 2px 10px;
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 3px;
+                &:not(:first-child) {
+                    margin-left: 4px;
+                }
+
+                &.board {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+
+                // &.home {
+                //     i {
+                //         font-size: 15px;
+                //     }
+                // }
+
+                &.search {
+                    padding: 6px 0;
+                    margin-left: 10px;
+                    .group-search {
+                        height: 19px;
+                        .input-search {
+                            max-height: 100%;
+                            background-color: inherit;
+                            color: inherit;
+                            border: none;
+                            font-size: 14px;
+                            &::placeholder {
+                                color: darken(aliceblue, 5);
+                                opacity: 1;
+                            }
+                        }
+
+                        
+                        .form-control {
+                            min-height: 0;
+                        }
+                        
+
+                        .input-icon-search {
+                            padding: 0 8px 0 0;
+                            background-color: transparent;
+                            border: none;
+                            color: inherit;
+
+                            
+                        }
+                        .input-group-text {
+                            height: calc(1.08rem);
+                        }
+                    }
+                }
+
+                strong {
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .app-branding {
+            cursor: pointer;
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+            a {
+                color: inherit;
+                &:hover {
+                    text-decoration: none;
+                    color: lighten($color: aliceblue, $amount: 10);
+                }
+                img.top-logo {
+                    width: 30px;
+                }
+                span.minhmai-slogan {
+                    font-size: 12px;
+                    text-transform: uppercase;
+                    margin-left: 4px;
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .user-actions {
+            display: inline-flex;
+            height: 100%;
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            div.item {
+                max-height: 45px;
+                padding: 6px 10px;
+                background-color: rgba(255, 255, 255, 0.3);
+                border-radius: 3px;
+                &:not(:first-child) {
+                    margin-left: 4px;
+                }
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(255, 255, 255, 0.4);
+                }
+                &.user-avatar {
+                    margin-left: 10px;
+                    padding: 0;
+                    background-color: transparent;
+                    img {
+                        width: 35px;
+                        height: 35px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        &:hover {
+                            filter: brightness(120%);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    
     font-size: 1.5rem
 }

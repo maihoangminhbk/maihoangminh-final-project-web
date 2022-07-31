@@ -1,0 +1,33 @@
+@import '_setting.scss';
+$sidebar-bg-color: hsla(311,13.7%,35.8%,0.9);
+
+@import '~react-pro-sidebar/dist/scss/styles.scss';
+.pro-sidebar-header {
+  height: 40px;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+ 
+  .aside-bar-header-icon {
+    padding-left: 29.5px;
+    padding-top: 5px;
+    border-color: red;
+    strong {
+      margin-left: 10px;
+      font-size: larger;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      
+      display: none;
+      
+      
+      @media (min-width: 270px) {
+        display: inline;
+      }
+    }
+
+    
+  }
+}

@@ -1,10 +1,12 @@
 @import '_setting.scss';
+$breakpoint-md: 768px;
 
 
 
 .board-content {
     height: $board-content-height;
     display: flex;
+    padding-top: $gap;
    
     // margin: 0 $gap $gap;
     overflow-x: auto;
@@ -21,12 +23,36 @@
 
     &::-webkit-scrollbar:horizontal {
       height: 10px;
+      
+      
     }
 
     &::-webkit-scrollbar-thumb {
       background-color: $common-element-bg;
       border-radius: 8px;
     }
+
+    .btn-toggle {
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      background: #353535;
+      color: #fff;
+      text-align: center;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      display: none;
+    }
+
+    @media (max-width: $breakpoint-md) {
+      .btn-toggle {
+        display: flex;
+      }
+    }
+
     .columns-drop-preview {
       background-color: rgba(150, 150, 200, 0.1);
       border: 1px dashed #abc;

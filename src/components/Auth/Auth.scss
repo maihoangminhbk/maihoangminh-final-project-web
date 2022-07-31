@@ -1,0 +1,70 @@
+@import '_setting.scss';
+@import '~mdb-ui-kit/css/mdb.min.css';
+// @import '~mdb-ui-kit/src/scss/mdb.free';
+
+// .auth {
+//   height: $auth-content-height;
+// }
+
+.gradient-custom-2 {
+  /* fallback for old browsers */
+  background: #fccb90;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+}
+
+@media (max-height: 720px) {
+  .gradient-form {
+    overflow-y: scroll;
+  }
+}
+
+// @media (height: 721px) {
+//   .gradient-form {
+//     overflow-y: hidden;
+//   }
+// }
+
+@media (min-width: 768px) {
+  .gradient-form {
+    height: 0;
+    // overflow-y: hidden;
+  }
+}
+
+@media (min-width: 769px) {
+  .gradient-custom-2 {
+    border-top-right-radius: .3rem;
+    border-bottom-right-radius: .3rem;
+  }
+}
+
+.form-label {
+  transform: translateY(-1rem) translateY(-0.3rem) scale(.8);
+}
+
+.form-control {
+  border: 0;
+}
+
+.form-outline {
+  border: 0;
+}
+
+// .form-outline {
+//   .form-control.active {
+//     ~ .form-label {
+//       transform: translateY(-1rem) translateY(0.1rem) scale(.8);
+//     }
+//   }
+
+//   .form-control:focus {
+//     ~.form-label {
+//       transform: translateY(-1rem) translateY(0.1rem) scale(.8);
+//     }
+//   }
+// }
