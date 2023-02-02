@@ -1,13 +1,21 @@
-import React from 'react'
+import React, { Children } from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+
+import { RouterProvider } from 'react-router-dom'
+
 import reportWebVitals from './reportWebVitals'
+
 import 'font-awesome/css/font-awesome.min.css'
+import './index.css'
+import { AuthProvider } from 'hooks/useAuth'
+
+import router from 'routes/router/router'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )

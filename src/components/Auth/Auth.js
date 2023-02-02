@@ -9,12 +9,20 @@ import './Auth.scss'
 
 import { login, signup } from 'actions/APICall'
 
-const initialState = { name: '', username: '', password: '', confirmPassword: '' }
+import { useAuth } from 'hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
 
-const Auth = ({ setUser }) => {
+import { getOwnership, getWorkplace } from 'actions/APICall'
+
+// const initialState = { name: '', username: '', password: '', confirmPassword: '' }
+
+const Auth = () => {
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const { saveUserLocalStorage } = useAuth()
+  const navigate = useNavigate()
 
   // const [formData, setFormData] = useState(initialState)
 
@@ -29,7 +37,7 @@ const Auth = ({ setUser }) => {
   }
 
   const saveLocalStorage = (saveUser) => {
-    localStorage.setItem('currentUser', JSON.stringify(saveUser))
+    saveUserLocalStorage(saveUser)
   }
 
 
@@ -41,17 +49,22 @@ const Auth = ({ setUser }) => {
 
     if (isSignUp) {
       const formData = { 'name' : name, 'email' : username, 'password' : password }
-      await signup(formData).then(user => {
-        const saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token }
-        saveLocalStorage(saveUser)
-        setUser(saveUser)
+      await signup(formData).then(() => {
+        setIsSignUp(false)
       })
     } else {
       const formData = { 'email' : username, 'password' : password }
-      login(formData).then(user => {
-        const saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token }
+      await login(formData).then(user => {
+        let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token }
         saveLocalStorage(saveUser)
-        setUser(saveUser)
+        getOwnership().then((ownershipList) => {
+          console.log('auth - handle submit form - check')
+          const firstWorkplace = ownershipList.workplaceOrder[0]
+          saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace }
+          saveLocalStorage(saveUser)
+
+          navigate(`/workplaces/${firstWorkplace}`)
+        })
       })
     }
   }

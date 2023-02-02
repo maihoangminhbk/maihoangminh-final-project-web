@@ -85,6 +85,15 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                     margin-left: 10px;
                 }
             }
+
+            .btn {
+                background-color: rgba(255, 255, 255, 0.3);
+            }
+
+            .btn-sm {
+                padding: 0.7rem 1rem 0.3125rem;
+                margin-bottom: 2px;
+            }
         }
 
         .app-branding {
@@ -107,6 +116,14 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                     margin-left: 4px;
                     font-weight: bold;
                 }
+            }
+
+            .btn {
+                background-color: red;
+            }
+
+            .btn-primary {
+                background-color: red;
             }
         }
 

@@ -12,11 +12,17 @@ import {
 import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaAlignJustify, FaRegCalendarCheck, FaTable, FaNetworkWired, FaUserAlt, FaRocketchat, FaWhmcs } from 'react-icons/fa'
 import './Aside.scss'
 import { getOwnership, getWorkplace } from 'actions/APICall'
+import { useAuth } from 'hooks/useAuth'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 
 const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   const [collapsed, setCollapsed] = useState(true)
   const [workplace, setWorkplace] = useState({})
   const [boardList, setBoardList] = useState([])
+  const { user } = useAuth()
+  const { workplaceId } = useParams()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const result = getOwnershipData()
@@ -25,9 +31,8 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }, [])
 
   const getOwnershipData = async () => {
-    const ownershipResult = await getOwnership()
-    console.log('aside - useEffect - result', ownershipResult)
-    const workplaceResult = await getWorkplace(ownershipResult.workplaceOrder[0])
+    console.log('aside - getOwnership - workplaceId', workplaceId)
+    const workplaceResult = await getWorkplace(workplaceId)
     console.log('aside - useEffect - workplaceResult', workplaceResult)
     setBoardList(workplaceResult.boardOrder)
     console.log('aside - useEffect - result', workplaceResult.boardOrder)
@@ -43,13 +48,18 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
 
     const menuItems = boardList.map((board, index) => {
       // console.log('aside - boardListInsert - board, index', board, index)
-      return <MenuItem key={index}>{board.title}</MenuItem>
+      return <MenuItem onClick={() => changeBoard(board.boardId)} key={index}>{board.title}</MenuItem>
     })
 
     return (
       menuItems
     )
     // return (<MenuItem>Board 2</MenuItem>)
+  }
+
+  const changeBoard = (boardId) => {
+    console.log('aside - changeBoard - location', location)
+    navigate(`boards/${boardId}`)
   }
 
   return (

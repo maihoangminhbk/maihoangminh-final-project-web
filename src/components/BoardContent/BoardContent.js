@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
+
+import { useOutletContext, useParams } from 'react-router-dom'
+
 import { Container, Draggable } from 'react-smooth-dnd'
 import './BoardContent.scss'
 import Column from 'components/Column/Column'
@@ -11,11 +14,16 @@ import { createBoard, fetchBoardDetails, createColumn, updateBoard, updateColumn
 import { Bars } from 'react-loading-icons'
 import { FaBars } from 'react-icons/fa'
 
-function BoardContent({ handleToggleSidebar, boardId }) {
+
+function BoardContent() {
   const [board, setBoard] = useState({})
   const [columns, setColumns] = useState({})
   const [boardIdSaved, setBoardIdSaved] = useState('')
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
+
+  const handleToggleSidebar = useOutletContext()
+  const { boardId } = useParams()
+
   const toogleOpenNewColumnForm = () => {
     setOpenNewColumnForm(!openNewColumnForm)
   }
@@ -240,7 +248,6 @@ function BoardContent({ handleToggleSidebar, boardId }) {
 
   return (
     <div className="board-content">
-      {console.log('test2')}
       <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
         <FaBars />
       </div>
@@ -265,10 +272,9 @@ function BoardContent({ handleToggleSidebar, boardId }) {
             />
           </Draggable>
         ))
-
         }
-
       </Container>
+
       <BootstrapContainer className='trello-maihoangminh-container'>
         {!openNewColumnForm &&
         <Row>

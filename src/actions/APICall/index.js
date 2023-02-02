@@ -5,8 +5,8 @@ import { API_ROOT } from 'utilities/constants'
 const API = axios.create({ baseURL: API_ROOT })
 
 API.interceptors.request.use((req) => {
-  if (localStorage.getItem('currentUser')) {
-    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('currentUser')).token}`
+  if (localStorage.getItem('user')) {
+    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
   }
 
   return req

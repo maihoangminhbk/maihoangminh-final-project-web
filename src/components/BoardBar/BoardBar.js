@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
 import './BoardBar.scss'
-import Aside from './Aside'
+import Aside from 'components/Aside/Aside'
 // import 'react-pro-sidebar/dist/css/styles.css'
 import BoardContent from 'components/BoardContent/BoardContent'
 
+import { useAuth } from 'hooks/useAuth'
+import { Outlet, useParams } from 'react-router-dom'
 
 function BoardBar() {
   const [toggled, setToggled] = useState(false)
   const [boardList, setBoardList] = useState([])
+
+  const workplaceId = useParams()
 
   const handleToggleSidebar = (value) => {
     setToggled(value)
@@ -31,10 +35,11 @@ function BoardBar() {
         handleToggleSidebar={handleToggleSidebar}
         handleCollapsedChange={handleCollapsedChange}
       /> */}
-      <BoardContent
+      {/* <BoardContent
         handleToggleSidebar={handleToggleSidebar}
         boardId={boardList[0]? boardList[0].boardId : ''}
-      />
+      /> */}
+      <Outlet context={handleToggleSidebar}/>
     </div>
   )
   // return (
