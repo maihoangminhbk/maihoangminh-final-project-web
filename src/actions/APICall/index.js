@@ -68,6 +68,12 @@ export const signup = async (data) => {
   return request.data
 }
 
+export const activate = async (data) => {
+  const request = await API.post('/v1/users/activate', data)
+
+  return request.data
+}
+
 // Create and get workplace
 export const createWorkplace = async (data) => {
   const request = await API.post('/v1/workplaces', data)

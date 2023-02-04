@@ -7,7 +7,7 @@ import { GoogleLogin } from 'react-google-login'
 
 import './Auth.scss'
 
-import { login, signup } from 'actions/APICall'
+import { login, signup, activate } from 'actions/APICall'
 
 import { useAuth } from 'hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +20,8 @@ const Auth = () => {
   const [name, setName] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [activeToken, setActiveToken] = useState('')
+  const [activeCode, setActiveCode] = useState('')
 
   const { saveUserLocalStorage } = useAuth()
   const navigate = useNavigate()
@@ -27,10 +29,12 @@ const Auth = () => {
   // const [formData, setFormData] = useState(initialState)
 
   const [isSignUp, setIsSignUp] = useState(false)
+  const [isActivate, setIsActivate] = useState(false)
 
   const handleFormNameChange = (e) => setName(e.target.value)
   const handleFormUsernameChange = (e) => setUsername(e.target.value)
-  const handleFormPasswordChange = (e) => setPassword(e.target.value)
+  const handleFormPasswordChange = (e) => setPassword(e.target.value)  
+  const handleFormActiveCodeChange = (e) => setActiveCode(e.target.value)
 
   const switchSignUp = () => {
     setIsSignUp(!isSignUp)
@@ -47,10 +51,20 @@ const Auth = () => {
     console.log('password', password)
     console.log('name', name)
 
+    if (isActivate) {
+      const formData = { 'token' : activeToken, 'active_code' : activeCode }
+      await activate(formData)
+      setIsSignUp(false)
+      setIsActivate(false)
+      return
+    }
+
     if (isSignUp) {
       const formData = { 'name' : name, 'email' : username, 'password' : password }
-      await signup(formData).then(() => {
-        setIsSignUp(false)
+      await signup(formData).then((returnData) => {
+        console.log('auth - handle submit form - return data', returnData)
+        setActiveToken(returnData.token)
+        setIsActivate(true)
       })
     } else {
       const formData = { 'email' : username, 'password' : password }
@@ -102,7 +116,7 @@ const Auth = () => {
                     </div>
                     <form onSubmit={handleSubmitForm}>
                       <p>Please enter to your account</p>
-                      { isSignUp &&
+                      { !isActivate && isSignUp &&
                         <div className="form-outline mb-4">
                           <Form.Control
                             className='form-control'
@@ -123,24 +137,27 @@ const Auth = () => {
                         </div>
                       }
 
-                      <div className="form-outline mb-4">
-                        <Form.Control
-                          className='form-control'
-                          size="md"
-                          type="email"
-                          placeholder="Email address"
-                          style={{ border: 0 }}
-                          value={username}
-                          // spellCheck="false"
-                          onClick={selectAllInlineText}
-                          onChange={handleFormUsernameChange}
+                      { !isActivate &&
+                        <div className="form-outline mb-4">
+                          <Form.Control
+                            className='form-control'
+                            size="md"
+                            type="email"
+                            placeholder="Email address"
+                            style={{ border: 0 }}
+                            value={username}
+                            // spellCheck="false"
+                            onClick={selectAllInlineText}
+                            onChange={handleFormUsernameChange}
                           // onBlur={handleFormTitleBlur}
                           // onMouseDown={e => e.preventDefault()}
                           // onKeyDown={saveContentAfterPressEnter}
-                        />
-                        <label className="form-label" htmlFor="form2Example11">Username</label>
-                        <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
-                      </div>
+                          />
+                          <label className="form-label" htmlFor="form2Example11">Username</label>
+                          <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
+                        </div>
+                      }
+                      { !isActivate &&
                       <div className="form-outline mb-4">
                         <Form.Control
                           className='form-control'
@@ -159,6 +176,27 @@ const Auth = () => {
                         <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
 
                       </div>
+                      }
+
+                      { isActivate && <div className="form-outline mb-4">
+                        <Form.Control
+                          className='form-control'
+                          size="md"
+                          type="number"
+                          placeholder="Active code"
+                          style={{ border: 0 }}
+                          value={activeCode}
+                          // spellCheck="false"
+                          onClick={selectAllInlineText}
+                          onChange={handleFormActiveCodeChange}
+                          // onBlur={handleFormTitleBlur}
+                          // onMouseDown={e => e.preventDefault()}
+                          // onKeyDown={saveContentAfterPressEnter}
+                        />
+                        <label className="form-label" htmlFor="form2Example11">Active code</label>
+                        <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
+                      </div>
+                      }
                       <div className="text-center pt-1 mb-5 pb-1">
                         <Button className="btn  btn-block  gradient-custom-2 mb-3" type='submit' size='md' onClick={null}>{isSignUp? 'Sign up': 'Log in'}</Button>
 
