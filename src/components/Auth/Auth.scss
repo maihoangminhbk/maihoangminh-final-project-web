@@ -1,5 +1,6 @@
 @import '_setting.scss';
 @import '~mdb-ui-kit/css/mdb.min.css';
+@import 'react-toastify/dist/ReactToastify.css';
 // @import '~mdb-ui-kit/src/scss/mdb.free';
 
 // .auth {
@@ -68,3 +69,15 @@
 //     }
 //   }
 // }
+
+.btn-custom-right {
+  width: 40%;
+  margin: 10px;
+  
+}
+
+.btn-custom-left {
+  width: 40%;
+  margin: 10px;
+  background-color: gray;
+}

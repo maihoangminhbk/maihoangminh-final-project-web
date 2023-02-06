@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, Toast } from 'react-bootstrap'
 import { selectAllInlineText } from 'utilities/contentEditable'
 import { FaGoogle } from 'react-icons/fa'
 
@@ -14,6 +14,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { getOwnership, getWorkplace } from 'actions/APICall'
 
+import { ToastContainer, toast } from 'react-toastify'
+import Loading from 'components/Loading/Loading'
+
 // const initialState = { name: '', username: '', password: '', confirmPassword: '' }
 
 const Auth = () => {
@@ -22,6 +25,10 @@ const Auth = () => {
   const [password, setPassword] = useState('')
   const [activeToken, setActiveToken] = useState('')
   const [activeCode, setActiveCode] = useState('')
+
+  const [validated, setValidated] = useState(false)
+
+  const [loading, setLoading] = useState(false)
 
   const { saveUserLocalStorage } = useAuth()
   const navigate = useNavigate()
@@ -33,11 +40,19 @@ const Auth = () => {
 
   const handleFormNameChange = (e) => setName(e.target.value)
   const handleFormUsernameChange = (e) => setUsername(e.target.value)
-  const handleFormPasswordChange = (e) => setPassword(e.target.value)  
+  const handleFormPasswordChange = (e) => {
+    if (e.target.value.length >= 6) {
+      setValidated(true)
+    } else {
+      setValidated(false)
+    }
+    setPassword(e.target.value)
+  }
   const handleFormActiveCodeChange = (e) => setActiveCode(e.target.value)
 
   const switchSignUp = () => {
     setIsSignUp(!isSignUp)
+    setIsActivate(false)
   }
 
   const saveLocalStorage = (saveUser) => {
@@ -47,25 +62,39 @@ const Auth = () => {
 
   const handleSubmitForm = async (e) => {
     e.preventDefault()
-    console.log('email', username)
+    setLoading(true)
+
+    console.log('username', username)
     console.log('password', password)
-    console.log('name', name)
 
     if (isActivate) {
       const formData = { 'token' : activeToken, 'active_code' : activeCode }
-      await activate(formData)
+      await activate(formData).catch((error) => {
+        toast.error(error.message)
+        setLoading(false)
+      })
       setIsSignUp(false)
       setIsActivate(false)
+      setLoading(false)
+      toast.success('Sign up successful')
+
       return
     }
 
     if (isSignUp) {
       const formData = { 'name' : name, 'email' : username, 'password' : password }
-      await signup(formData).then((returnData) => {
-        console.log('auth - handle submit form - return data', returnData)
-        setActiveToken(returnData.token)
-        setIsActivate(true)
-      })
+      await signup(formData)
+        .then((returnData) => {
+          console.log('auth - handle submit form - return data', returnData)
+          setActiveToken(returnData.token)
+          setIsActivate(true)
+          toast.info('Check your email to get verify code')
+        })
+        .catch((error) => {
+          toast.error(error.message)
+          setLoading(false)
+        }
+        )
     } else {
       const formData = { 'email' : username, 'password' : password }
       await login(formData).then(user => {
@@ -79,8 +108,19 @@ const Auth = () => {
 
           navigate(`/workplaces/${firstWorkplace}`)
         })
-      })
+      }).catch((error) => {
+        toast.error(error.message)
+        setLoading(false)
+      }
+      )
     }
+    setLoading(false)
+  }
+
+  const handleCancel = () => {
+    setIsSignUp(true)
+    setIsActivate(false)
+    setLoading(false)
   }
 
   const googleSuccess = async (res) => {
@@ -103,6 +143,10 @@ const Auth = () => {
 
   return (
     <section className="h-100 gradient-form auth" style={{ backgroundColor: '#eee' }}>
+      {
+        loading &&
+        <Loading />
+      }
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-xl-10">
@@ -114,11 +158,12 @@ const Auth = () => {
                       <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/lotus.webp" style={{ width: '185px' }} alt="logo" />
                       <h4 className="mt-1 mb-5 pb-1">Welcome</h4>
                     </div>
-                    <form onSubmit={handleSubmitForm}>
+                    <Form validated={validated} onSubmit={handleSubmitForm}>
                       <p>Please enter to your account</p>
                       { !isActivate && isSignUp &&
                         <div className="form-outline mb-4">
                           <Form.Control
+                            required
                             className='form-control'
                             size="md"
                             type="text"
@@ -132,7 +177,7 @@ const Auth = () => {
                           // onMouseDown={e => e.preventDefault()}
                           // onKeyDown={saveContentAfterPressEnter}
                           />
-                          <label className="form-label" htmlFor="form2Example11">Your name</label>
+                          <Form.Label className="form-label" htmlFor="form2Example11">Your name</Form.Label>
                           <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
                         </div>
                       }
@@ -140,6 +185,7 @@ const Auth = () => {
                       { !isActivate &&
                         <div className="form-outline mb-4">
                           <Form.Control
+                            required
                             className='form-control'
                             size="md"
                             type="email"
@@ -159,27 +205,33 @@ const Auth = () => {
                       }
                       { !isActivate &&
                       <div className="form-outline mb-4">
-                        <Form.Control
-                          className='form-control'
-                          size="md"
-                          type="password"
-                          style={{ border: 0 }}
-                          value={password}
-                          // spellCheck="false"
-                          onClick={selectAllInlineText}
-                          onChange={handleFormPasswordChange}
-                          // onBlur={handleFormTitleBlur}
-                          // onMouseDown={e => e.preventDefault()}
-                          onKeyDown={e => (e.key === 'Enter' && handleSubmitForm)}
-                        />
-                        <label className="form-label" htmlFor="form2Example22">Password</label>
-                        <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
-
+                        <Form.Group>
+                          <Form.Control
+                            required
+                            className='form-control'
+                            size="md"
+                            type="password"
+                            style={{ border: 0 }}
+                            value={password}
+                            // spellCheck="false"
+                            onClick={selectAllInlineText}
+                            onChange={handleFormPasswordChange}
+                            // onBlur={handleFormTitleBlur}
+                            // onMouseDown={e => e.preventDefault()}
+                            onKeyDown={e => (e.key === 'Enter' && handleSubmitForm)}
+                          />
+                          <Form.Label className="form-label" htmlFor="form2Example22">Password</Form.Label>
+                          <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
+                        </Form.Group>
                       </div>
+                      }
+                      { !validated &&
+                        <div type="valid">At least 6 characters</div>
                       }
 
                       { isActivate && <div className="form-outline mb-4">
                         <Form.Control
+                          required
                           className='form-control'
                           size="md"
                           type="number"
@@ -198,8 +250,10 @@ const Auth = () => {
                       </div>
                       }
                       <div className="text-center pt-1 mb-5 pb-1">
-                        <Button className="btn  btn-block  gradient-custom-2 mb-3" type='submit' size='md' onClick={null}>{isSignUp? 'Sign up': 'Log in'}</Button>
-
+                        { isActivate &&
+                          <Button className="btn btn-custom-left mb-3" type='submit' size='md' onClick={handleCancel}>Cancel</Button>
+                        }
+                        <Button className={`btn ${isActivate ? 'btn-custom-right' : 'btn-block'} gradient-custom-2 mb-3`} type='submit' size='md' onClick={null}>{isSignUp? 'Sign up': 'Log in'}</Button>
                         <GoogleLogin
                           clientId="810349711486-vsa36hqu6sfu2re4oc1vgq10830k6k1f.apps.googleusercontent.com"
                           render={(renderProps) => (
@@ -221,7 +275,7 @@ const Auth = () => {
                         <Button className="btn" size='md' onClick={switchSignUp}>{isSignUp? 'Log in': 'Sign up'}</Button>
 
                       </div>
-                    </form>
+                    </Form>
                   </div>
                 </div>
                 <div className="col-lg-6 d-flex align-items-center gradient-custom-2">
