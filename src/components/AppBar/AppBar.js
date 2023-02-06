@@ -26,7 +26,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   >
     {children}
   </a>
-));
+))
 
 function AppBar() {
   const [workplaceList, setWorkplaceList] = useState([])
@@ -63,8 +63,8 @@ function AppBar() {
     navigate(`/workplaces/${workplaceId}`)
   }
 
-  const logout = () => {
-    deleteUserLocalStorage()
+  const logout = async () => {
+    await deleteUserLocalStorage()
     navigate('/auth')
   }
 
@@ -136,11 +136,11 @@ function AppBar() {
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {
-                    workplaceList.map((workplace, index) => (
-                      <Dropdown.Item key={index} onClick={() => changeWorkplace(workplace._id)} >{workplace.title}</Dropdown.Item>
-                    ))
-                  }
+
+
+                  <Dropdown.Item onClick={() => changeWorkplace(logout())} >Log out</Dropdown.Item>
+
+
                 </Dropdown.Menu>
               </Dropdown>
 

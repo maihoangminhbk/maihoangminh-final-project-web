@@ -1,15 +1,57 @@
 import axios from 'axios'
 import { API_ROOT } from 'utilities/constants'
-
+import { customErrors } from 'utilities/customErrors'
 
 const API = axios.create({ baseURL: API_ROOT })
 
 API.interceptors.request.use((req) => {
-  if (localStorage.getItem('user')) {
-    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('user')).token}`
+
+  const user = localStorage.getItem('user')
+
+  if (user && JSON.parse(user)) {
+    // eslint-disable-next-line quotes
+    req.headers.Authorization = `Bearer ${JSON.parse(user).token}`
   }
 
   return req
+})
+
+API.interceptors.response.use(function (response) {
+  // Any status code that lie within the range of 2xx cause this function to trigger
+  // Do something with response data
+  return response
+}, function (error) {
+
+  console.log('api call - respond - error', error)
+  if (error.response.status === 400) {
+    // NEW:- Throw New Error
+    throw new customErrors.BadRequest400Error(error.response.data)
+  }
+
+  if (error.response.status === 401) {
+    // NEW:- Throw New Error
+    throw new customErrors.Unauthorized401Error(error.response.data)
+  }
+
+  if (error.response.status === 404) {
+    // NEW:- Throw New Error
+    throw new customErrors.NotFound404Error(error.response.data)
+  }
+
+  if (error.response.status === 409) {
+    // NEW:- Throw New Error
+    throw new customErrors.Conflict409Error(error.response.data)
+  }
+
+  if (error.response.status === 500) {
+    // NEW:- Throw New Error
+    throw new customErrors.Internal500Error(error.response.data)
+  }
+
+
+  // Any status codes that falls outside the range of 2xx cause this function to trigger
+  // Do something with response error
+  return Promise.reject(error)
 })
 
 export const createBoard = async (data) => {
