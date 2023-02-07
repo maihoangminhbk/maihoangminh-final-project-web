@@ -160,6 +160,15 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                         }
                     }
                 }
+
+                &.user-avatar-dropdown {
+                    img {
+                        margin-right: 10px;
+                    }
+                    font-weight: bold;
+                    font-size: larger;
+
+                }
             }
 
         }

@@ -3,11 +3,12 @@ import { Form, Button, Toast } from 'react-bootstrap'
 import { selectAllInlineText } from 'utilities/contentEditable'
 import { FaGoogle } from 'react-icons/fa'
 
-import { GoogleLogin } from 'react-google-login'
+// import { GoogleLogin } from 'react-google-login'
+import { GoogleLogin } from '@react-oauth/google'
 
 import './Auth.scss'
 
-import { login, signup, activate } from 'actions/APICall'
+import { login, signup, activate, loginWithGoogle } from 'actions/APICall'
 
 import { useAuth } from 'hooks/useAuth'
 import { useNavigate } from 'react-router-dom'
@@ -16,6 +17,7 @@ import { getOwnership, getWorkplace } from 'actions/APICall'
 
 import { ToastContainer, toast } from 'react-toastify'
 import Loading from 'components/Loading/Loading'
+import jwt_decode from 'jwt-decode'
 
 // const initialState = { name: '', username: '', password: '', confirmPassword: '' }
 
@@ -98,14 +100,14 @@ const Auth = () => {
     } else {
       const formData = { 'email' : username, 'password' : password }
       await login(formData).then(user => {
-        let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token }
+        let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover }
         saveLocalStorage(saveUser)
         getOwnership().then((ownershipList) => {
           console.log('auth - handle submit form - check')
           const firstWorkplace = ownershipList.workplaceOrder[0]
-          saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace }
+          saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
           saveLocalStorage(saveUser)
-
+          toast.success('Login successful')
           navigate(`/workplaces/${firstWorkplace}`)
         })
       }).catch((error) => {
@@ -123,22 +125,50 @@ const Auth = () => {
     setLoading(false)
   }
 
-  const googleSuccess = async (res) => {
-    // const result = res?.profileObj;
-    // const token = res?.tokenId;
+  const googleSuccess = async (respond) => {
+    const result = respond
+    const token = respond.credential
+    console.log('googleSuccess - result', result)
+    console.log('googleSuccess - token', token)
 
+    var decoded = jwt_decode(token)
+    console.log('decoded', decoded)
+    const { name, email, picture } = decoded
+    const formData = { 'email' : email, 'cover': picture, 'name' : name }
 
-    try {
-      // dispatch({ type: AUTH, data: { result, token } });
-      console.log('Success')
-      console.log(res)
-      // history.push('/');
-    } catch (error) {
-      console.log(error)
+    setLoading(true)
+    await loginWithGoogle(formData).then(user => {
+      let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover }
+      saveLocalStorage(saveUser)
+      getOwnership().then((ownershipList) => {
+        console.log('auth - handle submit form - check')
+        const firstWorkplace = ownershipList.workplaceOrder[0]
+        saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
+        saveLocalStorage(saveUser)
+        toast.success('Login successful')
+        toast.info('If this is the first time, check email to get new password')
+        navigate(`/workplaces/${firstWorkplace}`)
+      })
+    }).catch((error) => {
+      toast.error(error.message)
+      setLoading(false)
     }
+    )
+
+    // axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?id_token=${token}`, {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //     Accept: 'application/json'
+    //   }
+    // })
+    //   .then((res) => {
+    //     console.log('google respond', res)
+    //   })
+    //   .catch((err) => console.log(err))
+
   }
 
-  const googleError = () => console.log('Google Sign In was unsuccessful. Try again later')
+  const googleError = (error) => toast.error('Google Sign In was unsuccessful. Try again later', error)
 
 
   return (
@@ -249,13 +279,12 @@ const Auth = () => {
                         <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
                       </div>
                       }
-                      <div className="text-center pt-1 mb-5 pb-1">
+                      <div className="text-center pt-1 mb-3 pb-1">
                         { isActivate &&
                           <Button className="btn btn-custom-left mb-3" type='submit' size='md' onClick={handleCancel}>Cancel</Button>
                         }
                         <Button className={`btn ${isActivate ? 'btn-custom-right' : 'btn-block'} gradient-custom-2 mb-3`} type='submit' size='md' onClick={null}>{isSignUp? 'Sign up': 'Log in'}</Button>
                         <GoogleLogin
-                          clientId="810349711486-vsa36hqu6sfu2re4oc1vgq10830k6k1f.apps.googleusercontent.com"
                           render={(renderProps) => (
                             <Button className="btn  btn-block  gradient-custom-2 mb-3" onClick={renderProps.onClick} disabled={renderProps.disabled} variant="contained">
                               <FaGoogle size={20}/>
@@ -264,10 +293,14 @@ const Auth = () => {
                           )}
                           onSuccess={googleSuccess}
                           onFailure={googleError}
-                          cookiePolicy="single_host_origin"
+                          width='100%'
+                          height='50px'
+                          // cookiePolicy="single_host_origin"
                         />
-                        <a className="text-muted mb-3" href="#!">Forgot password?</a>
+
                       </div>
+
+                      <a className="text-center text-muted mb-3 pt-1 pb-1" href="#!" style={{ width: '100%', display: 'block' }}>Forgot password?</a>
 
                       <div className="d-flex align-items-center justify-content-center pb-4">
                         <p className="mb-0 me-2">Do not have an account?</p>

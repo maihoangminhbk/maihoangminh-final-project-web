@@ -104,6 +104,11 @@ export const login = async (data) => {
   return request.data
 }
 
+export const loginWithGoogle = async (data) => {
+  const request = await API.post('/v1/users/login/google', data)
+  return request.data
+}
+
 export const signup = async (data) => {
   const request = await API.post('/v1/users/signup', data)
 
@@ -141,3 +146,5 @@ export const getOwnership = async () => {
 
   return request.data
 }
+
+

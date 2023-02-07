@@ -34,7 +34,7 @@ function AppBar() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { deleteUserLocalStorage } = useAuth()
+  const { user, deleteUserLocalStorage } = useAuth()
 
   useEffect(() => {
     getOwnership().then((ownershipList) => {
@@ -132,13 +132,20 @@ function AppBar() {
               <Dropdown>
                 <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
                   <div className='item user-avatar' >
-                    <img src={minhMaiAvatar} />
+                    <img src={user.cover ? user.cover : minhMaiAvatar} />
                   </div>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
+                  <Dropdown.Header>
+                    <div className='item user-avatar user-avatar-dropdown' >
+                      <img src={user.cover ? user.cover : minhMaiAvatar} />
+                      {user.name}
+                    </div>
 
-
-                  <Dropdown.Item onClick={() => changeWorkplace(logout())} >Log out</Dropdown.Item>
+                  </Dropdown.Header>
+                  <Dropdown.ItemText>{user.email}</Dropdown.ItemText>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={() => logout()} >Log out</Dropdown.Item>
 
 
                 </Dropdown.Menu>
