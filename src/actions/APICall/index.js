@@ -29,7 +29,13 @@ API.interceptors.response.use(function (response) {
   }
 
   if (error.response.status === 401) {
+
     // NEW:- Throw New Error
+    console.log('error.response', error.response)
+    if (error.response.data.token_error) {
+      localStorage.removeItem('user')
+      window.location.reload(false)
+    }
     throw new customErrors.Unauthorized401Error(error.response.data)
   }
 

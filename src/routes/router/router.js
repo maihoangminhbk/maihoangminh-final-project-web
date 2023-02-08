@@ -9,6 +9,7 @@ import AppBar from 'components/AppBar/AppBar'
 
 import { createBrowserRouter } from 'react-router-dom'
 import BoardContent from 'components/BoardContent/BoardContent'
+import Profile from 'components/Profile/Profile'
 
 const router = createBrowserRouter([
   {
@@ -24,15 +25,24 @@ const router = createBrowserRouter([
         element: <Auth />
       },
       {
-        element: <ProtectedRoute />,
+        element: <><ProtectedRoute /></>,
         children: [
           {
-            path: 'workplaces/:workplaceId',
-            element: <><AppBar /><BoardBar /></>,
+            element: <AppBar />,
             children: [
               {
-                path: 'boards/:boardId',
-                element: <BoardContent />
+                path: 'workplaces/:workplaceId',
+                element: <><BoardBar /></>,
+                children: [
+                  {
+                    path: 'boards/:boardId',
+                    element: <BoardContent />
+                  }
+                ]
+              },
+              {
+                path: 'profile',
+                element: <Profile />
               }
             ]
           }
