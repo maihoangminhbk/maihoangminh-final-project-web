@@ -9,11 +9,12 @@ import {
   SidebarFooter,
   SidebarContent
 } from 'react-pro-sidebar'
-import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaAlignJustify, FaRegCalendarCheck, FaTable, FaNetworkWired, FaUserAlt, FaRocketchat, FaWhmcs } from 'react-icons/fa'
+import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaAlignJustify, FaRegCalendarCheck, FaTable, FaNetworkWired, FaUserAlt, FaRocketchat, FaWhmcs, FaAngleDoubleLeft } from 'react-icons/fa'
 import './Aside.scss'
 import { getOwnership, getWorkplace } from 'actions/APICall'
 import { useAuth } from 'hooks/useAuth'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import UserListAvatar from 'components/User/UserListAvatar'
 
 const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   const [collapsed, setCollapsed] = useState(true)
@@ -47,8 +48,22 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
     // console.log('aside - boardListInsert - boardList', boardList)
 
     const menuItems = boardList.map((board, index) => {
-      // console.log('aside - boardListInsert - board, index', board, index)
+      console.log('aside - boardListInsert - board, index', board, index)
       return <MenuItem onClick={() => changeBoard(board.boardId)} key={index}>{board.title}</MenuItem>
+    })
+
+    return (
+      menuItems
+    )
+    // return (<MenuItem>Board 2</MenuItem>)
+  }
+
+  const mindmapListInsert = () => {
+    // console.log('aside - boardListInsert - boardList', boardList)
+
+    const menuItems = boardList.map((board, index) => {
+      console.log('aside - mindmapListInsert - board, index', board.boardId, index)
+      return <MenuItem onClick={() => changeMindMap(board.boardId)} key={index}>{board.title}</MenuItem>
     })
 
     return (
@@ -62,6 +77,19 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
     navigate(`boards/${boardId}`)
   }
 
+  const changeUsers = () => {
+    navigate('users')
+  }
+
+  const changeCalendar = () => {
+    navigate('calendar')
+  }
+
+  const changeMindMap = (mindmapId) => {
+    console.log('mindmapId', mindmapId)
+    navigate(`mindmaps/${mindmapId}`)
+  }
+
   return (
     <ProSidebar
       collapsed={collapsed}
@@ -73,6 +101,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         <div className='aside-bar-header-icon'>
           {!collapsed? '': <FaAlignJustify/>}
           <strong>{(collapsed && workplace.title)? '': workplace.title}</strong>
+          {(collapsed && workplace.title)? '': <FaAngleDoubleLeft style={ { marginLeft: '30px' } }/>}
         </div>
       </SidebarHeader>
 
@@ -92,14 +121,15 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
           </SubMenu>
 
           <SubMenu
-            suffix={<span className="badge red">{'inprocess'}</span>}
+            // suffix={<span className="badge red">{'inprocess'}</span>}
             title={'MindMap'}
             icon={<FaNetworkWired />}
+            // onClick={changeMindMap}
           >
 
-            <MenuItem>MindMap 1</MenuItem>
-            <MenuItem>MindMap 2</MenuItem>
-            <MenuItem>MindMap 3</MenuItem>
+            {
+              mindmapListInsert()
+            }
 
           </SubMenu>
         </Menu>
@@ -107,7 +137,8 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         <Menu iconShape="circle">
           <MenuItem
             icon={<FaRegCalendarCheck />}
-            suffix={<span className="badge red">{'inprocess'}</span>}
+            // suffix={<span className="badge red">{'inprocess'}</span>}
+            onClick={changeCalendar}
           >
             {'Calendar'}
           </MenuItem>
@@ -116,7 +147,8 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         <Menu iconShape="circle">
           <MenuItem
             icon={<FaUserAlt />}
-            suffix={<span className="badge red">{'inprocess'}</span>}
+            suffix={!collapsed ? <UserListAvatar /> : ''}
+            onClick={changeUsers}
           >
             {'User'}
           </MenuItem>

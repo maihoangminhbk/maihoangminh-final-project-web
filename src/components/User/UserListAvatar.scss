@@ -1,0 +1,49 @@
+@import '_setting.scss';
+
+.avatars {
+    display: inline-block;
+    // transform: scale(-1, 1);
+
+    .avatar {
+        position: relative;
+        display: inline-block;
+        border: 1px solid #fff;
+        border-radius: 50%;
+        overflow: hidden;
+        width: 100px;
+        width: 25px;
+        height: 25px;
+
+        &:not(:first-child) {
+            margin-left: -5px;
+        }
+
+        &:last-child {
+            margin-left: 2px;
+        }
+
+
+        img {
+            width: 100%;
+            display: block;
+            // transform: scale(-1, 1);
+
+        }
+
+        &.bonus {
+            background-color: gray;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: center;
+        }
+    }
+
+
+}
+  
+  
+  
+
+  
+  

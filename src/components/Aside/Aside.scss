@@ -32,6 +32,22 @@ $sidebar-bg-color: hsla(311,13.7%,35.8%,0.9);
   }
 }
 
+.pro-sidebar.md {
+  @media (max-width: 768px) {
+    position: relative; 
+    left: 0px;
+  }
+    
+}
+
+
+.pro-sidebar.md.collapsed {
+  @media (max-width: 768px) {
+    left: 0px;
+  }
+
+}
+
 .pro-sidebar {
   z-index: 100;
 }

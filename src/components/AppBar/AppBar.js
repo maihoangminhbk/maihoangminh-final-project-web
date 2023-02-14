@@ -38,23 +38,17 @@ function AppBar() {
 
   useEffect(() => {
     getOwnership().then((ownershipList) => {
-      console.log('app bar - useffect - check')
       const workplaceOrder = ownershipList.workplaceOrder
-
-      console.log('app bar - useEffect - workplaceOrder', workplaceOrder)
-      console.log('workplaceOrder.length', workplaceOrder.length)
 
       let workplaces = []
 
       workplaceOrder.map((value, index) => {
-        getWorkplace(value).then((workplace) => {
+        getWorkplace(value.workplaceId).then((workplace) => {
           workplaces = [...workplaces, workplace]
-          console.log('workplaces and length', workplaces, workplaces.length)
           setWorkplaceList(workplaces)
         })
       })
 
-      console.log('day nay')
     }
     )
   }, [])

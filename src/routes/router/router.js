@@ -10,6 +10,9 @@ import AppBar from 'components/AppBar/AppBar'
 import { createBrowserRouter } from 'react-router-dom'
 import BoardContent from 'components/BoardContent/BoardContent'
 import Profile from 'components/Profile/Profile'
+import User from 'components/User/User'
+import TaskCalendar from 'components/TaskCalendar/TaskCalendar'
+import TaskMindMap from 'components/MindMap/MindMap'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +40,18 @@ const router = createBrowserRouter([
                   {
                     path: 'boards/:boardId',
                     element: <BoardContent />
+                  },
+                  {
+                    path: 'users',
+                    element: <User />
+                  },
+                  {
+                    path: 'calendar',
+                    element: <TaskCalendar />
+                  },
+                  {
+                    path: 'mindmaps/:mindmapId',
+                    element: <TaskMindMap />
                   }
                 ]
               },

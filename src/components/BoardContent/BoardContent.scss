@@ -104,5 +104,12 @@ $breakpoint-md: 768px;
       //   }
       // }
     }
+
     
+  }
+
+  .board-content .btn-toggle {
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
