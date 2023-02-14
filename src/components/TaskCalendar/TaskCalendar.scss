@@ -1,0 +1,14 @@
+@import '_setting.scss';
+@import 'react-big-calendar/lib/sass/styles';
+
+.task-calendar {
+    background-color: white;
+    height: 500px;
+    margin-top: -20%;
+    margin-left: 5%;
+    padding: 20px;
+    border: 1px;
+    border-color: red;
+    border-radius: 10px;
+
+}

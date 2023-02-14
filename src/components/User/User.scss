@@ -1,0 +1,88 @@
+@import '_setting.scss';
+
+.user-container {
+
+    margin-top: 10%;
+    margin-left: 7%;
+    height: 94vh;
+
+    .search {
+        padding: 6px 0;
+        margin-left: 10px;
+        max-width: fit-content;
+        .group-search {
+            height: 19px;
+            .input-search {
+                max-height: 100%;
+                background-color: inherit;
+                color: inherit;
+                border: none;
+                font-size: 14px;
+                &::placeholder {
+                    color: darken(aliceblue, 5);
+                    opacity: 1;
+                }
+            }
+    
+            
+            .form-control {
+                min-height: 0;
+            }
+            
+    
+            .input-icon-search {
+                padding: 0 8px 0 0;
+                background-color: transparent;
+                border: none;
+                color: inherit;
+    
+                
+            }
+            .input-group-text {
+                height: calc(1.08rem);
+            }
+        }
+    }
+    
+    .user-table {
+        // background-color:antiquewhite;
+        font-weight: bolder;
+        color: aliceblue;
+    
+        .user-avatar {
+            margin-top: 7px;
+            min-width: 200px;
+            // padding: 0;
+            background-color: transparent;
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 10px;
+    
+            }
+            &:hover {
+                filter: brightness(120%);
+            }
+    
+            font-weight: bold;
+            font-size: larger;
+            color: aliceblue;
+        }
+    
+        .table-data {
+            color: aliceblue;
+            margin-bottom: 0px;
+            margin-top: 9px;
+            // !important;
+        }
+    
+        .badge {
+            background-color: #d6f0e0;
+            color: #0d6832;
+            border-radius: 50rem!important;
+        }
+    
+    }
+}

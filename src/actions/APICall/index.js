@@ -31,7 +31,6 @@ API.interceptors.response.use(function (response) {
   if (error.response.status === 401) {
 
     // NEW:- Throw New Error
-    console.log('error.response', error.response)
     if (error.response.data.token_error) {
       localStorage.removeItem('user')
       window.location.reload(false)
@@ -149,6 +148,19 @@ export const createOwnership = async () => {
 
 export const getOwnership = async () => {
   const request = await API.get('/v1/ownership')
+
+  return request.data
+}
+
+
+export const addUserToWorkplace = async (id, data) => {
+  const request = await API.post(`/v1/workplaces/${id}/add-user`, data)
+
+  return request.data
+}
+
+export const getUserListInWorkplace = async (id) => {
+  const request = await API.get(`/v1/workplaces/${id}/users`)
 
   return request.data
 }

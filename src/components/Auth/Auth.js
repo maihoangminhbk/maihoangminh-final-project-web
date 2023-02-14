@@ -104,7 +104,7 @@ const Auth = () => {
         saveLocalStorage(saveUser)
         getOwnership().then((ownershipList) => {
           console.log('auth - handle submit form - check')
-          const firstWorkplace = ownershipList.workplaceOrder[0]
+          const firstWorkplace = ownershipList.workplaceOrder[0].workplaceId
           saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
           saveLocalStorage(saveUser)
           toast.success('Login successful')
@@ -142,7 +142,7 @@ const Auth = () => {
       saveLocalStorage(saveUser)
       getOwnership().then((ownershipList) => {
         console.log('auth - handle submit form - check')
-        const firstWorkplace = ownershipList.workplaceOrder[0]
+        const firstWorkplace = ownershipList.workplaceOrder[0].workplaceId
         saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
         saveLocalStorage(saveUser)
         toast.success('Login successful')

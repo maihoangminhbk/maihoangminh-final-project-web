@@ -1,21 +1,23 @@
 @import '_setting.scss';
 
-.profile-image {
-    width: 200px;
-}
-
-.form-label {
-    transform: none;
-}
-
-.form-text {
-    color: whitesmoke;
-}
-
-#form-basic-email {
-    color: gray;
-}
-
-.form-check-label {
-    color: red;
+.profile-form {
+    .profile-image {
+        width: 200px;
+    }
+    
+    .form-label {
+        transform: none;
+    }
+    
+    .form-text {
+        color: whitesmoke;
+    }
+    
+    #form-basic-email {
+        color: gray;
+    }
+    
+    .form-check-label {
+        color: red;
+    }
 }
