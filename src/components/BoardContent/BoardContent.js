@@ -42,18 +42,14 @@ function BoardContent() {
   const onNewColumnTitleChange = useCallback((e) => setNewColumnTitle(e.target.value), [])
   const onNewBoardTitleChange = useCallback((e) => setNewBoardTitle(e.target.value), [])
 
-
-  console.log('boardcontent - global - boardId', boardId)
   useEffect(() => {
     // const boardId = '62d92931b79a7a225262240a'
     // const boardId = localStorage.getItem('boardId')
-    console.log('boardcontent - usereffect - boardId', boardId)
     setBoardIdSaved(boardId)
 
     if (boardId) {
       const boardIdJson = boardId
 
-      console.log('boardcontent - usereffect - boardId', boardId)
       // const boardIdJson = JSON.parse(boardId)
       getBoardById(boardIdJson)
     }
@@ -83,7 +79,7 @@ function BoardContent() {
     toast.info('Other user add column!')
   }, [board, columns])
 
-  const handleOnColumnChange = useCallback((dropResult) => {
+  const handleOnColumnDrop = useCallback((dropResult) => {
     let newColumns = cloneDeep(columns)
     newColumns = applyDrag(newColumns, dropResult)
     let newBoard = cloneDeep(board)
@@ -141,17 +137,17 @@ function BoardContent() {
 
   useEffect(() => {
     console.log('SOCKET LISTEN')
-    boardSocket.on('onColumnChange', handleOnColumnChange)
+    boardSocket.on('onColumnDrop', handleOnColumnDrop)
     boardSocket.on('onColumnAdd', handleOnColumnAdd)
     boardSocket.on('onColumnUpdateState', handleOnColumnUpdateState)
     boardSocket.on('onCardDrop', handleOnCardDrop)
     return () => {
-      boardSocket.off('onColumnChange')
+      boardSocket.off('onColumnDrop')
       boardSocket.off('onColumnAdd')
       boardSocket.off('onColumnUpdateState')
       boardSocket.off('onCardDrop')
     }
-  }, [handleOnColumnChange, handleOnColumnAdd, handleOnColumnUpdateState, handleOnCardDrop])
+  }, [handleOnColumnDrop, handleOnColumnAdd, handleOnColumnUpdateState, handleOnCardDrop])
 
 
   const createNewBoard = () => {
@@ -177,9 +173,7 @@ function BoardContent() {
     await fetchBoardDetails(boardId).then(board => {
 
       setBoard(board)
-      console.log('Check 2')
       setColumns(mapOrder(board.columns, board.columnOrder, '_id'))
-      console.log('Check 3')
       setBoardIdSaved(boardId)
 
     })
@@ -310,6 +304,10 @@ function BoardContent() {
       toogleOpenNewColumnForm()
 
       boardSocket.emit('onColumnAdd', column)
+    }).catch((error) => {
+      setNewColumnTitle('')
+      toogleOpenNewColumnForm()
+      toast.error(error.message)
     })
 
 
@@ -318,6 +316,8 @@ function BoardContent() {
   const onUpdateColumnState = (newColumnToUpdate) => {
 
     const columnIdToUpdate = newColumnToUpdate._id
+
+    console.log('columnIdToUpdate', columnIdToUpdate)
 
     let newColumns = [...columns]
     const columnIndexToUpdate = newColumns.findIndex(i => i._id === columnIdToUpdate)

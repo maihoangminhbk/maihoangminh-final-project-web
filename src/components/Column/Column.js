@@ -10,6 +10,7 @@ import { mapOrder } from 'utilities/sorts'
 import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
 import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/contentEditable'
 import { createNewCard, updateColumn } from 'actions/APICall'
+import { toast } from 'react-toastify'
 
 
 function Column(props) {
@@ -56,9 +57,10 @@ function Column(props) {
       updateColumn(newColumn._id, newColumn).then(updatedColumn => {
 
         onUpdateColumnState(updatedColumn)
+      }).catch((error) => {
+        toast.error(error.message)
+        toogleShowConfirmModal()
       })
-
-      onUpdateColumnState(newColumn)
 
     }
     toogleShowConfirmModal()
@@ -77,6 +79,8 @@ function Column(props) {
       updateColumn(newColumn._id, newColumn).then(updatedColumn => {
         updatedColumn.cards = newColumn.cards
         onUpdateColumnState(updatedColumn)
+      }).catch((error) => {
+        toast.error(error.message)
       })
     }
 
@@ -104,6 +108,10 @@ function Column(props) {
       onUpdateColumnState(newColumn)
       setNewCardTitle('')
       toogleOpenNewCardForm()
+    }).catch((error) => {
+      setNewCardTitle('')
+      toogleOpenNewCardForm()
+      toast.error(error.message)
     })
 
 
