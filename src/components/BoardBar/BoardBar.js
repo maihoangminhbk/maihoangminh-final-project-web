@@ -6,6 +6,7 @@ import BoardContent from 'components/BoardContent/BoardContent'
 
 import { useAuth } from 'hooks/useAuth'
 import { Outlet, useParams } from 'react-router-dom'
+import ChatIcon from 'components/Chat/ChatIcon'
 
 function BoardBar() {
   const [toggled, setToggled] = useState(false)
@@ -29,6 +30,7 @@ function BoardBar() {
         handleToggleSidebar={handleToggleSidebar}
         getBoardList={getBoardList}
       />
+      <ChatIcon />
       {/* <Main
         toggled={toggled}
         collapsed={collapsed}

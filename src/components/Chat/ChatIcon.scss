@@ -1,0 +1,25 @@
+@import '_setting.scss';
+
+@import "react-chat-elements/dist/main.css";
+
+.chat-icon {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    border-radius: 50%;
+    .message-icon {
+        width: 50px;
+        height: 50px;
+        color: white;
+    }
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+    }
+}
+
+.chat-list {
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+}

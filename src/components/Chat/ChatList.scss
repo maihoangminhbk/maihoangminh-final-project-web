@@ -1,0 +1,109 @@
+@import '_setting.scss';
+
+@import "react-chat-elements/dist/main.css";
+
+
+.container {
+
+
+    &.chat-list {
+        position: fixed;
+        bottom: 10%;
+        right: 10%;
+        width: 30%;
+        height: 400px;
+        border-radius: 5%;
+        border-color: aliceblue;
+        background-color: rgba(255, 255, 255, 0.7);
+
+        .chat-avatar {
+            height: 10%;
+            .user-avatar {
+                margin-top: 7px;
+                min-width: 200px;
+                // padding: 0;
+                background-color: transparent;
+                img {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-right: 10px;
+        
+                }
+                &:hover {
+                    filter: brightness(120%);
+                    cursor: pointer;
+                }
+        
+                font-weight: bold;
+                font-size: larger;
+                // color: aliceblue;
+            }
+        }
+
+        .message-list {
+            height: 75%;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            overflow-y: auto;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0.7);
+
+            .rce-mbox-right {
+                background-color: blue;
+            }
+        }
+
+        .group-search {
+            padding-top: 5px;
+            height: 10%;
+            .input-search {
+                max-height: 100%;
+                // padding: 0px;
+                // background-color: rgba(255, 255, 255, 0.9);
+                color: inherit;
+                border: none;
+                font-size: 14px;
+                &::placeholder {
+                    color: darken(aliceblue, 5);
+                    opacity: 1;
+                }
+            }
+    
+            
+            .form-control {
+                min-height: 0;
+                width: 100%;
+            }
+            
+    
+            .input-icon-search {
+                padding: 0 8px 0 0;
+                background-color: transparent;
+                border: none;
+                color: inherit;
+    
+                
+            }
+            .input-group-text {
+                height: calc(1.08rem);
+            }
+
+            .send {
+                padding: 0px;
+                .send-button {
+                    height: 30px;
+                    width: 30px;
+                    margin-top: 3px;
+                    margin-left: 5px;
+                    // background-color: rgba(255, 255, 255, 0.9);
+                    // border-radius: 10%;
+                }
+            }
+            
+        }
+    }
+
+    
+}
