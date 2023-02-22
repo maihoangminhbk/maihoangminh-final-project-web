@@ -11,10 +11,11 @@ import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
 import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/contentEditable'
 import { createNewCard, updateColumn } from 'actions/APICall'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 
 function Column(props) {
-  const { column, onCardDrop, onUpdateColumnState } = props
+  const { column, onCardDrop, onUpdateColumnState, onCardClick } = props
   const cards = mapOrder(column.cards, column.cardOrder, '_id')
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -29,6 +30,8 @@ function Column(props) {
 
   const [newCardTitle, setNewCardTitle] = useState('')
   const onNewCardTitleChange = useCallback((e) => setNewCardTitle(e.target.value), [])
+
+  const navigate = useNavigate()
 
   const toogleOpenNewCardForm = () => {
     setOpenNewCardForm(!openNewCardForm)
@@ -114,7 +117,13 @@ function Column(props) {
       toast.error(error.message)
     })
 
+  }
 
+  const onChangeToTask = (card) => {
+    console.log('Task click')
+    console.log('card', card)
+    onCardClick(card)
+    navigate(`task/${card._id}`)
   }
 
   return (
@@ -166,7 +175,7 @@ function Column(props) {
         >
           {
             cards.map((card, index) => (
-              <Draggable key={index}>
+              <Draggable key={index} onClick={() => onChangeToTask(card)}>
                 <Card card={card} />
               </Draggable>)
 

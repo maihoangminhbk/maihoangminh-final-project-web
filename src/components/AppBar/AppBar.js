@@ -69,7 +69,6 @@ function AppBar() {
   return (
     <>
       <nav className='navbar-app'>
-        {console.log('app bar check')}
         <BootstrapContainer className='minhmai-trello-container'>
           <Row>
             <Col sm={5} xs={6} className='col-no-padding'>

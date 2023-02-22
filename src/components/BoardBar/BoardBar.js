@@ -19,7 +19,6 @@ function BoardBar() {
   }
 
   const getBoardList = (boardList) => {
-    console.log('boardbar - getBoardList - boardList', boardList)
     setBoardList(boardList)
   }
 

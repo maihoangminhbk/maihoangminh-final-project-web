@@ -27,16 +27,11 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
 
   useEffect(() => {
     const result = getOwnershipData()
-    console.log(result)
-
   }, [])
 
   const getOwnershipData = async () => {
-    console.log('aside - getOwnership - workplaceId', workplaceId)
     const workplaceResult = await getWorkplace(workplaceId)
-    console.log('aside - useEffect - workplaceResult', workplaceResult)
     setBoardList(workplaceResult.boardOrder)
-    console.log('aside - useEffect - result', workplaceResult.boardOrder)
     setWorkplace(workplaceResult)
     getBoardList(workplaceResult.boardOrder)
   }
@@ -45,10 +40,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }
 
   const boardListInsert = () => {
-    // console.log('aside - boardListInsert - boardList', boardList)
-
     const menuItems = boardList.map((board, index) => {
-      console.log('aside - boardListInsert - board, index', board, index)
       return <MenuItem onClick={() => changeBoard(board.boardId)} key={index}>{board.title}</MenuItem>
     })
 
@@ -59,10 +51,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }
 
   const mindmapListInsert = () => {
-    // console.log('aside - boardListInsert - boardList', boardList)
-
     const menuItems = boardList.map((board, index) => {
-      console.log('aside - mindmapListInsert - board, index', board.boardId, index)
       return <MenuItem onClick={() => changeMindMap(board.boardId)} key={index}>{board.title}</MenuItem>
     })
 
@@ -73,7 +62,6 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }
 
   const changeBoard = (boardId) => {
-    console.log('aside - changeBoard - location', location)
     navigate(`boards/${boardId}`)
   }
 
@@ -86,7 +74,6 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }
 
   const changeMindMap = (mindmapId) => {
-    console.log('mindmapId', mindmapId)
     navigate(`mindmaps/${mindmapId}`)
   }
 

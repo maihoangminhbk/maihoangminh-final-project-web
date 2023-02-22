@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API_ROOT } from 'utilities/constants'
+import { API_ROOT, CHATBOT_API_ROOT } from 'utilities/constants'
 import { customErrors } from 'utilities/customErrors'
 
 const API = axios.create({ baseURL: API_ROOT })
@@ -97,6 +97,12 @@ export const updateCard = async (id, data) => {
   return request.data
 }
 
+export const uploadCardImage = async (id, formData, onUploadProgress) => {
+  const request = await API.post(`/v1/cards/${id}/image/upload`, formData, onUploadProgress)
+
+  return request.data
+}
+
 export const createNewCard = async (data) => {
   const request = await API.post('/v1/cards', data)
 
@@ -161,6 +167,14 @@ export const addUserToWorkplace = async (id, data) => {
 
 export const getUserListInWorkplace = async (id) => {
   const request = await API.get(`/v1/workplaces/${id}/users`)
+
+  return request.data
+}
+
+const CHATBOT_API = axios.create({ baseURL: CHATBOT_API_ROOT })
+
+export const chatbot = async (data) => {
+  const request = await CHATBOT_API.post('/webhooks/rest/webhook', data)
 
   return request.data
 }

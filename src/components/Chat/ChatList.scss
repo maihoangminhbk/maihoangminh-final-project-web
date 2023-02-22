@@ -10,11 +10,11 @@
         position: fixed;
         bottom: 10%;
         right: 10%;
-        width: 30%;
-        height: 400px;
+        width: 350px;
+        height: 450px;
         border-radius: 5%;
         border-color: aliceblue;
-        background-color: rgba(255, 255, 255, 0.7);
+        background-color: rgba(255, 255, 255, 0.8);
 
         .chat-avatar {
             height: 10%;
@@ -51,7 +51,11 @@
             border-color: rgba(255, 255, 255, 0.7);
 
             .rce-mbox-right {
-                background-color: blue;
+                background-color: antiquewhite;
+            }
+
+            .rce-mbox-right-notch {
+                fill: antiquewhite;
             }
         }
 
@@ -97,6 +101,7 @@
                     width: 30px;
                     margin-top: 3px;
                     margin-left: 5px;
+                    cursor: pointer;
                     // background-color: rgba(255, 255, 255, 0.9);
                     // border-radius: 10%;
                 }

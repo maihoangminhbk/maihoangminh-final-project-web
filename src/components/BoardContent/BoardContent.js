@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import { useOutletContext, useParams } from 'react-router-dom'
+import { Outlet, useOutletContext, useParams } from 'react-router-dom'
 
 import { Container, Draggable } from 'react-smooth-dnd'
 import './BoardContent.scss'
@@ -26,6 +26,7 @@ function BoardContent() {
   const [columns, setColumns] = useState({})
   const [boardIdSaved, setBoardIdSaved] = useState('')
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
+  const [clickedCard, setClickedCard] = useState({ title: 'test' })
 
   const handleToggleSidebar = useOutletContext()
   const { boardId } = useParams()
@@ -277,6 +278,11 @@ function BoardContent() {
     }
   }
 
+  const onCardClick = (card) => {
+    console.log('board content - card', card)
+    setClickedCard(card)
+  }
+
   const addNewColumn = () => {
     if (!newColumnTitle) {
       newColumnInputRef.current.focus()
@@ -371,6 +377,7 @@ function BoardContent() {
             <Column
               column={column}
               onCardDrop={onCardDrop}
+              onCardClick={onCardClick}
               onUpdateColumnState={onUpdateColumnState}
             />
           </Draggable>
@@ -406,6 +413,7 @@ function BoardContent() {
         }
 
       </BootstrapContainer>
+      <Outlet context={clickedCard}/>
     </div>
 
   )
