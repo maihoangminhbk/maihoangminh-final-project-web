@@ -26,7 +26,7 @@ function BoardContent() {
   const [columns, setColumns] = useState({})
   const [boardIdSaved, setBoardIdSaved] = useState('')
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
-  const [clickedCard, setClickedCard] = useState({ title: 'test' })
+  const [clickedCard, setClickedCard] = useState({})
 
   const handleToggleSidebar = useOutletContext()
   const { boardId } = useParams()
@@ -55,7 +55,7 @@ function BoardContent() {
       getBoardById(boardIdJson)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boardId])
+  }, [boardId, clickedCard])
 
   // console.log('Vao user effext dau tien board content test')
   useEffect(() => {
@@ -172,7 +172,7 @@ function BoardContent() {
   const getBoardById = async (boardId) => {
 
     await fetchBoardDetails(boardId).then(board => {
-
+      console.log('board', board)
       setBoard(board)
       setColumns(mapOrder(board.columns, board.columnOrder, '_id'))
       setBoardIdSaved(boardId)
@@ -413,7 +413,7 @@ function BoardContent() {
         }
 
       </BootstrapContainer>
-      <Outlet context={clickedCard}/>
+      <Outlet context={{ clickedCard, setClickedCard }}/>
     </div>
 
   )

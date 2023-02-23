@@ -138,7 +138,7 @@ function Diagram() {
 
           const loc_x_card = getRandomInt(loc_x_column - 150, loc_x_column + 150)
           const loc_y_card = Math.sqrt(22500 - (loc_x_card - loc_x_column) * (loc_x_card - loc_x_column)) * Math.sign(Math.random() - 0.5) + loc_y_column
-          const cardNode = { key: card._id, text: card.title, color: 'pink', loc: `${loc_x_card} ${loc_y_card}`, source: card.cover }
+          const cardNode = { key: card._id, text: card.title, color: 'pink', loc: `${loc_x_card} ${loc_y_card}`, source: card.imageUrl }
           nodeDataArrayNew = [...nodeDataArrayNew, cardNode]
 
           const cardLink = { key: column._id + card._id, from: column._id, to: card._id, color: 'orange' }

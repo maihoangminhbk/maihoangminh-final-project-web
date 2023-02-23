@@ -100,6 +100,8 @@ export const updateCard = async (id, data) => {
 export const uploadCardImage = async (id, formData, onUploadProgress) => {
   const request = await API.post(`/v1/cards/${id}/image/upload`, formData, onUploadProgress)
 
+  console.log('request - uploadCardImage', request)
+
   return request.data
 }
 
