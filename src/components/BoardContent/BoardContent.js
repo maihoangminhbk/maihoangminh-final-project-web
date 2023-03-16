@@ -53,6 +53,8 @@ function BoardContent() {
 
       // const boardIdJson = JSON.parse(boardId)
       getBoardById(boardIdJson)
+
+      boardSocket.emit('onJoinBoard', boardId)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boardId, clickedCard])
@@ -176,7 +178,6 @@ function BoardContent() {
       setBoard(board)
       setColumns(mapOrder(board.columns, board.columnOrder, '_id'))
       setBoardIdSaved(boardId)
-
     })
   }
 
@@ -226,7 +227,7 @@ function BoardContent() {
       setBoard(board)
     }
     ).then(() => {
-      boardSocket.emit('onColumnDrop', dropResult)
+      boardSocket.emit('onColumnDrop', boardId, dropResult)
     })
   }
 
@@ -274,7 +275,7 @@ function BoardContent() {
       newBoard.columnOrder = newColumns.map(c => c._id)
       setBoard(newBoard)
 
-      boardSocket.emit('onCardDrop', columnId, dropResult)
+      boardSocket.emit('onCardDrop', boardId, columnId, dropResult)
     }
   }
 
@@ -309,7 +310,7 @@ function BoardContent() {
       setNewColumnTitle('')
       toogleOpenNewColumnForm()
 
-      boardSocket.emit('onColumnAdd', column)
+      boardSocket.emit('onColumnAdd', boardId, column)
     }).catch((error) => {
       setNewColumnTitle('')
       toogleOpenNewColumnForm()
@@ -342,7 +343,7 @@ function BoardContent() {
     setColumns(newColumns)
     setBoard(newBoard)
 
-    boardSocket.emit('onColumnUpdateState', newColumnToUpdate)
+    boardSocket.emit('onColumnUpdateState', boardId, newColumnToUpdate)
 
   }
 

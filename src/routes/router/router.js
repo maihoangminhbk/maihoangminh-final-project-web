@@ -12,7 +12,6 @@ import BoardContent from 'components/BoardContent/BoardContent'
 import Profile from 'components/Profile/Profile'
 import User from 'components/User/User'
 import TaskCalendar from 'components/TaskCalendar/TaskCalendar'
-import TaskMindMap from 'components/MindMap/MindMap'
 import Task from 'components/Task/Task'
 import Diagram from 'components/Diagram/Diagram'
 
@@ -59,7 +58,6 @@ const router = createBrowserRouter([
                   },
                   {
                     path: 'mindmaps/:boardId',
-                    // element: <TaskMindMap />
                     element: <Diagram />
                   }
                 ]
