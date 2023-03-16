@@ -117,7 +117,7 @@ function Diagram() {
 
       const rootNode = { key: board._id, text: board.title, color: 'red', loc: '0 0' }
 
-      let nodeDataArrayNew = [...nodeDataArray, rootNode]
+      let nodeDataArrayNew = [rootNode]
       let linkDataArrayNew = []
 
       board.columns.map((column) => {
@@ -132,7 +132,7 @@ function Diagram() {
         const columnLink = { key: board._id + column._id, from: board._id, to: column._id, color: 'red' }
         linkDataArrayNew = [...linkDataArrayNew, columnLink]
 
-        column.cards.map((card) => {
+        column.cards && column.cards.map((card) => {
           console.log(card)
           if (card._destroy) return
 

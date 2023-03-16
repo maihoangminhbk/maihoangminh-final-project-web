@@ -52,3 +52,32 @@ $sidebar-bg-color: hsla(311,13.7%,35.8%,0.9);
   z-index: 100;
 }
 
+.enter-new-column {
+  width: 250px;
+  max-width: 250px;
+  // background-color: $column-bg-color;
+
+  line-height: 32px;
+  // padding: 4px 4px;
+  // margin-left: 22px;
+  // margin-right: 3px;
+  border-radius: $column-border-radius;
+  background-color: rgb(51, 51, 51);
+  .input-enter-new-column {
+    margin: 5px 0;
+    border-color: $input-border-color;
+  }
+
+  // .cancel-new-column {
+  //   margin-left: $gap;
+  //   cursor: pointer;
+  //   color: $alert-danger;
+  //   i {
+  //     font-size: 18px;
+  //     &:hover {
+  //       color: darken($alert-danger, 10);
+  //     } 
+  //   }
+  // }
+}
+

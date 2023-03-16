@@ -173,6 +173,12 @@ export const getUserListInWorkplace = async (id) => {
   return request.data
 }
 
+export const addBoardToWorkplace = async (id, data) => {
+  const request = await API.post(`/v1/workplaces/${id}/add-board`, data)
+
+  return request.data
+}
+
 const CHATBOT_API = axios.create({ baseURL: CHATBOT_API_ROOT })
 
 export const chatbot = async (data) => {

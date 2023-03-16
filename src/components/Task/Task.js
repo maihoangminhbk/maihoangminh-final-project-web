@@ -33,7 +33,8 @@ function Task() {
     }).then((data) => {
       setCardImage(data.url)
       clickedCard.imageUrl = data.url
-      setClickedCard(clickedCard)
+      const newClickedCard = { ...clickedCard }
+      setClickedCard(newClickedCard)
 
     })
   }, [])
@@ -88,7 +89,7 @@ function Task() {
             </div>
           </Row> */}
           <Row>
-          <br></br>
+            <br></br>
             <h4>Description</h4>
             <p>
               This is card. I create to test modal...
