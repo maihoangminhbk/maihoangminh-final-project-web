@@ -147,6 +147,11 @@ export const getWorkplace = async (id) => {
   return request.data
 }
 
+export const updateWorkplace = async (id, data) => {
+  const request = await API.put(`/v1/workplaces/${id}`, data)
+
+  return request.data
+}
 // Create and get ownership
 export const createOwnership = async () => {
   const request = await API.post('/v1/ownership')
