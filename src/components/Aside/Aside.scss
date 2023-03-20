@@ -81,3 +81,28 @@ $sidebar-bg-color: hsla(311,13.7%,35.8%,0.9);
   // }
 }
 
+.pro-menu-item {
+
+  .close-button {
+    display: none;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  &:hover {
+    .close-button {
+      display: inline-block;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+      }
+    }
+  }
+  .board-title {
+    display: inline-block;
+    width: 86%;
+  }
+
+  
+}
+

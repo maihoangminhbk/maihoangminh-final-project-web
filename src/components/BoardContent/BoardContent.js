@@ -343,8 +343,13 @@ function BoardContent() {
     setColumns(newColumns)
     setBoard(newBoard)
 
-    boardSocket.emit('onColumnUpdateState', boardId, newColumnToUpdate)
-
+    updateBoard(newBoard._id, { columnOrder: newBoard.columnOrder }).catch(() => {
+      setColumns(columns)
+      setBoard(board)
+    }
+    ).then(() => {
+      boardSocket.emit('onColumnUpdateState', boardId, newColumnToUpdate)
+    })
   }
 
   // console.log('boardIdSaved', boardIdSaved)
