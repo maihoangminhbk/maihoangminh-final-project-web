@@ -6,6 +6,11 @@ import { MODAL_ACTION_CLOSE, MODAL_ACTION_CONFIRM } from 'utilities/constants'
 function ConfirmModal(props) {
   const { title, content, show, onAction } = props
 
+  const onClickAction = (e, type) => {
+    e.stopPropagation()
+    onAction(type)
+  }
+
   return (
     <Modal
       show={show}
@@ -18,10 +23,10 @@ function ConfirmModal(props) {
       </Modal.Header>
       <Modal.Body>{HTMLReactParser(content)}</Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => onAction(MODAL_ACTION_CLOSE)}>
+        <Button variant="secondary" onClick={(e) => onClickAction(e, MODAL_ACTION_CLOSE)}>
               Close
         </Button>
-        <Button variant="primary" onClick={() => onAction(MODAL_ACTION_CONFIRM)}>
+        <Button variant="primary" onClick={(e) => onClickAction(e, MODAL_ACTION_CONFIRM)}>
               Save Changes
         </Button>
       </Modal.Footer>

@@ -144,7 +144,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         key={index}>
         <div className='board-title'>{board.title}</div>
         {/* { onBoardCloseButton && */}
-          <CloseButton className='close-button' onClick={() => onBoardCloseButtonClick(board) }></CloseButton>
+          <CloseButton variant='white' className='close-button' onClick={() => onBoardCloseButtonClick(board) }></CloseButton>
         {/* } */}
       </MenuItem>
     })
