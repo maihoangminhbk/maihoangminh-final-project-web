@@ -11,9 +11,14 @@ $card-border-radius: 5px;
     margin-bottom: 10px;
 
 
-img.card-cover {
-    display: block;
-    width: calc(100% + 2 * #{$gap});
-    margin: -$gap 0 $gap (-$gap);
-}
+    img.card-cover {
+        display: block;
+        width: calc(100% + 2 * #{$gap});
+        margin: -$gap 0 $gap (-$gap);
+    }
+
+    .card-close-button {
+        display: inline-block;
+        margin-left: 185px;
+    }
 }

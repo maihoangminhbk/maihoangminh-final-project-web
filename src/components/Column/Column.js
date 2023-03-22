@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 function Column(props) {
-  const { column, onCardDrop, onUpdateColumnState, onCardClick } = props
+  const { column, onCardDrop, onUpdateColumnState, onCardClick, onCardDelete } = props
   const cards = mapOrder(column.cards, column.cardOrder, '_id')
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -25,6 +25,7 @@ function Column(props) {
   const handleColumnTitleChange = useCallback((e) => setColumnTitle(e.target.value), [])
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
+  const [deleteCard, setDeleteCard] = useState(false)
 
   const newCardTextareaRef = useRef(null)
 
@@ -35,6 +36,10 @@ function Column(props) {
 
   const toogleOpenNewCardForm = () => {
     setOpenNewCardForm(!openNewCardForm)
+  }
+
+  const toggleDeleteCard = () => {
+    setDeleteCard(!deleteCard)
   }
 
   useEffect(() => {
@@ -150,7 +155,7 @@ function Column(props) {
             <Dropdown.Menu>
               <Dropdown.Item onClick={toogleOpenNewCardForm}>Add Card...</Dropdown.Item>
               <Dropdown.Item onClick={toogleShowConfirmModal}>Remove Column...</Dropdown.Item>
-              <Dropdown.Item>Remove Card...</Dropdown.Item>
+              <Dropdown.Item onClick={toggleDeleteCard}>Remove Card...</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
@@ -175,8 +180,12 @@ function Column(props) {
         >
           {
             cards.map((card, index) => (
-              <Draggable key={index} onClick={() => onChangeToTask(card)}>
-                <Card card={card} />
+              <Draggable key={index}>
+                <Card 
+                  card={card} 
+                  onChangeToTask={onChangeToTask}
+                  onCardDelete={onCardDelete}
+                  deleteCard={deleteCard} />
               </Draggable>)
 
             )

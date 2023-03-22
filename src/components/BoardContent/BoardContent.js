@@ -352,6 +352,38 @@ function BoardContent() {
     })
   }
 
+  const onCardDelete = (card) => {
+    console.log('check', card)
+    let newColumns = cloneDeep(columns)
+
+    let currentColumn = newColumns.find(c => c._id === card.columnId)
+
+    console.log(currentColumn)
+
+    const cards = currentColumn.cards
+
+    const cardIndexToUpdate = cards.findIndex(i => i._id === card._id)
+
+    console.log('cardIndexToUpdate', cardIndexToUpdate)
+
+    cards.splice(cardIndexToUpdate, 1)
+
+    currentColumn.cards = cards
+
+    currentColumn.cardOrder = cards.map(c => c._id)
+
+    const currentCard = {
+      ...card,
+      _destroy: true
+    }
+
+    updateCard(currentCard._id, currentCard).catch((error) => {
+      toast.error(error.message)
+    }).then(
+      onUpdateColumnState(currentColumn)
+    )
+  }
+
   // console.log('boardIdSaved', boardIdSaved)
   // if (isEmpty(boardIdSaved)) {
   //   return boardNotFoundCase()
@@ -384,6 +416,7 @@ function BoardContent() {
               column={column}
               onCardDrop={onCardDrop}
               onCardClick={onCardClick}
+              onCardDelete={onCardDelete}
               onUpdateColumnState={onUpdateColumnState}
             />
           </Draggable>
