@@ -1,4 +1,5 @@
 @import '_setting.scss';
+@import 'react-datepicker/dist/react-datepicker.css';
 
 .task-container {
     .image-upload {
@@ -29,4 +30,29 @@
 
         }
     }
+
+    .progress-row {
+        --mdb-gutter-x: 0;
+        .progress {
+            height: 20px;
+        }
+
+    }
+
+    .addition-row {
+        .icon {
+            padding-right: 4px;
+        }
+
+        .icon-deadline {
+            color: orange;
+        }
+
+        .user-list {
+            padding-left: 10px;
+            margin-bottom: 0;
+        }
+    }
+
+
 }
