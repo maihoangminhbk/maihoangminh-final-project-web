@@ -9,6 +9,7 @@ import {
   SidebarContent
 } from 'react-pro-sidebar'
 import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaAlignJustify, FaRegCalendarCheck, FaTable, FaNetworkWired, FaUserAlt, FaRocketchat, FaWhmcs, FaAngleDoubleLeft } from 'react-icons/fa'
+import { AiOutlineDashboard } from 'react-icons/ai'
 import './Aside.scss'
 import { createBoard, updateBoard, getOwnership, getWorkplace, addBoardToWorkplace, updateWorkplace } from 'actions/APICall'
 import { useAuth } from 'hooks/useAuth'
@@ -144,7 +145,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         key={index}>
         <div className='board-title'>{board.title}</div>
         {/* { onBoardCloseButton && */}
-          <CloseButton variant='white' className='close-button' onClick={() => onBoardCloseButtonClick(board) }></CloseButton>
+        <CloseButton variant='white' className='close-button' onClick={() => onBoardCloseButtonClick(board) }></CloseButton>
         {/* } */}
       </MenuItem>
     })
@@ -211,6 +212,10 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
 
   const changeMindMap = (mindmapId) => {
     navigate(`mindmaps/${mindmapId}`)
+  }
+
+  const changeDashBoard = () => {
+    navigate('dashboard')
   }
 
   return (
@@ -301,6 +306,12 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
             suffix={<span className="badge red">{'inprocess'}</span>}
           >
             {'Chat'}</MenuItem>
+
+          <MenuItem
+            icon={<AiOutlineDashboard />}
+            onClick={changeDashBoard}
+          >
+            {'DashBoard'}</MenuItem>
         </Menu>
 
         <Menu iconShape="circle">

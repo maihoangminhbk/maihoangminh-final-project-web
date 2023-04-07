@@ -1,0 +1,44 @@
+@import '_setting.scss';
+
+.dashboard-container {
+    height: $board-content-height;
+    padding-top: $gap;
+    .area {
+        margin-top: 10px;
+        border-radius: 5px;
+        margin-left: 10px;
+        margin-right: 10px;
+        min-height: 200px;
+        // width: 100%;
+        background-color: whitesmoke;
+
+        &.square-area {
+            min-width: 200px;
+
+            .first-row {
+                padding-top: 20px;
+                min-height: 100px;
+            }
+
+            .second-row {
+                padding-top: 20px;
+                min-height: 100px;
+            }
+
+            .value {
+                font-size: 50px;
+                display: flex;
+                justify-content: center;
+                font-weight: bolder;
+            }
+
+            .unit {
+                font-size: 25px;
+            }
+        }
+
+        &.rectangle-area {
+            min-width: 400px;
+        }
+    }
+}

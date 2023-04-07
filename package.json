@@ -25,6 +25,7 @@
     "react": "^16.14.0",
     "react-big-calendar": "^1.6.4",
     "react-bootstrap": "^2.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-chat-elements": "^11.0.1",
     "react-datepicker": "^4.11.0",
     "react-dom": "^16.14.0",

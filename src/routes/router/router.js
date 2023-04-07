@@ -14,6 +14,7 @@ import User from 'components/User/User'
 import TaskCalendar from 'components/TaskCalendar/TaskCalendar'
 import Task from 'components/Task/Task'
 import Diagram from 'components/Diagram/Diagram'
+import DashBoard from 'components/DashBoard/DashBoard'
 
 const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
                   {
                     path: 'calendar',
                     element: <TaskCalendar />
+                  },
+                  {
+                    path: 'dashboard',
+                    element: <DashBoard />
                   },
                   {
                     path: 'mindmaps/:boardId',
