@@ -8,7 +8,8 @@ import { Container, ProgressBar, Row, Col } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import Accordion from 'react-bootstrap/Accordion'
 import Modal from 'react-bootstrap/Modal'
-import { useNavigate, useOutletContext } from 'react-router-dom'
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
+import { getCard } from 'actions/APICall'
 
 import { FaUpload, FaRegCalendarAlt, FaTasks, FaUserAlt } from 'react-icons/fa'
 import { BiTime } from 'react-icons/bi'
@@ -40,13 +41,14 @@ const toDoListInit = [
 ]
 
 function Task() {
-  const { clickedCard, setClickedCard } = useOutletContext()
+  const [ clickedCard, setClickedCard ] = useState()
 
-  const { _id, title, imageUrl } = clickedCard
-  const [cardImage, setCardImage] = useState(imageUrl)
+  // const { _id, title, imageUrl } = clickedCard
+  const [cardImage, setCardImage] = useState('')
   const [fileUpload, setFileUpLoad] = useState(null)
   const [toDoList, setToDoList] = useState(toDoListInit)
   const [progress, setProgress] = useState(0)
+  const { taskId } = useParams()
 
   const [startDate, setStartDate] = useState(
     // setHours(setMinutes(new Date(), 0), 1)
@@ -54,6 +56,13 @@ function Task() {
   )
 
   const [endDate, setEndDate] = useState(new Date())
+
+  useEffect(() => {
+    getCard(taskId).then(card => {
+      setClickedCard(card)
+      // console.log('clicked card', card)
+    })
+  }, [])
 
   useEffect(() => {
     let doneNumber = 0
@@ -83,7 +92,7 @@ function Task() {
     formData.append('file', files[0])
     console.log('file', files[0])
 
-    uploadCardImage(_id, formData, {
+    uploadCardImage(clickedCard._id, formData, {
       onUploadProgress: (p) => {
         const percentCompleted = Math.round((p.loaded * 100) / p.total)
         setFileUpLoad({ fileName: files[0].name, percentCompleted })

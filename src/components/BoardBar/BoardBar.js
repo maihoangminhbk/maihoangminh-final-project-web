@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './BoardBar.scss'
 import Aside from 'components/Aside/Aside'
 // import 'react-pro-sidebar/dist/css/styles.css'
 import BoardContent from 'components/BoardContent/BoardContent'
 
 import { useAuth } from 'hooks/useAuth'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useOutletContext, useParams } from 'react-router-dom'
 import ChatIcon from 'components/Chat/ChatIcon'
 
 function BoardBar() {
@@ -13,6 +13,7 @@ function BoardBar() {
   const [boardList, setBoardList] = useState([])
 
   const workplaceId = useParams()
+  // const { setBoard } = useOutletContext()
 
   const handleToggleSidebar = (value) => {
     setToggled(value)
@@ -28,6 +29,7 @@ function BoardBar() {
         toggled={toggled}
         handleToggleSidebar={handleToggleSidebar}
         getBoardList={getBoardList}
+        // setBoard={setBoard}
       />
       <ChatIcon />
       {/* <Main

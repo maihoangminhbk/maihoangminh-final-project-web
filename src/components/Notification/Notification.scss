@@ -1,0 +1,36 @@
+@import '_setting.scss';
+
+.notification-menu {
+    width: 350px;
+    // background-color: red;
+    .notification-header {
+        align-items: left;
+        font-weight: bold;
+        font-size: larger;
+        color: black;
+    }
+
+    .notification-mark-seen {
+        text-align: right;
+
+        .btn {
+            padding: 0px;
+        }
+    }
+    
+    .notification-tab {
+        .nav-link {
+            width: 100%;
+            padding: 9px;
+        }
+
+    }
+
+    .tab-content {
+        .infinite-scroll-component  {
+            overflow-y: hidden !important;
+            overflow-x: hidden !important;
+        }
+
+    }
+}

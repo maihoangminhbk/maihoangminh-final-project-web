@@ -1,0 +1,50 @@
+@import '_setting.scss';
+
+.notification-item {
+    // white-space: normal;
+    padding: 10px;
+    .item-container {
+        padding: 0px;
+
+        .item-avatar {
+            img {
+                padding: 0px;
+                width: 57px;
+                height: 57px;
+            } 
+        }
+    
+        .item-content {
+            padding: 0px;
+    
+            
+    
+            .content-text {
+                // max-height: 30px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+                white-space: pre-wrap; /* let the text wrap preserving spaces */
+                margin: 0px;
+                margin-top: -5px;
+                padding-right: 5px;
+                // text-overflow: ellipsis; 
+            }
+
+            .content-time {
+                // max-height: 30px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+                white-space: pre-wrap; /* let the text wrap preserving spaces */
+                margin: 0px;
+                margin-top: -5px;
+                color: blue;
+                // text-overflow: ellipsis; 
+            }
+        }
+    }
+    
+}

@@ -13,7 +13,7 @@ import { AiOutlineDashboard } from 'react-icons/ai'
 import './Aside.scss'
 import { createBoard, updateBoard, getOwnership, getWorkplace, addBoardToWorkplace, updateWorkplace } from 'actions/APICall'
 import { useAuth } from 'hooks/useAuth'
-import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom'
 import UserListAvatar from 'components/User/UserListAvatar'
 import { Form, Button, CloseButton } from 'react-bootstrap'
 import { toast } from 'react-toastify'
@@ -24,6 +24,8 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   const [collapsed, setCollapsed] = useState(true)
   const [workplace, setWorkplace] = useState({})
   const [boardList, setBoardList] = useState([])
+  const [clickedBoard, setClickedBoard] = useState()
+
   const [openNewBoardForm, setOpenNewBoardForm] = useState(false)
   const [newBoardTitle, setNewBoardTitle] = useState('')
   const [onBoardCloseButton, setOnBoardCloseButton] = useState(false)
@@ -33,15 +35,20 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   const newBoardInputRef = useRef(null)
 
   const { user } = useAuth()
-  const { workplaceId } = useParams()
+  const { workplaceId, boardId } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const setBoard = useOutletContext()
 
   console.log('workplaceId', workplaceId)
 
   useEffect(() => {
     const result = getOwnershipData()
-  }, [])
+  }, [workplaceId])
+
+  useEffect(() => {
+    if (boardId) changeBoard(boardId)
+  }, [boardId])
 
   useEffect(() => {
     if (newBoardInputRef && newBoardInputRef.current) {
@@ -143,7 +150,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         // onMouseEnter={() => setOnBoardCloseButton(true)}
         // onMouseLeave={() => setOnBoardCloseButton(false)}
         key={index}>
-        <div className='board-title'>{board.title}</div>
+        <div className={`board-title ${clickedBoard === board.boardId ? 'clicked-board' : ''}`}>{board.title}</div>
         {/* { onBoardCloseButton && */}
         <CloseButton variant='white' className='close-button' onClick={() => onBoardCloseButtonClick(board) }></CloseButton>
         {/* } */}
@@ -199,6 +206,8 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }
 
   const changeBoard = (boardId) => {
+    setClickedBoard(boardId)
+    setBoard(boardId)
     navigate(`boards/${boardId}`)
   }
 
@@ -216,6 +225,10 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
 
   const changeDashBoard = () => {
     navigate('dashboard')
+  }
+
+  const changeSlackChat = () => {
+    navigate('slack-chat')
   }
 
   return (
@@ -303,9 +316,10 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
           </MenuItem>
           <MenuItem
             icon={<FaRocketchat />}
-            suffix={<span className="badge red">{'inprocess'}</span>}
+            // suffix={<span className="badge red">{'inprocess'}</span>}
+            onClick={changeSlackChat}
           >
-            {'Chat'}</MenuItem>
+            {'Slack Chat'}</MenuItem>
 
           <MenuItem
             icon={<AiOutlineDashboard />}

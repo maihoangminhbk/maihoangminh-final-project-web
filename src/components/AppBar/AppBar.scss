@@ -45,21 +45,68 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                 // }
 
                 &.search {
-                    padding: 6px 0;
-                    margin-left: 10px;
+                    // padding: 6px 0;
+                    // margin-left: 10px;
                     .group-search {
-                        height: 19px;
-                        .input-search {
-                            max-height: 100%;
-                            background-color: inherit;
-                            color: inherit;
-                            border: none;
+                        // height: 19px;
+
+                        .custom-search {
+                            // display: flex;
+                            // flex-direction: column;
+                            // background-color: white;
+                            // min-height: 100vh;
+                            // display: flex;
+                            align-items: center;
+                            justify-content: center;
                             font-size: 14px;
-                            &::placeholder {
-                                color: darken(aliceblue, 5);
-                                opacity: 1;
+                            color: #282c34;
+
+                            .input-search {
+                                // max-height: 100%;
+                                background-color: inherit;
+                                color: inherit;
+                                border: none;
+                                font-size: 14px;
+                                // &::placeholder {
+                                //     color: darken(aliceblue, 5);
+                                //     opacity: 1;
+                                // }
+                                // height: 15px;
                             }
-                        }
+                            // to target the search icon
+                            // .search .wrapper:first-child svg {
+                            //     border: 4px solid blue !important;
+                            //   }
+                              
+                              // to target the input element
+                              .search .wrapper:first-child input {
+                                margin: 5px 0;
+                                border: none;
+                                // width: 15px;
+                                // color: orange;
+                              }
+                              
+                              // to target the wrapper element
+                              .search .wrapper:first-child {
+                                border: none;
+                                z-index: 1000;
+                                // background-color: white;
+
+                              }
+
+                              .wrapper {
+                                background-color: inherit;
+                                // border-color: black;
+                                &:focus-within {
+                                    background-color: white;
+                                }
+
+                                &:hover {
+                                    background-color: none;
+                                }
+                              }
+
+                          }
 
                         
                         .form-control {
@@ -79,6 +126,10 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                             height: calc(1.08rem);
                         }
                     }
+
+                    &:hover {
+                        background-color: inherit;
+                    }
                 }
 
                 strong {
@@ -93,6 +144,17 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
             .btn-sm {
                 padding: 0.7rem 1rem 0.3125rem;
                 margin-bottom: 2px;
+            }
+        }
+
+        .right-column {
+            .notification {
+                color: white;
+            }
+
+            .notification-dropdown {
+                width: 300px;
+
             }
         }
 

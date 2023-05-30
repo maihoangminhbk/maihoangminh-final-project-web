@@ -90,6 +90,14 @@ export const updateColumn = async (id, data) => {
   return request.data
 }
 
+// Get card
+export const getCard = async (id) => {
+  const request = await API.get(`/v1/cards/${id}`)
+
+  return request.data
+}
+
+
 // Update or remove column
 export const updateCard = async (id, data) => {
   const request = await API.put(`/v1/cards/${id}`, data)
@@ -180,6 +188,12 @@ export const getUserListInWorkplace = async (id) => {
 
 export const addBoardToWorkplace = async (id, data) => {
   const request = await API.post(`/v1/workplaces/${id}/add-board`, data)
+
+  return request.data
+}
+
+export const getSlackAuth = async () => {
+  const request = await API.get('/v1/slack/auth')
 
   return request.data
 }

@@ -15,6 +15,7 @@ import TaskCalendar from 'components/TaskCalendar/TaskCalendar'
 import Task from 'components/Task/Task'
 import Diagram from 'components/Diagram/Diagram'
 import DashBoard from 'components/DashBoard/DashBoard'
+import SlackChat from 'components/SlackChat/SlackChat'
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
                   {
                     path: 'mindmaps/:boardId',
                     element: <Diagram />
+                  },
+                  {
+                    path: 'slack-chat',
+                    element: <SlackChat />
                   }
                 ]
               },
