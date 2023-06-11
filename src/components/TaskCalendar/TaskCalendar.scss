@@ -2,13 +2,53 @@
 @import 'react-big-calendar/lib/sass/styles';
 
 .task-calendar {
-    background-color: white;
-    height: 500px;
-    margin-top: -20%;
-    margin-left: 5%;
-    padding: 20px;
-    border: 1px;
-    border-color: red;
-    border-radius: 10px;
+    height: 100%;
+    display: flex;
+    padding-top: $gap;
+    width: 100%;
 
+    .calendar-container {
+        margin-top: 1%;
+        margin-left: 3%;
+        margin-right: 3%;
+        max-height: 85vh;
+        width: 100%;
+
+        .control-row {
+            .calendar-navbar {
+                background-color: hsla(0, 0%, 100%, .20);
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+
+            margin-bottom: 5px;
+            // border: 1px solid black;
+            // border-radius: 10px;
+
+        }
+
+        .calendar-row {
+            .calendar {
+                height: 80vh;
+                background-color: rgb(223, 223, 236);
+        
+                padding: 10px;
+                border: 1px;
+                border-color: red;
+                border-radius: 10px;
+
+                background-clip: content-box; /* <---- */
+                box-shadow: inset 0 0 0 10px rgb(199, 199, 223); /* <-- 10px spread radius */
+        
+                .rbc-event-content {
+                    font-size: 9px;
+                }
+        
+                .rbc-show-more {
+                    font-size: 8px;
+                }
+            
+            }
+        }
+    }
 }

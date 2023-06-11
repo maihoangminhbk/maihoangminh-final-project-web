@@ -62,68 +62,70 @@ function User () {
     )
   }
   return (
-    <Container className='user-container'>
-      <Row>
-        <div className='item search'>
-          <Form.Group>
-            <InputGroup className='group-search'>
+    <div className='user'>
+      <Container className='user-container'>
+        <Row className='user-form-row'>
+          <div className='item search'>
+            <Form.Group>
+              <InputGroup className='group-search'>
 
-              <FormControl
-                className='input-search'
-                placeholder='Add user to workplace'
-                type='email'
-                value={userEmail}
-                onChange={onUserEmailChange}
-                onKeyDown={e => (e.key === 'Enter' && toogleShowConfirmModal())}
-              />
-              <InputGroup.Text className='input-icon-search' onClick={toogleShowConfirmModal}><i className='fa fa-search d-none d-sm-block' /></InputGroup.Text>
+                <FormControl
+                  className='input-search'
+                  placeholder='Add user to workplace'
+                  type='email'
+                  value={userEmail}
+                  onChange={onUserEmailChange}
+                  onKeyDown={e => (e.key === 'Enter' && toogleShowConfirmModal())}
+                />
+                <InputGroup.Text className='input-icon-search' onClick={toogleShowConfirmModal}><i className='fa fa-search d-none d-sm-block' /></InputGroup.Text>
 
-            </InputGroup>
-            <Form.Check type="checkbox" label="Admin" style={{ color: 'white', fontSize: '15px' }}/>
+              </InputGroup>
+              <Form.Check type="checkbox" label="Admin" style={{ color: 'white', fontSize: '15px' }}/>
 
-          </Form.Group>
-        </div>
-      </Row>
-      <Row>
-        <Table striped hover responsive='sm' size="sm" className="user-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Permission</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            { userList.map((user, index) => (
-              <tr key={index}>
-                <td>
-                  <div className='item user-avatar user-avatar-dropdown' >
-                    <img src={user.cover === null ? minhMaiAvatar : user.cover} />
-                    { user.name}
-                  </div>
-
-                </td>
-                <td><p className='table-data'>{ user.email }</p></td>
-                <td><p className='table-data badge'>{ user.role === 1 ? 'Admin' : 'User' }</p></td>
-                <td><Button>Edit</Button></td>
+            </Form.Group>
+          </div>
+        </Row>
+        <Row className='user-table-row'>
+          <Table striped hover responsive='sm' size="sm" className="user-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Permission</th>
+                <th>Action</th>
               </tr>
+            </thead>
+            <tbody>
 
-            )
+              { userList.map((user, index) => (
+                <tr key={index}>
+                  <td>
+                    <div className='item user-avatar user-avatar-dropdown' >
+                      <img src={user.cover === null ? minhMaiAvatar : user.cover} />
+                      { user.name}
+                    </div>
 
-            )}
+                  </td>
+                  <td><p className='table-data'>{ user.email }</p></td>
+                  <td><p className='table-data badge'>{ user.role === 1 ? 'Admin' : 'User' }</p></td>
+                  <td><Button>Edit</Button></td>
+                </tr>
 
-          </tbody>
-        </Table>
-      </Row>
-      <ConfirmModal
-        show={showConfirmModal}
-        onAction={onConfirmModalAction}
-        title="Add user"
-        content={`Are you sure you want add user <strong>${userEmail}</strong> with <strong>${userRole === 1 ? 'admin' : 'user'}</strong> permission?`}
-      />
-    </Container>
+              )
+
+              )}
+
+            </tbody>
+          </Table>
+        </Row>
+        <ConfirmModal
+          show={showConfirmModal}
+          onAction={onConfirmModalAction}
+          title="Add user"
+          content={`Are you sure you want add user <strong>${userEmail}</strong> with <strong>${userRole === 1 ? 'admin' : 'user'}</strong> permission?`}
+        />
+      </Container>
+    </div>
 
   )
 }

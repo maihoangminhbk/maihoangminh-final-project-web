@@ -8,8 +8,12 @@ import { Container, ProgressBar, Row, Col } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import Accordion from 'react-bootstrap/Accordion'
 import Modal from 'react-bootstrap/Modal'
+import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/contentEditable'
+
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom'
-import { getCard } from 'actions/APICall'
+import { getCard, updateCard } from 'actions/APICall'
+
+import { isEqual } from 'lodash'
 
 import { FaUpload, FaRegCalendarAlt, FaTasks, FaUserAlt } from 'react-icons/fa'
 import { BiTime } from 'react-icons/bi'
@@ -21,6 +25,7 @@ import { format } from 'date-fns'
 import UserListAvatar from 'components/User/UserListAvatar'
 
 import './Task.scss'
+import { toast } from 'react-toastify'
 
 const toDoListInit = [
   { id: '0123',
@@ -42,27 +47,60 @@ const toDoListInit = [
 
 function Task() {
   const [ clickedCard, setClickedCard ] = useState()
+  const [ updatedCard, setUpdatedCard ] = useState()
 
   // const { _id, title, imageUrl } = clickedCard
   const [cardImage, setCardImage] = useState('')
   const [fileUpload, setFileUpLoad] = useState(null)
   const [toDoList, setToDoList] = useState(toDoListInit)
   const [progress, setProgress] = useState(0)
+  const [onChangeCard, setOnchangeCard] = useState(false)
+  const [userList, setUserList] = useState([])
+
+
   const { taskId } = useParams()
 
-  const [startDate, setStartDate] = useState(
-    // setHours(setMinutes(new Date(), 0), 1)
-    new Date()
-  )
+  const [startDate, setStartDate] = useState()
+  const [endDate, setEndDate] = useState()
+  const [cardTitle, setCardTitle] = useState('')
+  const [cardDescription, setCardDescription] = useState('')
 
-  const [endDate, setEndDate] = useState(new Date())
+  const handleCardTitleChange = useCallback((e) => setCardTitle(e.target.value), [])
+  const handleCardDescriptionChange = useCallback((e) => setCardDescription(e.target.value), [])
+
 
   useEffect(() => {
     getCard(taskId).then(card => {
       setClickedCard(card)
-      // console.log('clicked card', card)
+
+      // Create update card to check when update data in card
+      setUpdatedCard(card)
     })
-  }, [])
+  }, [taskId])
+
+  useEffect(() => {
+    if (!isEqual(clickedCard, updatedCard)) {
+      console.log('vaof check equal')
+      console.log('click card', clickedCard)
+      console.log('updatedCard', updatedCard)
+      setOnchangeCard(true)
+    } else {
+      setOnchangeCard(false)
+    }
+  }, [clickedCard, updatedCard])
+
+  useEffect(() => {
+    if (startDate && endDate) {
+      const newUpdatedCard = {
+        ...updatedCard,
+        startTime: startDate.getTime(),
+        endTime: endDate.getTime()
+      }
+
+      setUpdatedCard(newUpdatedCard)
+    }
+
+  }, [startDate, endDate])
 
   useEffect(() => {
     let doneNumber = 0
@@ -82,10 +120,19 @@ function Task() {
   }, [toDoList])
 
   useEffect(() => {
-    console.log('date', format(new Date(), 'MMMM d, yyyy h:mm aa'))
-    console.log('start date', startDate)
-    console.log('end date', endDate)
-  }, [startDate, endDate])
+    if (clickedCard && clickedCard.startTime && clickedCard.endTime) {
+      console.log('clicked card when set time', clickedCard)
+      const convertStartTime = new Date(clickedCard.startTime)
+      const convertEndTime = new Date(clickedCard.endTime)
+      setStartDate(convertStartTime)
+      setEndDate(convertEndTime)
+    }
+
+    if (clickedCard) {
+      setCardTitle(clickedCard.title)
+      setCardDescription(clickedCard.description)
+    }
+  }, [clickedCard])
 
   const onDrop = useCallback((files) => {
     const formData = new FormData()
@@ -105,6 +152,10 @@ function Task() {
       setClickedCard(newClickedCard)
 
     })
+  }, [clickedCard])
+
+  useEffect(() => {
+
   }, [])
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
@@ -129,6 +180,49 @@ function Task() {
 
   }
 
+  const onUpdateCard = () => {
+    if (!isEqual(clickedCard, updatedCard)) {
+      setOnchangeCard(true)
+      updateCard(updatedCard._id, updatedCard).then(
+        card => {
+          setClickedCard(updatedCard)
+          toast.success('Update successful')
+        }
+      ).catch(
+        e => {
+          toast.error('Error when update')
+        }
+      )
+    } else {
+      setOnchangeCard(false)
+      return
+    }
+  }
+
+  const handleCardTitleBlur = () => {
+
+    if (cardTitle !== clickedCard.title) {
+
+      const newUpdatedCard = {
+        ...updatedCard,
+        title: cardTitle
+      }
+      setUpdatedCard(newUpdatedCard)
+    }
+  }
+
+  const handleCardDescriptionBlur = () => {
+
+    if (cardDescription !== clickedCard.description) {
+
+      const newUpdatedCard = {
+        ...updatedCard,
+        description: cardDescription
+      }
+      setUpdatedCard(newUpdatedCard)
+    }
+  }
+
   return (
     <Modal
       onHide={backToBoard}
@@ -136,13 +230,27 @@ function Task() {
       size="lg"
       aria-labelledby="contained-modal-title-vcenter"
       centered
+      className='card-modal'
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className='card-modal-header'>
         <Modal.Title id="contained-modal-title-vcenter">
-          {clickedCard && clickedCard.title}
+          <div className='card-title'>
+            <Form.Control
+              className='trello-clone-content-editable'
+              size="md"
+              type="text"
+              value={cardTitle}
+              spellCheck="false"
+              onClick={selectAllInlineText}
+              onChange={handleCardTitleChange}
+              onBlur={handleCardTitleBlur}
+              onMouseDown={e => e.preventDefault()}
+              onKeyDown={saveContentAfterPressEnter}
+            />
+          </div>
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className='card-modal-body'>
         <Container className='task-container'>
           {cardImage && <Row>
             <img src={cardImage} className='card-cover' alt='image1'/>
@@ -166,9 +274,20 @@ function Task() {
           <Row>
             <br></br>
             <h4>Description</h4>
-            <p>
-              This is card. I create to test modal...
-            </p>
+            <div className='card-description'>
+              <Form.Control
+                className='trello-clone-content-editable'
+                size="md"
+                type="text"
+                value={cardDescription}
+                spellCheck="false"
+                onClick={selectAllInlineText}
+                onChange={handleCardDescriptionChange}
+                onBlur={handleCardDescriptionBlur}
+                onMouseDown={e => e.preventDefault()}
+                onKeyDown={saveContentAfterPressEnter}
+              />
+            </div>
           </Row>
           <Row className='progress-row'>
             <h4>Progress</h4>
@@ -187,7 +306,9 @@ function Task() {
                   </Col>
                   <Col>
                     <GiBackwardTime className='icon-deadline'/>
-                    {format(endDate, 'MMMM d, yyyy h:mm aa')}
+                    { endDate &&
+                      format(endDate, 'MMMM d, yyyy h:mm aa')
+                    }
                   </Col>
 
                 </Accordion.Header>
@@ -266,6 +387,18 @@ function Task() {
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>
+          </Row>
+
+          <Row className='control-button-row'>
+            { onChangeCard &&
+            <Button className='save-button' onClick={onUpdateCard}>Save</Button>
+            }
+
+            { !onChangeCard &&
+            <Button className='save-button' disabled>Not Save</Button>
+            }
+
+            <Button variant='secondary' className='cancel-button' onClick={backToBoard}>Cancel</Button>
           </Row>
         </Container>
       </Modal.Body>
