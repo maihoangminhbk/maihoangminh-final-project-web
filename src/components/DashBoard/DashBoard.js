@@ -35,41 +35,45 @@ function DashBoard() {
   const [userNumber, setUserNumber] = useState(1000)
 
   return (
-    <Container className='dashboard-container'>
-      <Row className='dashboard-row'>
-        <Col lg sm={3} className='area square-area'>
-          <PieChart chartData={chartData} />
-        </Col>
-        <Col lg sm={3} className='area square-area'>
-          <Row className='first-row'>
-            <Col lg sm={10} className='value'>
-              {taskNumber}
-            </Col>
-            <Col className='unit'>
+    <div className='dashboard'>
+
+
+      <Container className='dashboard-container'>
+        <Row className='dashboard-row'>
+          <Col lg sm={3} className='area square-area'>
+            <PieChart chartData={chartData} />
+          </Col>
+          <Col lg sm={3} className='area square-area'>
+            <Row className='first-row'>
+              <Col lg sm={10} className='value'>
+                {taskNumber}
+              </Col>
+              <Col className='unit'>
               Tasks
-            </Col>
-          </Row>
-          <Row className='second-row'>
-            <Col lg sm={10} className='value'>
-              {userNumber}
-            </Col>
-            <Col className='unit'>
+              </Col>
+            </Row>
+            <Row className='second-row'>
+              <Col lg sm={10} className='value'>
+                {userNumber}
+              </Col>
+              <Col className='unit'>
               Users
-            </Col>
-          </Row>
-        </Col>
-        <Col lg sm={6} className='area rectangle-area'>
-          <BarChart chartData={chartData} />
+              </Col>
+            </Row>
+          </Col>
+          <Col lg sm={6} className='area rectangle-area'>
+            <BarChart chartData={chartData} />
 
-        </Col>
-      </Row>
-      <Row className='dashboard-row'>
-        <Col lg sm={6} className='area rectangle-area'>
-          <BarChart chartData={chartData} />
+          </Col>
+        </Row>
+        <Row className='dashboard-row'>
+          <Col lg sm={6} className='area rectangle-area'>
+            <BarChart chartData={chartData} />
 
-        </Col>
-      </Row>
-    </Container>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   )
 }
 

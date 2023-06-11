@@ -127,7 +127,43 @@ export default [
     id: 15,
     title: 'Point in Time Event',
     start: now,
-    end: now
+    end: new Date(2023, 6, 22, 2, 0, 0)
+  },
+  {
+    id: 15,
+    title: 'Point in Time Event2',
+    start: now,
+    end: new Date(2023, 6, 22, 2, 0, 0)
+  },
+  {
+    id: 15,
+    title: 'Point in Time Event3',
+    start: now,
+    end: new Date(2023, 6, 22, 2, 0, 0)
+  },
+  {
+    id: 15,
+    title: 'Event 2',
+    start: new Date(new Date().setHours(new Date().getHours() - 2)),
+    end: new Date(new Date().setHours(new Date().getHours() + 3))
+  },
+  {
+    id: 15,
+    title: 'Enevt 555',
+    start: new Date(new Date().setHours(new Date().getHours() - 5)),
+    end: new Date(new Date().setHours(new Date().getHours() + 1))
+  },
+  {
+    id: 15,
+    title: 'Enevt 555',
+    start: new Date(new Date().setHours(new Date().getHours() - 5)),
+    end: new Date(new Date().setHours(new Date().getHours() + 1))
+  },
+  {
+    id: 15,
+    title: 'Enevt 555',
+    start: new Date(new Date().setHours(new Date().getHours() - 5)),
+    end: new Date(new Date().setHours(new Date().getHours() + 1))
   },
   {
     id: 16,

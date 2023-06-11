@@ -1,58 +1,91 @@
 @import '_setting.scss';
 @import 'react-datepicker/dist/react-datepicker.css';
 
-.task-container {
-    .image-upload {
-        text-align: center;
-        cursor: pointer;
-        background-color: antiquewhite;
-        border-radius: 5%;
-        border-style: dashed;
-        border-color: black;
-        // width: 50%;
-        font-size: smaller;
-        margin: 0px;
-        p {
-            margin-bottom: 0px;
-        }
-
-
-        .upload-icon {
-            width: 20px;
-            height: 20px;
-    }
-
-    img.card-cover {
-        display: block;
-        width: calc(100% + 2 * #{$gap});
-        // margin: -$gap 0 $gap (-$gap);
-
-
+.card-modal {
+    .card-modal-header {
+        .card-title {
+            .trello-clone-content-editable {
+                font-size: larger;
+            }
         }
     }
-
-    .progress-row {
-        --mdb-gutter-x: 0;
-        .progress {
-            height: 20px;
+    
+    .card-modal-body {
+        .task-container {
+            .image-upload {
+                text-align: center;
+                cursor: pointer;
+                background-color: antiquewhite;
+                border-radius: 5%;
+                border-style: dashed;
+                border-color: black;
+                // width: 50%;
+                font-size: smaller;
+                margin: 0px;
+                p {
+                    margin-bottom: 0px;
+                }
+        
+        
+                .upload-icon {
+                    width: 20px;
+                    height: 20px;
+            }
+        
+            img.card-cover {
+                display: block;
+                width: calc(100% + 2 * #{$gap});
+                // margin: -$gap 0 $gap (-$gap);
+        
+        
+                }
+            }
+        
+            .progress-row {
+                --mdb-gutter-x: 0;
+                .progress {
+                    height: 20px;
+                }
+        
+            }
+        
+            .addition-row {
+                .icon {
+                    padding-right: 4px;
+                }
+        
+                .icon-deadline {
+                    color: orange;
+                }
+        
+                .user-list {
+                    padding-left: 10px;
+                    margin-bottom: 0;
+                }
+            }
+        
+            .control-button-row {
+                display: flex;
+                justify-content: right;
+                .save-button {
+                    width: fit-content;
+                    margin-right: 5px;
+                }
+        
+                .cancel-button {
+                    color: gray;
+                    width: fit-content;
+                    background-color: hsla(0, 0%, 100%, .24);
+                    &:hover {
+                        background-color: hsla(0, 0%, 100%, .34);
+                    }
+                }
+            }
+        
+        
         }
-
     }
-
-    .addition-row {
-        .icon {
-            padding-right: 4px;
-        }
-
-        .icon-deadline {
-            color: orange;
-        }
-
-        .user-list {
-            padding-left: 10px;
-            margin-bottom: 0;
-        }
-    }
-
-
 }
+
+
+

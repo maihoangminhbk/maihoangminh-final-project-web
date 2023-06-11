@@ -56,7 +56,13 @@ const router = createBrowserRouter([
                   },
                   {
                     path: 'calendar',
-                    element: <TaskCalendar />
+                    element: <TaskCalendar />,
+                    children: [
+                      {
+                        path: 'task/:taskId',
+                        element: <Task />
+                      }
+                    ]
                   },
                   {
                     path: 'dashboard',

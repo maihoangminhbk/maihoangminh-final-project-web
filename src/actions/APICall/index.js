@@ -97,6 +97,13 @@ export const getCard = async (id) => {
   return request.data
 }
 
+// Get card calendar
+export const getCalendarCards = async (data) => {
+  const request = await API.post('/v1/cards/get-calendar-cards', data)
+
+  return request.data
+}
+
 
 // Update or remove column
 export const updateCard = async (id, data) => {
@@ -192,8 +199,38 @@ export const addBoardToWorkplace = async (id, data) => {
   return request.data
 }
 
-export const getSlackAuth = async () => {
-  const request = await API.get('/v1/slack/auth')
+export const getSlackAuth = async (data) => {
+  const request = await API.post('/v1/slack/auth', data)
+
+  return request.data
+}
+
+export const getSlackWorkspace = async (data) => {
+  const request = await API.post('/v1/slack/get-workspace', data)
+
+  return request.data
+}
+
+export const getSlackConnections = async (data) => {
+  const request = await API.post('/v1/slack/get-connections', data)
+
+  return request.data
+}
+
+export const getSlackChannels = async (data) => {
+  const request = await API.post('/v1/slack/get-channels', data)
+
+  return request.data
+}
+
+export const createSlackConnection = async (data) => {
+  const request = await API.post('/v1/slack/create-connection', data)
+
+  return request.data
+}
+
+export const updateSlackConnection = async (data) => {
+  const request = await API.post('/v1/slack/update-connection', data)
 
   return request.data
 }
