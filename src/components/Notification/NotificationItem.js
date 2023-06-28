@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Dropdown, Container, Row, Col } from 'react-bootstrap'
 import './NotificationItem.scss'
-import minhMaiAvatar from 'actions/images/avatar.jpg'
+import minhMaiAvatar from 'actions/images/userAvatar.png'
 
 
 

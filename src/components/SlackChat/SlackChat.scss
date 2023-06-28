@@ -13,9 +13,11 @@ $breakpoint-md: 768px;
     // overflow-y: auto;
 
     .slack-chat-container {
-        margin-top: 4%;
-        margin-left: 7%;
-        margin-right: 7%;
+        margin-top: 1%;
+        margin-left: 3%;
+        margin-right: 3%;
+        max-height: 85vh;
+        width: 100%;
         .add-slack-row {
             // width: fit-content;
         }

@@ -40,14 +40,12 @@ function SlackChat() {
     }
     getSlackAuth(getSlackAuthData).then(result => {
       setSlackUrl(result.url)
-      console.log('slack URL', slackUrl)
     })
   }, [workplaceId, slackUrl])
 
 
   useEffect(() => {
     if (workplaceId) {
-      console.log('slack chat - workplace Id', workplaceId)
       const data = {
         workplaceId: workplaceId
       }
@@ -73,7 +71,6 @@ function SlackChat() {
   useEffect(() => {
     getWorkplace(workplaceId).then(workplace => {
       setBoardList(workplace.boardOrder)
-      console.log('slack chat - board list', workplace.boardOrder)
     }
     )
   }, [workplaceId])
@@ -86,7 +83,6 @@ function SlackChat() {
 
       getSlackChannels(data).then(channels => {
         setChannelList(channels)
-        console.log('slack chat - board list', channels)
       }
       )
     }
@@ -111,18 +107,14 @@ function SlackChat() {
   }
 
   const onChannelSellect = (e) => {
-    console.log('e.target.value', e.target.value)
     setNewChannel(e.target.value)
   }
 
   const onBoardSellect = (e) => {
-    console.log('e.target.value', e.target.value)
     setNewBoard(e.target.value)
   }
 
   const onAddConnection = () => {
-    console.log('channel', newChannel)
-    console.log('board', newBoard)
 
     if (newChannel && newBoard) {
       toogleShowConfirmModal()
@@ -211,7 +203,6 @@ function SlackChat() {
         </Row>
 
         <Row className='slack-connections-row'>
-          { console.log('slack chat - slackconnections', slackConnections)}
           {/* { slackConnections ? slackConnections : '' } */}
           <Table striped hover responsive='sm' size="sm" className="connection-table">
             <thead>

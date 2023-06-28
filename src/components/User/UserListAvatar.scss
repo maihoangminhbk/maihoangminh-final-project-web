@@ -2,6 +2,11 @@
 
 .avatars {
     display: inline-block;
+    padding-top: 4px;
+    &:hover {
+        cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.4);
+      }
     // transform: scale(-1, 1);
 
     .avatar {
@@ -10,7 +15,6 @@
         border: 1px solid #fff;
         border-radius: 50%;
         overflow: hidden;
-        width: 100px;
         width: 25px;
         height: 25px;
 
@@ -18,9 +22,9 @@
             margin-left: -5px;
         }
 
-        &:last-child {
-            margin-left: 2px;
-        }
+        // &:last-child {
+        //     margin-left: 2px;
+        // }
 
 
         img {
@@ -36,6 +40,7 @@
             font-size: 13px;
             font-weight: bold;
             text-align: center;
+            margin-left: 2px;
         }
     }
 

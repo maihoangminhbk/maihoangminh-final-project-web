@@ -1,16 +1,29 @@
 @import '_setting.scss';
 $breakpoint-md: 768px;
 
+.board-container {
+  display: flex;
+  flex-direction: column;
+  height: $board-content-height;
+  width: 100%;
 
+  .board-nav {
+    display: flex;
+    width: 100%;
+  }
 
-.board-content {
-    height: $board-content-height;
+  .board-content {
+    // height: $board-content-height;
     display: flex;
     padding-top: $gap;
    
     // margin: 0 $gap $gap;
     overflow-x: auto;
     overflow-y: hidden;
+
+    .add-new-column-row {
+      margin: 0px;
+    }
 
     &:after {
       content: '';
@@ -113,3 +126,4 @@ $breakpoint-md: 768px;
       display: none;
     }
   }
+}

@@ -8,6 +8,8 @@ import { fetchBoardDetails } from 'actions/APICall'
 import { mapOrder } from 'utilities/sorts'
 import { getRandomInt } from 'utilities/getRandom'
 
+import { Container } from 'react-bootstrap'
+
 import { TaperedLink } from './TaperedLink'
 
 import './Diagram.scss' // contains .diagram-component CSS
@@ -52,7 +54,7 @@ function initDiagram() {
           cursor: 'pointer' },
         // Shape.fill is bound to Node.data.color
         new go.Binding('fill', 'color')),
-        $(go.Picture, { margin: 5, width: 50, height: 50 }, new go.Binding('source')),
+      $(go.Picture, { margin: 5, width: 50, height: 50 }, new go.Binding('source')),
       $(go.TextBlock,
         { margin: 12, stroke: 'white', font: 'bold 16px sans-serif', editable: true }, // some room around the text
         new go.Binding('text').makeTwoWay()
@@ -125,7 +127,6 @@ function Diagram() {
 
         const loc_x_column = getRandomInt(-300, 300)
         const loc_y_column = Math.sqrt(90000 - loc_x_column * loc_x_column) * Math.sign(Math.random() - 0.5)
-        console.log(loc_x_column, loc_y_column)
         const columnNode = { key: column._id, text: column.title, color: 'orange', loc: `${loc_x_column} ${loc_y_column}` }
         nodeDataArrayNew = [...nodeDataArrayNew, columnNode]
 
@@ -133,7 +134,6 @@ function Diagram() {
         linkDataArrayNew = [...linkDataArrayNew, columnLink]
 
         column.cards && column.cards.map((card) => {
-          console.log(card)
           if (card._destroy) return
 
           const loc_x_card = getRandomInt(loc_x_column - 150, loc_x_column + 150)
@@ -155,14 +155,16 @@ function Diagram() {
   }
 
   return (
-    <div>
-      <ReactDiagram
-        initDiagram={initDiagram}
-        divClassName='diagram-component'
-        nodeDataArray={nodeDataArray}
-        linkDataArray={linkDataArray}
-        onModelChange={handleModelChange}
-      />
+    <div className="mindmap">
+      <Container className='mindmap-container'>
+        <ReactDiagram
+          initDiagram={initDiagram}
+          divClassName='diagram-component'
+          nodeDataArray={nodeDataArray}
+          linkDataArray={linkDataArray}
+          onModelChange={handleModelChange}
+        />
+      </Container>
     </div>
   )
 }

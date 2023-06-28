@@ -125,10 +125,8 @@ function Column(props) {
   }
 
   const onChangeToTask = (card) => {
-    console.log('Task click')
-    console.log('card', card)
     onCardClick(card)
-    navigate(`task/${card._id}`)
+    navigate(`card/${card._id}`)
   }
 
   return (
