@@ -1,0 +1,16 @@
+@import '_setting.scss';
+
+.mindmap {
+    height: 100%;
+    display: flex;
+    padding-top: $gap;
+    width: 100%;
+
+    .mindmap-container {
+        margin-top: 1%;
+        margin-left: 3%;
+        margin-right: 3%;
+        max-height: 85vh;
+        width: 100%;
+    }
+}

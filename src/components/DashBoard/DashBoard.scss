@@ -5,8 +5,14 @@
     height: 100%;
     width: 100%;
     padding-top: $gap;
+    display: flex;
 
     .dashboard-container {
+        margin-top: 1%;
+        margin-left: 3%;
+        margin-right: 3%;
+        max-height: 85vh;
+        width: 100%;
         // height: $board-content-height;
         .area {
             margin-top: 10px;
@@ -19,21 +25,32 @@
     
             &.square-area {
                 min-width: 200px;
+
+                &.workplace-status {
+                    padding: 5% 0;
+                }
+
     
                 .first-row {
-                    padding-top: 20px;
-                    min-height: 100px;
+                    // padding-top: 20px;
+                    min-height: 50px;
                 }
     
                 .second-row {
-                    padding-top: 20px;
-                    min-height: 100px;
+                    // padding-top: 20px;
+                    min-height: 50px;
+                }
+
+                .second-row {
+                    // padding-top: 20px;
+                    min-height: 50px;
                 }
     
                 .value {
-                    font-size: 50px;
-                    display: flex;
-                    justify-content: center;
+                    font-size: 70px;
+                    // display: flex;
+                    // justify-content: center;
+                    text-align: right;
                     font-weight: bolder;
                 }
     

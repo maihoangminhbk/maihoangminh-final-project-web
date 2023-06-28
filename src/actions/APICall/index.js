@@ -77,6 +77,42 @@ export const fetchBoardDetails = async (id) => {
   return request.data
 }
 
+export const searchUsersToAddBoard = async (id, data) => {
+  const request = await API.post(`/v1/boards/${id}/search-users-to-add`, data)
+
+  return request.data
+}
+
+export const searchUsersInBoard = async (id, data) => {
+  const request = await API.post(`/v1/boards/${id}/search-users`, data)
+
+  return request.data
+}
+
+export const addUserToBoard = async (id, data) => {
+  const request = await API.post(`/v1/boards/${id}/add-user`, data)
+
+  return request.data
+}
+
+export const deleteUserFromBoard = async (id, data) => {
+  const request = await API.post(`/v1/boards/${id}/delete-user`, data)
+
+  return request.data
+}
+
+export const updateUserFromBoard = async (id, data) => {
+  const request = await API.post(`/v1/boards/${id}/update-user`, data)
+
+  return request.data
+}
+
+export const getUserListInBoard = async (id) => {
+  const request = await API.get(`/v1/boards/${id}/users`)
+
+  return request.data
+}
+
 export const createColumn = async (data) => {
   const request = await API.post('/v1/columns', data)
 
@@ -126,6 +162,67 @@ export const createNewCard = async (data) => {
   return request.data
 }
 
+export const searchUsersToAddCard = async (id, data) => {
+  const request = await API.post(`/v1/cards/${id}/search-users-to-add`, data)
+
+  return request.data
+}
+
+export const searchUsersInCard = async (id, data) => {
+  const request = await API.post(`/v1/cards/${id}/search-users`, data)
+
+  return request.data
+}
+
+export const addUserToCard = async (id, data) => {
+  const request = await API.post(`/v1/cards/${id}/add-user`, data)
+
+  return request.data
+}
+
+export const deleteUserFromCard = async (id, data) => {
+  const request = await API.post(`/v1/cards/${id}/delete-user`, data)
+
+  return request.data
+}
+
+// Task API
+export const createNewTask = async (data) => {
+  const request = await API.post('/v1/tasks', data)
+
+  return request.data
+}
+
+export const updateTask = async (id, data) => {
+  const request = await API.put(`/v1/tasks/${id}`, data)
+
+  return request.data
+}
+
+export const searchUsersToAddTask = async (id, data) => {
+  const request = await API.post(`/v1/tasks/${id}/search-users-to-add`, data)
+
+  return request.data
+}
+
+export const searchUsersInTask = async (id, data) => {
+  const request = await API.post(`/v1/tasks/${id}/search-users`, data)
+
+  return request.data
+}
+
+export const addUserToTask = async (id, data) => {
+  const request = await API.post(`/v1/tasks/${id}/add-user`, data)
+
+  return request.data
+}
+
+export const deleteUserFromTask = async (id, data) => {
+  const request = await API.post(`/v1/tasks/${id}/delete-user`, data)
+
+  return request.data
+}
+
 // Login and signup
 export const login = async (data) => {
   const request = await API.post('/v1/users/login', data)
@@ -167,6 +264,13 @@ export const updateWorkplace = async (id, data) => {
 
   return request.data
 }
+
+export const searchUsersInWorkplace = async (id, data) => {
+  const request = await API.post(`/v1/workplaces/${id}/search-users`, data)
+
+  return request.data
+}
+
 // Create and get ownership
 export const createOwnership = async () => {
   const request = await API.post('/v1/ownership')
@@ -234,6 +338,61 @@ export const updateSlackConnection = async (data) => {
 
   return request.data
 }
+
+export const dashboardGetCardsStatusFullStatistic = async (id) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-cards-status-full-statistic`)
+
+  return request.data
+}
+
+export const dashboardGetTasksStatusFullStatistic = async (id) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-tasks-status-full-statistic`)
+
+  return request.data
+}
+
+export const dashboardGetCardsStatusStatistic = async (id, startTime, endTime) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-cards-status-statistic?startTime=${startTime}&endTime=${endTime}`)
+
+  return request.data
+}
+
+export const dashboardGetTasksStatusStatistic = async (id, startTime, endTime) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-tasks-status-statistic?startTime=${startTime}&endTime=${endTime}`)
+
+  return request.data
+}
+
+export const dashboardGetWorkplaceStatistic = async (id) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-workplace-statistic`)
+
+  return request.data
+}
+
+export const dashboardGetBoardStatistic = async (id) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-board-statistic`)
+
+  return request.data
+}
+
+export const dashboardGetWorkplaceUserCountStatistic = async (id) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-workplace-users-count-statistic`)
+
+  return request.data
+}
+
+export const dashboardGetTasksStatusInYearStatistic = async (id, year) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-tasks-status-in-year-statistic?year=${year}`)
+
+  return request.data
+}
+
+export const dashboardGetUsersInfoStatistic = async (id, keyword, page) => {
+  const request = await API.get(`/v1/dashboard/${id}/get-users-info-statistic?keyword=${keyword}&page=${page}`)
+
+  return request.data
+}
+
 
 const CHATBOT_API = axios.create({ baseURL: CHATBOT_API_ROOT })
 

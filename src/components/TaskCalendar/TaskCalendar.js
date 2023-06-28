@@ -26,7 +26,6 @@ export default function ReactBigCalendar() {
   useEffect(() => {
     getWorkplace(workplaceId).then(workplace => {
       setBoardList(workplace.boardOrder)
-      console.log('slack chat - board list', workplace.boardOrder)
 
       const newBoardListFilter = workplace.boardOrder.map(board => (board.boardId))
       setBoardListFilter(newBoardListFilter)
@@ -37,16 +36,12 @@ export default function ReactBigCalendar() {
   useEffect(() => {
     if (workplaceId && boardListFilter && boardListFilter.length >= 0) {
 
-      console.log('check boardListFilter change', boardListFilter)
       const data = {
         workplaceId: workplaceId,
         boardList: boardListFilter
       }
 
-      console.log('data', data)
-
       getCalendarCards(data).then(resultArray => {
-        console.log('resultArray', resultArray)
         const convertData = resultArray.map(result => (
           {
             id: result._id,
@@ -104,7 +99,7 @@ export default function ReactBigCalendar() {
   }
 
   const onSelectEvent = (event) => {
-    navigate(`task/${event.id}`)
+    navigate(`card/${event.id}`)
   }
 
   return (

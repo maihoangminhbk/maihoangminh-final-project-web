@@ -66,9 +66,6 @@ const Auth = () => {
     e.preventDefault()
     setLoading(true)
 
-    console.log('username', username)
-    console.log('password', password)
-
     if (isActivate) {
       const formData = { 'token' : activeToken, 'active_code' : activeCode }
       await activate(formData).catch((error) => {
@@ -87,7 +84,6 @@ const Auth = () => {
       const formData = { 'name' : name, 'email' : username, 'password' : password }
       await signup(formData)
         .then((returnData) => {
-          console.log('auth - handle submit form - return data', returnData)
           setActiveToken(returnData.token)
           setIsActivate(true)
           toast.info('Check your email to get verify code')
@@ -103,7 +99,6 @@ const Auth = () => {
         let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover }
         saveLocalStorage(saveUser)
         getOwnership().then((ownershipList) => {
-          console.log('auth - handle submit form - check')
           const firstWorkplace = ownershipList.workplaceOrder[0].workplaceId
           saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
           saveLocalStorage(saveUser)
@@ -128,11 +123,8 @@ const Auth = () => {
   const googleSuccess = async (respond) => {
     const result = respond
     const token = respond.credential
-    console.log('googleSuccess - result', result)
-    console.log('googleSuccess - token', token)
 
     var decoded = jwt_decode(token)
-    console.log('decoded', decoded)
     const { name, email, picture } = decoded
     const formData = { 'email' : email, 'cover': picture, 'name' : name }
 
@@ -141,7 +133,6 @@ const Auth = () => {
       let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover }
       saveLocalStorage(saveUser)
       getOwnership().then((ownershipList) => {
-        console.log('auth - handle submit form - check')
         const firstWorkplace = ownershipList.workplaceOrder[0].workplaceId
         saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
         saveLocalStorage(saveUser)

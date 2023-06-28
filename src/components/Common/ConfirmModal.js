@@ -4,7 +4,7 @@ import HTMLReactParser from 'html-react-parser'
 import { MODAL_ACTION_CLOSE, MODAL_ACTION_CONFIRM } from 'utilities/constants'
 
 function ConfirmModal(props) {
-  const { title, content, show, onAction } = props
+  const { title, content, ComponentContent, show, onAction } = props
 
   const onClickAction = (e, type) => {
     e.stopPropagation()
@@ -21,7 +21,10 @@ function ConfirmModal(props) {
       <Modal.Header closeButton>
         <Modal.Title className='h5'>{HTMLReactParser(title)}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>{HTMLReactParser(content)}</Modal.Body>
+      <Modal.Body>
+        {HTMLReactParser(content)}
+        { ComponentContent && <ComponentContent /> }
+      </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={(e) => onClickAction(e, MODAL_ACTION_CLOSE)}>
               Close

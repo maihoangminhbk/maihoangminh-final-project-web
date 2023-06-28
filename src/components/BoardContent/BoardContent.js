@@ -8,18 +8,76 @@ import Column from 'components/Column/Column'
 import { isEmpty, cloneDeep } from 'lodash'
 import { mapOrder } from 'utilities/sorts'
 import { applyDrag } from 'utilities/dragDrop'
-import { Container as BootstrapContainer, Row, Col, Form, Button } from 'react-bootstrap'
+import { Container as BootstrapContainer, Row, Col, Form, Button, Nav, Navbar, NavDropdown, Dropdown, InputGroup, FormControl } from 'react-bootstrap'
 import { useCallback } from 'react'
 import { createBoard, fetchBoardDetails, createColumn, updateBoard, updateColumn, updateCard } from 'actions/APICall'
 import { Bars } from 'react-loading-icons'
 import { FaBars } from 'react-icons/fa'
+import { AiFillStar, AiOutlineFilter } from 'react-icons/ai'
+import { RiSlackFill, RiDeleteBin6Fill } from 'react-icons/ri'
+import { MdOutlinePersonAddAlt } from 'react-icons/md'
+
+import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
+import ConfirmModal from 'components/Common/ConfirmModal'
+
+import CustomToggle from 'components/Common/CustomToggle'
+// import Notification from 'components/Notification/Notification'
+
 
 import { io } from 'socket.io-client'
 import { toast } from 'react-toastify'
 
 import { socketURL } from 'actions/socket/socket'
+import minhMaiAvatar from 'actions/images/userAvatar.png'
+import { isReturningJSX } from 'eslint-plugin-react/lib/util/jsx'
+import BoardNav from 'components/BoardNav/BoardNav'
+
 
 const boardSocket = io(socketURL.boardSocket)
+
+
+const userListInit = [
+  { _id: '1',
+    name: 'Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai',
+    email: 'minh@gmail.com',
+    cover: 'https://picsum.photos/90',
+    role: 1
+  },
+
+  { _id: '2',
+    name: 'Anh Mai',
+    cover: 'https://picsum.photos/91',
+    email: 'minh12@gmail.com',
+    role: 0
+  },
+
+  { _id: '3',
+    name: 'Mai Van B',
+    cover: 'https://picsum.photos/92',
+    email: 'anh@gmail.com',
+    role: 1
+  },
+  { _id: '4',
+    name: 'Nguyen Van A',
+    cover: 'https://picsum.photos/90',
+    email: 'van@gmail.com',
+    role: 1
+  },
+
+  { _id: '5',
+    name: 'Minh mai',
+    cover: 'https://picsum.photos/91',
+    email: 'toi@gmail.com',
+    role: 0
+  },
+
+  { _id: '6',
+    name: 'Nay day',
+    cover: 'https://picsum.photos/92',
+    email: 'nay@gmail.com',
+    role: 1
+  }
+]
 
 function BoardContent() {
   const [board, setBoard] = useState({})
@@ -27,6 +85,15 @@ function BoardContent() {
   const [boardIdSaved, setBoardIdSaved] = useState('')
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const [clickedCard, setClickedCard] = useState({})
+  const [likeBoard, setLikeBoard] = useState(false)
+  const [userList, setUserList] = useState(userListInit)
+  const [userListFilter, setUserListFilter] = useState([])
+  const [userSearch, setUserSearch] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [userRole, setUserRole] = useState(0)
+  const [addUserMode, setAddUserMode] = useState(false)
+  const [showAddUserConfirmModal, setShowAddUserConfirmModal] = useState(false)
+  const toogleShowAddUserConfirmModal = () => setShowAddUserConfirmModal(!showAddUserConfirmModal)
 
   const handleToggleSidebar = useOutletContext()
   const { boardId } = useParams()
@@ -157,11 +224,8 @@ function BoardContent() {
     const data = {
       title: newBoardTitle
     }
-    console.log('TEST createNewBoard', newBoardTitle)
     createBoard(data).then(createdBoard => {
-      console.log('baord content - createboard', createBoard)
       const createdBoardId = createdBoard._id
-      console.log('createdBoardId', createdBoardId)
       localStorage.setItem('boardId', JSON.stringify(createdBoardId))
       setBoardIdSaved(createdBoard._id)
       getBoardById(createdBoardId)
@@ -174,7 +238,6 @@ function BoardContent() {
   const getBoardById = async (boardId) => {
 
     await fetchBoardDetails(boardId).then(board => {
-      console.log('board', board)
       setBoard(board)
       setColumns(mapOrder(board.columns, board.columnOrder, '_id'))
       setBoardIdSaved(boardId)
@@ -208,9 +271,7 @@ function BoardContent() {
 
 
   const onColumnDrop = (dropResult) => {
-    console.log('dropResult', dropResult)
     let newColumns = cloneDeep(columns)
-    console.log('newColumns', newColumns)
     newColumns = applyDrag(newColumns, dropResult)
 
 
@@ -280,7 +341,6 @@ function BoardContent() {
   }
 
   const onCardClick = (card) => {
-    console.log('board content - card', card)
     setClickedCard(card)
   }
 
@@ -324,8 +384,6 @@ function BoardContent() {
 
     const columnIdToUpdate = newColumnToUpdate._id
 
-    console.log('columnIdToUpdate', columnIdToUpdate)
-
     let newColumns = [...columns]
     const columnIndexToUpdate = newColumns.findIndex(i => i._id === columnIdToUpdate)
 
@@ -353,18 +411,13 @@ function BoardContent() {
   }
 
   const onCardDelete = (card) => {
-    console.log('check', card)
     let newColumns = cloneDeep(columns)
 
     let currentColumn = newColumns.find(c => c._id === card.columnId)
 
-    console.log(currentColumn)
-
     const cards = currentColumn.cards
 
     const cardIndexToUpdate = cards.findIndex(i => i._id === card._id)
-
-    console.log('cardIndexToUpdate', cardIndexToUpdate)
 
     cards.splice(cardIndexToUpdate, 1)
 
@@ -393,48 +446,65 @@ function BoardContent() {
     return <Bars speed={1.} />
   }
 
+  const onAddUserConfirmModalAction = (type) => {
+
+    if (type === MODAL_ACTION_CONFIRM) {
+      // addNewUser()
+
+
+    }
+    toogleShowAddUserConfirmModal()
+  }
+
   return (
-    <div className="board-content">
-      <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
-        <FaBars />
+    <div className="board-container">
+      <div className="board-nav">
+        <BoardNav
+          board={board}
+        />
       </div>
-      <Container
-        orientation="horizontal"
-        onDrop={onColumnDrop}
-        dragHandleSelector=".column-drag-handle"
-        getChildPayload={index => columns[index]}
-        dropPlaceholder={{
-          animationDuration: 150,
-          showOnTop: true,
-          className: 'columns-drop-preview'
-        }}
-      >
-        {columns instanceof Array && columns.map((column, index) => (
 
-          <Draggable key={index}>
-            <Column
-              column={column}
-              onCardDrop={onCardDrop}
-              onCardClick={onCardClick}
-              onCardDelete={onCardDelete}
-              onUpdateColumnState={onUpdateColumnState}
-            />
-          </Draggable>
-        ))
-        }
-      </Container>
+      <div className="board-content">
+        {/* <div className="btn-toggle" onClick={() => handleToggleSidebar(true)}>
+          <FaBars />
+        </div> */}
+        <Container
+          orientation="horizontal"
+          onDrop={onColumnDrop}
+          dragHandleSelector=".column-drag-handle"
+          getChildPayload={index => columns[index]}
+          dropPlaceholder={{
+            animationDuration: 150,
+            showOnTop: true,
+            className: 'columns-drop-preview'
+          }}
+        >
+          {columns instanceof Array && columns.map((column, index) => (
 
-      <BootstrapContainer className='trello-maihoangminh-container'>
-        {!openNewColumnForm &&
-        <Row>
+            <Draggable key={index}>
+              <Column
+                column={column}
+                onCardDrop={onCardDrop}
+                onCardClick={onCardClick}
+                onCardDelete={onCardDelete}
+                onUpdateColumnState={onUpdateColumnState}
+              />
+            </Draggable>
+          ))
+          }
+        </Container>
+
+        <BootstrapContainer className='trello-maihoangminh-container'>
+          {!openNewColumnForm &&
+        <Row className="add-new-column-row">
           <Col className='add-new-column' onClick={toogleOpenNewColumnForm}>
             <i className='fa fa-plus icon' />Add another column
           </Col>
         </Row>
-        }
+          }
 
-        {openNewColumnForm &&
-        <Row>
+          {openNewColumnForm &&
+        <Row className="add-new-column-row">
           <Col className='enter-new-column'>
             <Form.Control
               className='input-enter-new-column'
@@ -449,10 +519,17 @@ function BoardContent() {
             <span className='cancel-icon' onClick={toogleOpenNewColumnForm}><i className='fa fa-trash icon'></i></span>
           </Col>
         </Row>
-        }
+          }
+          <ConfirmModal
+            show={showAddUserConfirmModal}
+            onAction={onAddUserConfirmModalAction}
+            title="Add user"
+            content={`Are you sure you want add user <strong>${userEmail}</strong> with <strong>${userRole === 1 ? 'admin' : 'user'}</strong> permission?`}
+          />
 
-      </BootstrapContainer>
-      <Outlet context={{ clickedCard, setClickedCard }}/>
+        </BootstrapContainer>
+        <Outlet context={{ clickedCard, setClickedCard }}/>
+      </div>
     </div>
 
   )

@@ -1,8 +1,29 @@
 @import '_setting.scss';
 
-.diagram-component {
-    width: 1200px;
-    height: 800px;
-    border: solid 1px black;
-    background-color: white;
+.mindmap {
+    height: 100%;
+    display: flex;
+    padding-top: $gap;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+
+    .mindmap-container {
+        margin-top: 1%;
+        margin-left: 3%;
+        margin-right: 3%;
+        max-height: 85vh;
+        width: 100%;
+
+
+
+        .diagram-component {
+            width: 1200px;
+            height: 800px;
+            border: solid 1px black;
+            background-color: white;
+        }
+    }
 }
+
+

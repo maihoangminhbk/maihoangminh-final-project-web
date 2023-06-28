@@ -11,7 +11,7 @@ import {
 import { FaTachometerAlt, FaGem, FaList, FaGithub, FaRegLaughWink, FaHeart, FaAlignJustify, FaRegCalendarCheck, FaTable, FaNetworkWired, FaUserAlt, FaRocketchat, FaWhmcs, FaAngleDoubleLeft } from 'react-icons/fa'
 import { AiOutlineDashboard } from 'react-icons/ai'
 import './Aside.scss'
-import { createBoard, updateBoard, getOwnership, getWorkplace, addBoardToWorkplace, updateWorkplace } from 'actions/APICall'
+import { createBoard, updateBoard, getOwnership, getWorkplace, addBoardToWorkplace, updateWorkplace, getUserListInWorkplace } from 'actions/APICall'
 import { useAuth } from 'hooks/useAuth'
 import { useParams, useNavigate, useLocation, useOutletContext } from 'react-router-dom'
 import UserListAvatar from 'components/User/UserListAvatar'
@@ -32,6 +32,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const toogleShowConfirmModal = () => setShowConfirmModal(!showConfirmModal)
   const [deleteBoard, setDeleteBoard] = useState()
+  const [userListAvatar, setUserListAvatar] = useState([])
   const newBoardInputRef = useRef(null)
 
   const { user } = useAuth()
@@ -40,15 +41,14 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   const location = useLocation()
   const setBoard = useOutletContext()
 
-  console.log('workplaceId', workplaceId)
 
   useEffect(() => {
     const result = getOwnershipData()
   }, [workplaceId])
 
-  useEffect(() => {
-    if (boardId) changeBoard(boardId)
-  }, [boardId])
+  // useEffect(() => {
+  //   if (boardId) changeBoard(boardId)
+  // }, [boardId])
 
   useEffect(() => {
     if (newBoardInputRef && newBoardInputRef.current) {
@@ -56,6 +56,18 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
       newBoardInputRef.current.select()
     }
   }, [openNewBoardForm])
+
+  useEffect(() => {
+    getUserListInWorkplace(workplaceId).then((users) => {
+      const listAvatar = users.map(user => (
+        user.cover
+      ))
+
+      setUserListAvatar(listAvatar)
+    }).catch((error) => {
+      toast.error(error.message)
+    })
+  }, [workplaceId])
 
   const toogleOpenNewBoardForm = () => {
     setOpenNewBoardForm(!openNewBoardForm)
@@ -100,7 +112,6 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
 
     if (newUpdatedBoard._id) delete newUpdatedBoard._id
 
-    console.log('newBoardToUpdateId', boardIdToUpdate)
 
     let newBoardList = [...boardList]
     const boardIndexToUpdate = newBoardList.findIndex(i => i.boardId === boardIdToUpdate)
@@ -112,8 +123,6 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
       //  Update column info
       newBoardList.splice(boardIndexToUpdate, 1, newUpdatedBoard)
     }
-
-    console.log('newBoardList', newBoardList)
 
     setBoardList(newBoardList)
 
@@ -191,7 +200,6 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
       setWorkplace(workplace)
       getBoardList(workplace.boardOrder)
 
-      console.log('newWorkplace', workplace)
       setNewBoardTitle('')
       toogleOpenNewBoardForm()
       changeBoard(workplace.boardOrder.at(-1).boardId)
@@ -309,7 +317,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
         <Menu iconShape="circle">
           <MenuItem
             icon={<FaUserAlt />}
-            suffix={!collapsed ? <UserListAvatar /> : ''}
+            suffix={!collapsed ? <UserListAvatar avatarList={userListAvatar} showMore={true} /> : ''}
             onClick={changeUsers}
           >
             {'User'}

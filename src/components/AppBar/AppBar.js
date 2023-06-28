@@ -14,7 +14,7 @@ import { getOwnership, getWorkplace } from 'actions/APICall'
 import { useAuth } from 'hooks/useAuth'
 
 import minhMaiLogo from 'actions/images/logo.png'
-import minhMaiAvatar from 'actions/images/avatar.jpg'
+import minhMaiAvatar from 'actions/images/userAvatar.png'
 import stylePropObject from 'eslint-plugin-react/lib/rules/style-prop-object'
 import { arrayMoveImmutable } from 'array-move'
 
@@ -82,7 +82,6 @@ function AppBar() {
   }, [])
 
   useEffect(() => {
-    console.log('board context', boardId)
 
     if (!boardId) return
 
@@ -105,12 +104,8 @@ function AppBar() {
     })
   }, [boardId])
 
-  useEffect(() => {
-    console.log('appbar items', items)
-  }, [items])
 
   const changeWorkplace = (workplaceId) => {
-    console.log('app bar - workplace list', workplaceList)
     const index = workplaceList.findIndex(workplace => {
       return workplace._id === workplaceId
     })
@@ -142,16 +137,14 @@ function AppBar() {
   const handleOnSearch = (string, results) => {
     // onSearch will have as the first callback parameter
     // the string searched and for the second the results.
-    console.log(string, results)
   }
 
   const handleOnSelect = (item) => {
     // the item selected
-    navigate(`/workplaces/${workplaceList[0]._id}/boards/${item.boardId}/task/${item._id}`)
+    navigate(`/workplaces/${workplaceList[0]._id}/boards/${item.boardId}/card/${item._id}`)
   }
 
   const handleOnFocus = () => {
-    console.log('Focused')
   }
 
   return (
@@ -172,9 +165,6 @@ function AppBar() {
 
 
                     <Dropdown.Menu>
-                      {
-                        console.log('workplace list', workplaceList)
-                      }
                       {
 
                         workplaceList.map((workplace, index) => {

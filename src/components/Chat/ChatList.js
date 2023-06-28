@@ -33,7 +33,6 @@ function ChatList() {
   }
 
   const onSendMessage = () => {
-    console.log(message)
     const sendData = {
       sender: user.email,
       message: message

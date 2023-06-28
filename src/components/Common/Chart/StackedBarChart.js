@@ -1,7 +1,7 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
 
-export const BarChart = ({ chartData, title, description }) => {
+export const StackedBarChart = ({ chartData, title, description }) => {
   return (
     <div className="chart-container">
       <h2 style={{ textAlign: 'center' }}>{title}</h2>
@@ -15,24 +15,22 @@ export const BarChart = ({ chartData, title, description }) => {
             },
             legend: {
               display: false
+            }
+          },
+          scales: {
+            x: {
+              stacked: true
             },
-            scales: {
-              yAxes: [{
-                display: true,
-                ticks: {
-                  beginAtZero: true,
-                  steps: 10,
-                  stepValue: 1,
-                  // max: 100
-                  min: 1
-                }
-              }]
+            y: {
+              stacked: true
             }
           }
-        }}
+        }
+        }
+
       />
     </div>
   )
 }
 
-export default BarChart
+export default StackedBarChart

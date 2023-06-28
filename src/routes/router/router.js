@@ -45,7 +45,7 @@ const router = createBrowserRouter([
                     element: <BoardContent />,
                     children: [
                       {
-                        path: 'task/:taskId',
+                        path: 'card/:cardId',
                         element: <Task />
                       }
                     ]
@@ -59,7 +59,7 @@ const router = createBrowserRouter([
                     element: <TaskCalendar />,
                     children: [
                       {
-                        path: 'task/:taskId',
+                        path: 'card/:cardId',
                         element: <Task />
                       }
                     ]

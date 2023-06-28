@@ -7,11 +7,14 @@
     width: 100%;
 
     .user-container {
-        margin-top: 4%;
-        margin-left: 7%;
-        margin-right: 7%;
+        margin-top: 1%;
+        margin-left: 3%;
+        margin-right: 3%;
+        max-height: 85vh;
+        width: 100%;
 
         .user-form-row {
+
             .search {
                 padding: 6px 0;
                 margin-left: 10px;
@@ -49,6 +52,112 @@
                     }
                 }
             }
+
+            .board-user-list-menu {
+                width: 300px;
+                .user-container {
+
+                        margin: 0px;
+                        padding: 0px;
+                        .user-list-row {
+                            .scrollableDiv {
+                                height: 200px; 
+                                overflow: auto;
+        
+                                .infinite-scroll-component  {
+                                    overflow-y: hidden !important;
+                                    overflow-x: hidden !important;
+                                }
+                            }
+                            margin: 0px;
+                            max-height: 250px;
+                            overflow-y: auto;
+                            overflow-x: hidden;
+                            .notification-item {
+                                // white-space: normal;
+                                padding: 10px;
+                                // background-color: red;
+                                .item-container {
+                                    padding: 0px;
+                            
+                                    .item-avatar {
+                                        .image-avatar {
+                                        width: 35px;
+                                        height: 35px;
+                                        border-radius: 50%;
+                                        object-fit: cover;
+                                        &:hover {
+                                            filter: brightness(120%);
+                                        }
+                                        } 
+                                    }
+                                
+                                    .item-content {
+                                        padding: 0px;
+                                
+                                        
+                                
+                                        .content-name {
+                                            // max-height: 30px;
+                                            overflow: hidden;
+                                            display: -webkit-box;
+                                            -webkit-box-orient: vertical;
+                                            -webkit-line-clamp: 1; /* start showing ellipsis when 3rd line is reached */
+                                            white-space: pre-wrap; /* let the text wrap preserving spaces */
+                                            margin: 0px;
+                                            margin-top: -5px;
+                                            padding-right: 5px;
+                                            padding-left: 5px;
+                                            // text-overflow: ellipsis; 
+                                        }
+                    
+                                        .content-email {
+                                            // max-height: 30px;
+                                            overflow: hidden;
+                                            display: -webkit-box;
+                                            -webkit-box-orient: vertical;
+                                            -webkit-line-clamp: 1; /* start showing ellipsis when 3rd line is reached */
+                                            white-space: pre-wrap; /* let the text wrap preserving spaces */
+                                            margin: 0px;
+                                            margin-top: -5px;
+                                            padding-left: 5px;
+                                            padding-right: 5px;
+                                            font-weight: 100;
+                                            font-size: smaller;
+                                            // text-overflow: ellipsis; 
+                                        }
+                            
+                                        .content-role {
+                                            // max-height: 30px;
+                                            overflow: hidden;
+                                            display: -webkit-box;
+                                            -webkit-box-orient: vertical;
+                                            -webkit-line-clamp: 1; /* start showing ellipsis when 3rd line is reached */
+                                            white-space: pre-wrap; /* let the text wrap preserving spaces */
+                                            margin: 0px;
+                                            margin-top: -5px;
+                                            padding-right: 5px;
+                                            padding-left: 5px;
+                                            color: blue;
+                                            font-weight: 200;
+                                            font-size: small;
+                                            // text-overflow: ellipsis; 
+                                        }
+                                    }
+                                }
+                            
+                            }
+                        }
+                    
+                    
+                }
+            }
+
+            .user-checkbox-role {
+                scale: 0.95;
+            }
+
+            
         }
 
         
