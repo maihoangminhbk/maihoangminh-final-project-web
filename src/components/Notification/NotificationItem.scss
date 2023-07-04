@@ -18,19 +18,22 @@
             padding: 0px;
     
             
-    
-            .content-text {
-                // max-height: 30px;
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
-                white-space: pre-wrap; /* let the text wrap preserving spaces */
-                margin: 0px;
-                margin-top: -5px;
-                padding-right: 5px;
-                // text-overflow: ellipsis; 
+            .content-text-row {
+                margin-right: 0px;
+                .content-text {
+                    // max-height: 30px;
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 3; /* start showing ellipsis when 3rd line is reached */
+                    white-space: pre-wrap; /* let the text wrap preserving spaces */
+                    margin: 0px;
+                    margin-top: -5px;
+                    padding-right: 5px;
+                    // text-overflow: ellipsis; 
+                }
             }
+            
 
             .content-time {
                 // max-height: 30px;
@@ -42,6 +45,7 @@
                 margin: 0px;
                 margin-top: -5px;
                 color: blue;
+                font-size: smaller;
                 // text-overflow: ellipsis; 
             }
         }

@@ -43,7 +43,7 @@ export const workplaceData = [
     userTarget: 'you',
     objectTarget: 'board',
     targetName: 'Test Board'
-  },
+  }
   // {
   //   _id: 5,
   //   userCreateName: 'Minh Mai',
@@ -136,7 +136,7 @@ export const personalData = [
     userTarget: null,
     objectTarget: 'board',
     targetName: 'Test Board'
-  },
+  }
   // {
   //   _id: 5,
   //   userCreateName: 'Minh Mai',
@@ -186,9 +186,22 @@ export const personalData = [
 
 
 export const grammar = (notification) => {
-  if (notification.userTarget) {
-    return `${notification.userCreateName} ${notification.action} ${notification.userTarget} at ${notification.objectTarget} ${notification.targetName}`
-  } else {
-    return `${notification.userCreateName} ${notification.action} ${notification.objectTarget} ${notification.targetName}`
+  // if (notification.userTarget) {
+  //   return `${notification.userCreateName} ${notification.action} ${notification.userTarget} at ${notification.objectTarget} ${notification.targetName}`
+  // } else {
+  //   return `${notification.userCreateName} ${notification.action} ${notification.objectTarget} ${notification.targetName}`
+  // }
+
+  switch (notification.notificationType) {
+  case 'board':
+    return ` ${notification.action} ${notification.objectTargetType} ${notification.objectTargetName} in board ${notification.boardTitle}`
+  case 'personal':
+    return ` ${notification.action} you at ${notification.objectTargetType} ${notification.objectTargetName}`
+  case 'deadline':
+    return ` ${notification.action} ${notification.notificationType} at ${notification.objectTargetType} ${notification.objectTargetName} in board ${notification.boardTitle} after 1 day`
+  case 'late':
+    return ` ${notification.action} deadline ${notification.notificationType} at ${notification.objectTargetType} ${notification.objectTargetName} in board ${notification.boardTitle}`
+  default:
+    break
   }
 }

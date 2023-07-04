@@ -393,6 +393,18 @@ export const dashboardGetUsersInfoStatistic = async (id, keyword, page) => {
   return request.data
 }
 
+export const getPersonalNotifications = async (id, page) => {
+  const request = await API.get(`v1/notifications/${id}/get-personal-notifications?page=${page}`)
+
+  return request.data
+}
+
+export const getFollowingNotifications = async (id, page) => {
+  const request = await API.get(`v1/notifications/${id}/get-following-notifications?page=${page}`)
+
+  return request.data
+}
+
 
 const CHATBOT_API = axios.create({ baseURL: CHATBOT_API_ROOT })
 

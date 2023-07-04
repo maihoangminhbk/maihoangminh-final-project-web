@@ -1,4 +1,5 @@
 import React from 'react'
+import { Navigate } from 'react-router-dom'
 
 import App from 'App'
 import ErrorPage from 'components/ErrorPage/ErrorPage'
@@ -20,12 +21,16 @@ import SlackChat from 'components/SlackChat/SlackChat'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <><App /></>,
     errorElement: <ErrorPage />,
     // loader: rootLoader,
     // action: rootAction,
     children: [
       // { index: true, element: <Index /> },
+      {
+        index: true, // <-- match on parent, i.e. "/"
+        element: <Navigate to="/auth" replace /> // <-- redirect
+      },
       {
         path: 'auth',
         element: <Auth />

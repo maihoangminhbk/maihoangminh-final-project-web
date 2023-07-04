@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+
 import { Button, Dropdown } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner'
 import Tab from 'react-bootstrap/Tab'
@@ -6,6 +8,7 @@ import Tabs from 'react-bootstrap/Tabs'
 import NotificationItem from './NotificationItem'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
+import { getPersonalNotifications, getFollowingNotifications } from 'actions/APICall'
 
 import './Notification.scss'
 import { workplaceData, personalData, grammar } from './data'
@@ -13,40 +16,96 @@ import { workplaceData, personalData, grammar } from './data'
 
 function Notification () {
 
-  const [workplaceDataInput, setWorkplaceDataInput] = useState(workplaceData)
-  const [personalDataInput, setPersonalDataInput] = useState(workplaceData)
-  const [workplaceLength, setWorkplaceLength] = useState(workplaceData.length)
-  const [personalLength, setPersonalLength] = useState(personalData.length)
+  const [followingNotifications, setFollowingNotifications] = useState([])
+  const [personalNotifications, setPersonalNotifications] = useState([])
 
+  const [notificationListPage, setNotificationListPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
 
-  const fetchMoreWorkplaceData = () => {
-    // a fake async api call like which sends
-    // 20 more records in 1.5 secs
-    setTimeout(() => {
+  const [personalTab, setPersonalTab] = useState(true)
+  // const [workplaceLength, setWorkplaceLength] = useState(workplaceData.length)
+  // const [personalLength, setPersonalLength] = useState(personalData.length)
 
-      const newWorkplaceData = [
-        ...workplaceDataInput,
-        workplaceDataInput
-      ]
+  const { workplaceId } = useParams()
 
-      setWorkplaceDataInput(newWorkplaceData)
-      setWorkplaceLength(newWorkplaceData.length)
-    }, 1500)
+  useEffect(() => {
+    setNotificationListPage(1)
+
+    if (personalTab) {
+      const page = 1
+
+      getPersonalNotifications(workplaceId, page).then(result => {
+        console.log('getPersonalNotifications', result)
+        if (result && result.length == 0) {
+          setHasMore(false)
+        } else {
+          setHasMore(true)
+        }
+        setPersonalNotifications(result)
+
+      })
+    } else {
+      const page = 1
+
+      getFollowingNotifications(workplaceId, page).then(result => {
+        console.log('getFollowingNotifications', result)
+        if (result && result.length == 0) {
+          setHasMore(false)
+        } else {
+          setHasMore(true)
+        }
+        setFollowingNotifications(result)
+      }
+      )}
+  }, [personalTab, workplaceId])
+
+  const fetchMoreNotificationData = () => {
+
+    if (personalTab) {
+      const page = notificationListPage + 1
+
+      getPersonalNotifications(workplaceId, page).then(result => {
+        console.log('getPersonalNotifications fetch', result)
+        if (result && result.length == 0) {
+          setHasMore(false)
+        } else {
+          setHasMore(true)
+        }
+        const newPersonalNotifications = [
+          ...personalNotifications,
+          ...result
+        ]
+        setPersonalNotifications(newPersonalNotifications)
+        setNotificationListPage(notificationListPage + 1)
+
+      })
+    } else {
+      const page = notificationListPage + 1
+
+      getFollowingNotifications(workplaceId, page).then(result => {
+        console.log('getFollowingNotifications fetch', result)
+        if (result && result.length == 0) {
+          setHasMore(false)
+        } else {
+          setHasMore(true)
+        }
+        const newFollowingNotifications = [
+          ...followingNotifications,
+          ...result
+        ]
+        setFollowingNotifications(newFollowingNotifications)
+        setNotificationListPage(notificationListPage + 1)
+      }
+      )}
   }
 
-  const fetchMorePersonalData = () => {
-    // a fake async api call like which sends
-    // 20 more records in 1.5 secs
-    setTimeout(() => {
+  const onSelectTab = (key) => {
+    if (key === 'personal') {
+      setPersonalTab(true)
+    } else {
+      setPersonalTab(false)
+    }
 
-      const newPersonalData = [
-        ...personalDataInput,
-        personalDataInput
-      ]
-
-      setPersonalDataInput(newPersonalData)
-      setPersonalLength(newPersonalData.length)
-    }, 1500)
   }
 
   return (
@@ -55,49 +114,23 @@ function Notification () {
         Notification
       </Dropdown.Header>
       {/* <Dropdown.Divider /> */}
-      <Dropdown.ItemText
+      {/* <Dropdown.ItemText
         className='notification-mark-seen'>
         <Button>Mark seen</Button>
-      </Dropdown.ItemText>
+      </Dropdown.ItemText> */}
       <Tabs
-        defaultActiveKey="workplace"
+        defaultActiveKey="personal"
         id="fill-tab-example"
         className="mb-3 notification-tab"
         fill
+        onSelect={(key) => onSelectTab(key)}
       >
-        <Tab eventKey="workplace" title="Workplace">
-          <div id="scrollableDiv" style={{ height: 400, overflow: 'auto' }}>
-            <InfiniteScroll
-              dataLength={workplaceLength}
-              next={fetchMoreWorkplaceData}
-              hasMore={true}
-              loader=<Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-              scrollableTarget="scrollableDiv"
-              // height={200}
-              endMessage={
-                <p style={{ textAlign: 'center' }}>
-                  <b>Yay! You have seen it all</b>
-                </p>
-              }
-            >
-              {
-                workplaceDataInput.map(notification => {
-                  return <NotificationItem key={notification._id} data={notification} />
-                })
-              }
-            </InfiniteScroll>
-          </div>
-
-
-        </Tab>
         <Tab eventKey="personal" title="Personal">
-          <div id="scrollableDiv2" style={{ height: 400, overflow: 'auto' }}>
+          <div id="scrollableDiv2" className='scrollableDiv'>
             <InfiniteScroll
-              dataLength={personalLength}
-              next={fetchMorePersonalData}
-              hasMore={true}
+              dataLength={personalNotifications.length}
+              next={fetchMoreNotificationData}
+              hasMore={hasMore}
               loader=<Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
               </Spinner>
@@ -110,7 +143,33 @@ function Notification () {
               }
             >
               {
-                personalDataInput.map(notification => {
+                personalNotifications.map(notification => {
+                  return <NotificationItem key={notification._id} data={notification} />
+                })
+              }
+            </InfiniteScroll>
+          </div>
+        </Tab>
+
+        <Tab eventKey="workplace" title="Workplace">
+          <div id="scrollableDiv" className='scrollableDiv'>
+            <InfiniteScroll
+              dataLength={followingNotifications.length}
+              next={fetchMoreNotificationData}
+              hasMore={hasMore}
+              loader=<Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+              scrollableTarget="scrollableDiv"
+              // height={200}
+              endMessage={
+                <p style={{ textAlign: 'center' }}>
+                  <b>Yay! You have seen it all</b>
+                </p>
+              }
+            >
+              {
+                followingNotifications.map(notification => {
                   return <NotificationItem key={notification._id} data={notification} />
                 })
               }

@@ -32,5 +32,15 @@
             overflow-x: hidden !important;
         }
 
+        .scrollableDiv {
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        .scrollableDiv2 {
+            height: 300px;
+            overflow-y: auto;
+        }
+
     }
 }
