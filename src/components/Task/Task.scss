@@ -208,6 +208,7 @@
                                 .infinite-scroll-component  {
                                     overflow-y: hidden !important;
                                     overflow-x: hidden !important;
+                                    min-height: 200px;
                                 }
                               }
                               max-height: 250px;

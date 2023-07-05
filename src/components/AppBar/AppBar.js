@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import { Container as BootstrapContainer, Row, Col, InputGroup, FormControl } from 'react-bootstrap'
 import { Dropdown, Form, Button, SplitButton } from 'react-bootstrap'
 
-import { fetchBoardDetails } from 'actions/APICall'
+import { fetchBoardDetails, createWorkplace } from 'actions/APICall'
 
 import './AppBar.scss'
 
@@ -18,45 +18,22 @@ import minhMaiAvatar from 'actions/images/userAvatar.png'
 import stylePropObject from 'eslint-plugin-react/lib/rules/style-prop-object'
 import { arrayMoveImmutable } from 'array-move'
 
-import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+
 import CustomToggle from 'components/Common/CustomToggle'
 import Notification from 'components/Notification/Notification'
 
-function AppBar() {
-  // const items = [
-  //   {
-  //     id: 0,
-  //     title: 'Cobol',
-  //     boardName: 'Current Board'
-  //   },
-  //   {
-  //     id: 1,
-  //     title: 'JavaScript',
-  //     boardName: 'Current Board'
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Basic',
-  //     boardName: 'Current Board'
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'PHP',
-  //     boardName: 'Current Board'
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'Java',
-  //     boardName: 'Current Board'
-  //   }
-  // ]
+import { toast } from 'react-toastify'
 
-  const [items, setItems] = useState([])
+function AppBar() {
 
   const [workplaceList, setWorkplaceList] = useState([])
   const [boardId, setBoard] = useState()
   const [ownership, setOwnership] = useState()
   const [searchPlaceholder, setSearchPlaceHolder] = useState()
+
+  const [openNewWorkplaceForm, setOpenNewWorkplaceForm] = useState(false)
+  const [newWorkplaceTitle, setNewWorkplaceTitle] = useState('')
+  const newWorkplaceInputRef = useRef(null)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -81,28 +58,11 @@ function AppBar() {
     )
   }, [])
 
-  useEffect(() => {
+  const toogleOpenNewWorkplaceForm = () => {
+    setOpenNewWorkplaceForm(!openNewWorkplaceForm)
+  }
 
-    if (!boardId) return
-
-    fetchBoardDetails(boardId).then(board => {
-      // console.log('board', board)
-      // setBoard(board)
-      let itemList = []
-
-      board.columns.map(column => {
-        column.cards.map(card => {
-          const cardWithId = {
-            ...card,
-            id: card._id,
-            boardName: 'Current Board'
-          }
-          itemList.push(cardWithId)
-        })
-      })
-      setItems(itemList)
-    })
-  }, [boardId])
+  const onNewWorkplaceTitleChange = useCallback((e) => setNewWorkplaceTitle(e.target.value), [])
 
 
   const changeWorkplace = (workplaceId) => {
@@ -147,6 +107,31 @@ function AppBar() {
   const handleOnFocus = () => {
   }
 
+  const addNewWorkplace = () => {
+    if (!newWorkplaceTitle) {
+      newWorkplaceInputRef.current.focus()
+      return
+    }
+    const newWorkplaceToAdd = {
+      title: newWorkplaceTitle.trim()
+    }
+
+
+    // Call API
+    createWorkplace(newWorkplaceToAdd).then(workplace => {
+      const newWorkplaceList = [...workplaceList, workplace]
+      setWorkplaceList(newWorkplaceList)
+
+      setNewWorkplaceTitle('')
+      toogleOpenNewWorkplaceForm()
+
+    }).catch((error) => {
+      setNewWorkplaceTitle('')
+      toogleOpenNewWorkplaceForm()
+      toast.error(error.message)
+    })
+  }
+
   return (
     <>
       <nav className='navbar-app'>
@@ -154,69 +139,71 @@ function AppBar() {
           <Row>
             <Col sm={5} xs={6} className='col-no-padding'>
               <div className='app-actions'>
-                <div className='item all'><i className='' />
-                  { location.pathname !== '/' &&
+                { location.pathname !== '/' &&
                 <div className='column-dropdown-actions'>
-
                   <Dropdown>
                     <Dropdown.Toggle id="dropdown-basic" as={CustomToggle}>
                       <div className='item all'><i className='fa fa-th' /></div>
                     </Dropdown.Toggle>
 
 
-                    <Dropdown.Menu>
+                    <Dropdown.Menu className='workplace-dropdown-menu'>
+                      <Dropdown.Header className='workplace-dropdown-header'>
+                        <div>
+                          {workplaceList[0]? workplaceList[0].title : 'Choose Workplace'}
+                        </div>
+                      </Dropdown.Header>
+                      <Dropdown.Divider />
                       {
 
                         workplaceList.map((workplace, index) => {
                           if (index === 0) {
                             return (
-                              <>
-                                <Dropdown.Item key={workplace._id}>{workplaceList[0]? workplaceList[0].title : 'Choose Workplace'}</Dropdown.Item>
-                                <Dropdown.Divider />
-                              </>
+                              <Dropdown.Item key={workplace._id} className='workplace-dropdown-item'>
+                                <Row className='workplace-name-row'>
+                                  {workplaceList[0]? workplaceList[0].title : 'Choose Workplace'}
+                                </Row>
+                                <Row className='workplace-addition-row'>
+                                  <div>Current Workplace</div>
+                                </Row>
+                              </Dropdown.Item>
                             )
                           }
 
-                          return <Dropdown.Item key={workplace._id} onClick={() => changeWorkplace(workplace._id)} >{workplace.title}</Dropdown.Item>
-
-
+                          return <Dropdown.Item key={workplace._id} onClick={() => changeWorkplace(workplace._id)} className='workplace-dropdown-item'>{workplace.title} </Dropdown.Item>
                         })
+                      }
+                      { !openNewWorkplaceForm &&
+
+                        <div className='add-new-column' onClick={toogleOpenNewWorkplaceForm}>
+                          <i className='fa fa-plus icon' />Add another board
+                        </div>
+
+                      }
+
+                      { openNewWorkplaceForm &&
+                        <div className='workplace-enter-new-column'>
+                          <Form.Control
+                            className='input-enter-new-column'
+                            size="sm" type="text"
+                            placeholder="Enter column title..."
+                            ref={newWorkplaceInputRef}
+                            value={newWorkplaceTitle}
+                            onChange={onNewWorkplaceTitleChange}
+                            onKeyDown={e => (e.key === 'Enter' && addNewWorkplace())}
+                          />
+                          <Button variant={newWorkplaceTitle ? 'success' : 'error'} size='sm' onClick={addNewWorkplace}>Add Workplace</Button>
+                          <span className='cancel-icon' onClick={toogleOpenNewWorkplaceForm}><i className='fa fa-trash icon'></i></span>
+                        </div>
                       }
                     </Dropdown.Menu>
                   </Dropdown>
-
                 </div>
-                  }
-
-                </div>
-                <div className='item home'><i className='fa fa-home' /></div>
+                }
+                {/* <div className='item home'><i className='fa fa-home' /></div> */}
                 <div className='item board'>
                   <i className='fa fa-columns' />
                   <strong>Boards</strong>
-                </div>
-                <div className='item search'>
-                  <InputGroup className='group-search'>
-                    {/* <FormControl
-                      className='input-search'
-                      placeholder='Jump to...'
-                    /> */}
-                    <div style={{ width: 400 }} className=' custom-search'>
-                      <ReactSearchAutocomplete
-                        items={items}
-                        onSearch={handleOnSearch}
-                        // onHover={handleOnHover}
-                        onSelect={handleOnSelect}
-                        onFocus={handleOnFocus}
-                        // autoFocus
-                        resultStringKeyName='title'
-                        formatResult={formatResult}
-                        fuseOptions={ { keys: ['title'] } }
-                        className='input-search search'
-                        placeholder='Search...'
-                      />
-                    </div>
-                    {/* <InputGroup.Text className='input-icon-search'><i className='fa fa-search d-none d-sm-block' /></InputGroup.Text> */}
-                  </InputGroup>
                 </div>
               </div>
             </Col>
@@ -232,8 +219,8 @@ function AppBar() {
             </Col>
             <Col sm={5} xs={12} className='right-column col-no-padding d-none d-sm-block'>
               <div className='user-actions'>
-                <div className='item quick'><i className='fa fa-plus-square-o' /></div>
-                <div className='item news'><i className='fa fa-info-circle' /></div>
+                {/* <div className='item quick'><i className='fa fa-plus-square-o' /></div>
+                <div className='item news'><i className='fa fa-info-circle' /></div> */}
 
                 <Dropdown>
                   <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
