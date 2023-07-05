@@ -144,6 +144,10 @@ $breakpoint-md: 768px;
             padding-left: 12px;
             padding-right: 12px;
             width: fit-content;
+
+            input {
+                width: fit-content;
+            }
         }
 
         .slack-add-new-row {

@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-import { Outlet, useOutletContext, useParams } from 'react-router-dom'
+import { Outlet, useOutletContext, useParams, useNavigate } from 'react-router-dom'
 
 import { Container as BootstrapContainer, Row, Col, Form, Button, Nav, Navbar, NavDropdown, Dropdown, InputGroup, FormControl } from 'react-bootstrap'
-import { searchUsersInBoard, addUserToBoard, searchUsersToAddBoard, deleteUserFromBoard, updateUserFromBoard } from 'actions/APICall'
+import { searchUsersInBoard, addUserToBoard, searchUsersToAddBoard, deleteUserFromBoard, updateUserFromBoard, fetchBoardDetails } from 'actions/APICall'
 
 import { AiFillStar, AiOutlineFilter } from 'react-icons/ai'
 import { RiSlackFill, RiDeleteBin6Fill } from 'react-icons/ri'
 import { MdOutlinePersonAddAlt } from 'react-icons/md'
 import Spinner from 'react-bootstrap/Spinner'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 
 import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
 import ConfirmModal from 'components/Common/ConfirmModal'
@@ -83,6 +84,9 @@ function BoardNav(props) {
   const [userListAvatar, setUserListAvatar] = useState([])
   const [hasMore, setHasMore] = useState(true)
 
+  const [items, setItems] = useState([])
+  const navigate = useNavigate()
+
   // const [userListFilter, setUserListFilter] = useState([])
   const [userBoardList, setUserBoardList] = useState([])
   const [userSearchList, setUserSearchList] = useState([])
@@ -96,7 +100,7 @@ function BoardNav(props) {
   const [showUpdateUserConfirmModal, setShowUpdateUserConfirmModal] = useState(false)
   const toogleShowUpdateUserConfirmModal = () => setShowUpdateUserConfirmModal(!showUpdateUserConfirmModal)
 
-  const { boardId } = useParams()
+  const { workplaceId, boardId } = useParams()
 
   // useEffect(() => {
   //   console.log('userList', userList)
@@ -155,6 +159,29 @@ function BoardNav(props) {
       setUserListAvatar(listAvatar)
     }
     )
+  }, [boardId])
+
+  useEffect(() => {
+
+    if (!boardId) return
+
+    fetchBoardDetails(boardId).then(board => {
+      // console.log('board', board)
+      // setBoard(board)
+      let itemList = []
+
+      board.columns.map(column => {
+        column.cards.map(card => {
+          const cardWithId = {
+            ...card,
+            id: card._id,
+            boardName: 'Current Board'
+          }
+          itemList.push(cardWithId)
+        })
+      })
+      setItems(itemList)
+    })
   }, [boardId])
 
   const fetchMoreUserData = () => {
@@ -324,6 +351,28 @@ function BoardNav(props) {
     }
   }
 
+  const formatResult = (item) => {
+    return (
+      <>
+        <span style={{ display: 'block', textAlign: 'left' }}>Card: {item.title}</span>
+        <span style={{ display: 'block', textAlign: 'left', fontSize: '10px', color: 'gray' }}>Board: {item.boardName}</span>
+      </>
+    )
+  }
+
+  const handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+  }
+
+  const handleOnSelect = (item) => {
+    // the item selected
+    navigate(`/workplaces/${workplaceId}/boards/${boardId}/card/${item._id}`)
+  }
+
+  const handleOnFocus = () => {
+  }
+
   const RoleFormCheck = () => (
     <Form.Check type="checkbox" label="Admin" checked={!userRole} onClick={onUserRoleChange}/>
   )
@@ -472,6 +521,31 @@ function BoardNav(props) {
             </BootstrapContainer>
           </Dropdown.Menu>
         </Dropdown>
+
+        <div className='navbar-item search'>
+          <InputGroup className='group-search'>
+            {/* <FormControl
+                      className='input-search'
+                      placeholder='Jump to...'
+                    /> */}
+            <div style={{ width: 250 }} className=' custom-search'>
+              <ReactSearchAutocomplete
+                items={items}
+                onSearch={handleOnSearch}
+                // onHover={handleOnHover}
+                onSelect={handleOnSelect}
+                onFocus={handleOnFocus}
+                // autoFocus
+                resultStringKeyName='title'
+                formatResult={formatResult}
+                fuseOptions={ { keys: ['title'] } }
+                className='input-search search'
+                placeholder='Search card...'
+              />
+            </div>
+            {/* <InputGroup.Text className='input-icon-search'><i className='fa fa-search d-none d-sm-block' /></InputGroup.Text> */}
+          </InputGroup>
+        </div>
 
         <div className="navbar-item board-filter">
           <AiOutlineFilter className="navbar-item-icon"/>

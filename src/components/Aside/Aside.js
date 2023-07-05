@@ -284,7 +284,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
                 onChange={onNewBoardTitleChange}
                 onKeyDown={e => (e.key === 'Enter' && addNewBoard())}
               />
-              <Button variant={newBoardTitle ? 'success' : 'error'} size='sm' onClick={addNewBoard}>Add Column</Button>
+              <Button variant={newBoardTitle ? 'success' : 'error'} size='sm' onClick={addNewBoard}>Add Board</Button>
               <span className='cancel-icon' onClick={toogleOpenNewBoardForm}><i className='fa fa-trash icon'></i></span>
             </MenuItem>
             }

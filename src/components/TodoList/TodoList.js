@@ -87,36 +87,38 @@ function TodoList(props) {
   }, [todoStartDate, todoEndDate, updateTodoId])
 
   useEffect(() => {
-    setUserListPage(1)
+    if (chooseTaskId) {
+      setUserListPage(1)
 
-    if (addUserMode) {
-      const searchData = {
-        keyword: userSearch,
-        page: 1
-      }
-      searchUsersToAddTask(chooseTaskId, searchData).then(result => {
-        if (result && result.length == 0) {
-          setHasMore(false)
-        } else {
-          setHasMore(true)
+      if (addUserMode) {
+        const searchData = {
+          keyword: userSearch,
+          page: 1
         }
-        setUserSearchList(result)
+        searchUsersToAddTask(chooseTaskId, searchData).then(result => {
+          if (result && result.length == 0) {
+            setHasMore(false)
+          } else {
+            setHasMore(true)
+          }
+          setUserSearchList(result)
 
-      })
-    } else {
-      const searchData = {
-        keyword: userSearch,
-        page: 1
-      }
-      searchUsersInTask(chooseTaskId, searchData).then(result => {
-        if (result && result.length == 0) {
-          setHasMore(false)
-        } else {
-          setHasMore(true)
+        })
+      } else {
+        const searchData = {
+          keyword: userSearch,
+          page: 1
         }
-        setUserBoardList(result)
-      }
-      )}
+        searchUsersInTask(chooseTaskId, searchData).then(result => {
+          if (result && result.length == 0) {
+            setHasMore(false)
+          } else {
+            setHasMore(true)
+          }
+          setUserBoardList(result)
+        }
+        )}
+    }
   }, [userSearch, chooseTaskId, addUserMode])
 
   //   useEffect(() => {

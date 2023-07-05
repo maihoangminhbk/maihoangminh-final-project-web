@@ -24,7 +24,7 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                 // background-color: rgba(255, 255, 255, 0.3);
                 border-radius: 3px;
                 &:not(:first-child) {
-                    margin-left: 4px;
+                    margin-left: 10px;
                 }
 
                 &.board {
@@ -144,6 +144,50 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
             .btn-sm {
                 padding: 0.7rem 1rem 0.3125rem;
                 margin-bottom: 2px;
+            }
+
+            .column-dropdown-actions {
+                .workplace-dropdown-menu {
+                    width: 200px;
+                    .workplace-dropdown-header {
+                        text-align: center;
+                        padding-bottom: 0px;
+                        font-weight: bold;
+                    }
+
+                    .workplace-dropdown-item {
+                        .workplace-name-row {
+                            margin: 0px;
+                        }
+
+                        .workplace-addition-row {
+                            // text-align: right   ;
+                            font-size: smaller;
+                        }
+                    }
+
+                    .workplace-enter-new-column {
+                        width: 200px;
+                        max-width: 250px;
+
+                        line-height: 32px;
+
+                        border-radius: $column-border-radius;
+                        // background-color: rgb(51, 51, 51);
+                        .input-enter-new-column {
+                          margin: 5px 0;
+                        //   border-color: $input-border-color;
+                        }
+                    }
+
+                    .add-new-column {
+                        color: rgba(181, 175, 175, 0.4);
+                        &:hover {
+                            cursor: pointer;
+                            color: black;
+                        }
+                    }
+                }
             }
         }
 
