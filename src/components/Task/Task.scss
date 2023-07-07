@@ -48,6 +48,69 @@
                 }
         
             }
+
+            .status-row {
+              .status-option {
+                min-width: 120px;
+                .todo-list-options-dropdown {
+                  // position: relative;
+                  font-size: large;
+                  width: fit-content;
+      
+                  .badge {
+                    // background-color: #d6f0e0;
+                    color: #0d6832;
+                    border-radius: 50rem!important;
+      
+                    &.created {
+                      background-color: rgb(225, 223, 223);
+                    }
+      
+                    &.inprocess {
+                      background-color: yellow;
+                    }
+      
+                    &.done {
+                      background-color: blue;
+                      color: white;
+                    }
+      
+                    &.completed {
+                      background-color: green;
+                      color: white;
+                    }
+      
+                    &.late {
+                      background-color: red;
+                      color: black;
+                    }
+      
+                    &.cancel {
+                      background-color: orange;
+                      color: black;
+                    }
+                  }
+      
+                  .item-option-menu {
+                    text-align: center;
+                    min-width: fit-content;
+                    inset: 0px auto auto 30px !important;
+      
+                    .item-option {
+                      // min-width: fit-content;
+                      width: 100%;
+                      // border-radius: 0!important;
+                      &:hover {
+                        cursor: pointer;
+                        filter: brightness(90%);
+                      }
+                    }
+                  }
+      
+      
+                }
+              }
+            }
         
             .addition-row {
                 .icon {
@@ -61,6 +124,22 @@
                 .user-list {
                     padding-left: 10px;
                     margin-bottom: 0;
+                }
+
+                .icon-google-calendar {
+                  color: #1b15be;
+                  margin-right: 5px;
+                }
+
+                .google-calendar {
+                  padding: 2px 5px;
+                  border-radius: 5%;
+                  width: fit-content;
+                  background-color: rgba(66, 198, 143, 0.2);
+                  &:hover {
+                    cursor: pointer;
+                    filter: brightness(90%);
+                  }
                 }
             }
         

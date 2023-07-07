@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Outlet, useOutletContext, useParams, useNavigate } from 'react-router-dom'
 
 import { Container as BootstrapContainer, Row, Col, Form, Button, Nav, Navbar, NavDropdown, Dropdown, InputGroup, FormControl } from 'react-bootstrap'
-import { searchUsersInBoard, addUserToBoard, searchUsersToAddBoard, deleteUserFromBoard, updateUserFromBoard, fetchBoardDetails } from 'actions/APICall'
+import { searchUsersInBoard, addUserToBoard, searchUsersToAddBoard, deleteUserFromBoard, updateUserFromBoard, fetchBoardDetails, getSlackConnections, getSlackWorkspace } from 'actions/APICall'
 
 import { AiFillStar, AiOutlineFilter } from 'react-icons/ai'
 import { RiSlackFill, RiDeleteBin6Fill } from 'react-icons/ri'
@@ -91,6 +91,9 @@ function BoardNav(props) {
   const [userBoardList, setUserBoardList] = useState([])
   const [userSearchList, setUserSearchList] = useState([])
 
+  const [slackChannelList, setSlackChannelList] = useState([])
+  const [slackWorkspace, setSlackWorkspace] = useState()
+
   const [showAddUserConfirmModal, setShowAddUserConfirmModal] = useState(false)
   const toogleShowAddUserConfirmModal = () => setShowAddUserConfirmModal(!showAddUserConfirmModal)
 
@@ -99,6 +102,12 @@ function BoardNav(props) {
 
   const [showUpdateUserConfirmModal, setShowUpdateUserConfirmModal] = useState(false)
   const toogleShowUpdateUserConfirmModal = () => setShowUpdateUserConfirmModal(!showUpdateUserConfirmModal)
+
+  const [displayOptions, setDisplayOptions] = useState({
+    showImage: true,
+    showStatus: true,
+    showDeadline: true
+  })
 
   const { workplaceId, boardId } = useParams()
 
@@ -183,6 +192,34 @@ function BoardNav(props) {
       setItems(itemList)
     })
   }, [boardId])
+
+  useEffect(() => {
+    props.setDisplayOptions(displayOptions)
+  }, [displayOptions, props])
+
+  useEffect(() => {
+    const data = {
+      workplaceId: workplaceId
+    }
+
+    getSlackConnections(data).then(slackConnections => {
+      const boardSlackConnection = slackConnections.filter(connection => connection.boardId === boardId)
+
+      setSlackChannelList(boardSlackConnection)
+    })
+  }, [boardId, workplaceId])
+
+  useEffect(() => {
+    if (workplaceId) {
+      const data = {
+        workplaceId: workplaceId
+      }
+
+      getSlackWorkspace(data).then(workspace => {
+        setSlackWorkspace(workspace)
+      })
+    }
+  }, [workplaceId])
 
   const fetchMoreUserData = () => {
     if (addUserMode) {
@@ -377,6 +414,20 @@ function BoardNav(props) {
     <Form.Check type="checkbox" label="Admin" checked={!userRole} onClick={onUserRoleChange}/>
   )
 
+  const onCheckboxChange = (e) => {
+    const newDisplayOptions = { ...displayOptions }
+    if (e.target.checked) {
+      newDisplayOptions[e.target.id] = true
+    } else {
+      newDisplayOptions[e.target.id] = false
+    }
+    setDisplayOptions(newDisplayOptions)
+  }
+
+  const onSlackChannelClick = () => {
+    navigate('./../../slack-chat')
+  }
+
   return (
     <Navbar className="navbar" expand="sm">
       {/* <BootstrapContainer> */}
@@ -548,12 +599,59 @@ function BoardNav(props) {
         </div>
 
         <div className="navbar-item board-filter">
-          <AiOutlineFilter className="navbar-item-icon"/>
-              Filter
+          {/* <AiOutlineFilter className="navbar-item-icon"/> */}
+          <NavDropdown
+            id="nav-dropdown-dark-example"
+            title="Filter"
+            menuVariant="white"
+          >
+            <Form.Check
+              type={'checkbox'}
+              id='showImage'
+              label='showImage'
+              defaultChecked={displayOptions.showImage}
+              onChange={e => onCheckboxChange(e)}
+              // onClick={e => onCheckboxClick(e)}
+            />
+            <Form.Check
+              type={'checkbox'}
+              id='showStatus'
+              label='showStatus'
+              defaultChecked={displayOptions.showStatus}
+              onChange={e => onCheckboxChange(e)}
+              // onClick={e => onCheckboxClick(e)}
+            />
+            <Form.Check
+              type={'checkbox'}
+              id='showDeadline'
+              label='showDeadline'
+              defaultChecked={displayOptions.showStatus}
+              onChange={e => onCheckboxChange(e)}
+              // onClick={e => onCheckboxClick(e)}
+            />
+          </NavDropdown>
         </div>
         <div className="navbar-item slack-channel">
-          <RiSlackFill className="navbar-item-icon"/>
-              Slack Channel
+
+          <Dropdown>
+            <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
+              <RiSlackFill className="navbar-item-icon"/>
+                  Slack Channel
+            </Dropdown.Toggle>
+            <Dropdown.Menu className='slack-channel-list-menu'>
+              <Dropdown.Header className='slack-channel-list-header'>
+                <i className='slack-workspace-content'><RiSlackFill />{ slackWorkspace ? slackWorkspace.title : '' }</i>
+              </Dropdown.Header>
+              {/* <Dropdown.Divider /> */}
+              <BootstrapContainer className='slack-channel-list'>
+                { slackChannelList &&
+                      slackChannelList.map((slackChannel, index) => {
+                        return <Dropdown.Item key={index} onClick={onSlackChannelClick}>#{slackChannel.slackChannel}</Dropdown.Item>
+                      })
+                }
+              </BootstrapContainer>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </Navbar.Collapse>
       {/* </BootstrapContainer> */}

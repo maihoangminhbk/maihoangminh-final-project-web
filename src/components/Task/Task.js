@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigate, useParams, useOutletContext } from 'react-router-dom'
 
 import { useDropzone } from 'react-dropzone'
 
@@ -10,7 +11,6 @@ import Modal from 'react-bootstrap/Modal'
 import Spinner from 'react-bootstrap/Spinner'
 import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/contentEditable'
 
-import { useNavigate, useParams } from 'react-router-dom'
 import { getCard, updateCard, uploadCardImage, searchUsersInCard, searchUsersToAddCard, addUserToCard, deleteUserFromCard } from 'actions/APICall'
 
 import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
@@ -26,10 +26,13 @@ import { BiTime } from 'react-icons/bi'
 import { GiBackwardTime } from 'react-icons/gi'
 import { MdOutlinePersonAddAlt } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
+import { AiOutlineCaretDown } from 'react-icons/ai'
+import { SiGooglecalendar } from 'react-icons/si'
 
 
 import DatePicker from 'react-datepicker'
 import { format } from 'date-fns'
+import { statusMap } from 'utilities/statusMap'
 
 import UserListAvatar from 'components/User/UserListAvatar'
 import minhMaiAvatar from 'actions/images/userAvatar.png'
@@ -39,6 +42,8 @@ import { toast } from 'react-toastify'
 import TodoList from 'components/TodoList/TodoList'
 
 function Task() {
+  console.log('check')
+  const setClickedCardToBoard = useOutletContext()
   const [ clickedCard, setClickedCard ] = useState()
   const [ updatedCard, setUpdatedCard ] = useState()
 
@@ -69,6 +74,7 @@ function Task() {
   const [endDate, setEndDate] = useState()
   const [cardTitle, setCardTitle] = useState('')
   const [cardDescription, setCardDescription] = useState('')
+  const [cardStatus, setCardStatus] = useState()
 
   const handleCardTitleChange = useCallback((e) => setCardTitle(e.target.value), [])
   const handleCardDescriptionChange = useCallback((e) => setCardDescription(e.target.value), [])
@@ -91,15 +97,22 @@ function Task() {
       // Create update card to check when update data in card
       setUpdatedCard(card)
     })
-  }, [cardId])
+  }, [cardId, setClickedCardToBoard])
 
   useEffect(() => {
-    if (!isEqual(clickedCard, updatedCard)) {
+    if (!isEqual(clickedCard, updatedCard) && updatedCard) {
       setOnchangeCard(true)
     } else {
       setOnchangeCard(false)
     }
   }, [clickedCard, updatedCard])
+
+  useEffect(() => {
+    console.log('onChangeCard', onChangeCard)
+    if (onChangeCard) {
+      onUpdateCard()
+    }
+  }, [onChangeCard])
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -123,8 +136,11 @@ function Task() {
     }
 
     if (clickedCard) {
+      console.log('clickedCard', clickedCard)
       setCardTitle(clickedCard.title)
       setCardDescription(clickedCard.description)
+      setCardStatus(clickedCard.status)
+      setCardImage(clickedCard.imageUrl)
     }
   }, [clickedCard])
 
@@ -144,6 +160,7 @@ function Task() {
   }, [cardId])
 
   const onDrop = useCallback((files) => {
+    console.log('upload file', files)
     const formData = new FormData()
     formData.append('file', files[0])
 
@@ -153,6 +170,7 @@ function Task() {
         setFileUpLoad({ fileName: files[0].name, percentCompleted })
       }
     }).then((data) => {
+      console.log('upload image', data)
       setCardImage(data.url)
       clickedCard.imageUrl = data.url
       const newClickedCard = { ...clickedCard }
@@ -209,6 +227,7 @@ function Task() {
       updateCard(updatedCard._id, updatedCard).then(
         card => {
           setClickedCard(updatedCard)
+          setClickedCardToBoard(updatedCard)
           toast.success('Update successful')
         }
       ).catch(
@@ -364,6 +383,37 @@ function Task() {
     }
   }
 
+  const createStatus = (statusId) => {
+    const status = statusMap.find(status => status.statusId === statusId)
+    if (status) {
+      return <div className={`${status.className} icon-option badge`}>
+        {status.title}
+        <AiOutlineCaretDown />
+      </div>
+    }
+  }
+
+  const onCardChangeStatus = (statusId) => {
+    const newUpdatedCard = {
+      ...updatedCard,
+      status: statusId
+    }
+    setUpdatedCard(newUpdatedCard)
+    setCardStatus(statusId)
+  }
+
+  const linkToCalendar = () => {
+    let convertStartTime
+    let convertEndTime
+    if (clickedCard && clickedCard.startTime && clickedCard.endTime) {
+      convertStartTime = format(clickedCard.startTime, 'yyyymmdd:HHmm')
+      convertEndTime = format(clickedCard.endTime, 'yyyymmdd:HHmm')
+    }
+    console.log(convertStartTime)
+    const link = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${cardTitle}&details=Event description text&dates=${convertStartTime}/${convertEndTime}`
+    return <a href={link} target='_blank' rel="noreferrer">Add to Google Calendar</a>
+  }
+
   return (
     <Modal
       onHide={backToBoard}
@@ -434,6 +484,35 @@ function Task() {
             <h4>Progress</h4>
             <ProgressBar now={progress} label={`${progress}%`} />
           </Row>
+          <Row className='status-row'>
+            <h4>Status</h4>
+            <div className='status-option'>
+              <Dropdown className='todo-list-options-dropdown'>
+                <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle} className='dropdown-toggle'>
+                  {/* <div className='icon-option badge'> */}
+                  {
+                    createStatus(cardStatus)
+                  }
+                  {/* </div> */}
+                </Dropdown.Toggle>
+                <Dropdown.Menu className='item-option-menu'>
+                  {
+                    statusMap.map(status => (
+                      <Dropdown.Item
+                        key={status.statusId}
+                        className={`${status.className} item-option badge`}
+                        onClick={() => onCardChangeStatus(status.statusId)}
+                      >
+                        { status.title }
+                      </Dropdown.Item>
+                    ))
+                  }
+
+                </Dropdown.Menu>
+              </Dropdown>
+
+            </div>
+          </Row>
           <Row className='addition-row'>
             <Accordion defaultActiveKey="0" flush>
               <Accordion.Item eventKey="0">
@@ -445,13 +524,16 @@ function Task() {
                     <FaRegCalendarAlt className='icon'/>
                   Deadline
                   </Col>
-                  <Col>
+                  <Col sm={4}>
                     <GiBackwardTime className='icon-deadline'/>
                     { endDate &&
                       format(endDate, 'MMMM d, yyyy h:mm aa')
                     }
                   </Col>
-
+                  <Col sm={3} className='google-calendar'>
+                    <SiGooglecalendar className='icon-google-calendar'/>
+                    { linkToCalendar() }
+                  </Col>
                 </Accordion.Header>
                 <Accordion.Body>
                   <Row>
@@ -499,7 +581,7 @@ function Task() {
                 </Accordion.Header>
                 <Accordion.Body className='todo-list-accordion-body'>
                   {todoList &&
-                    <TodoList todoList={todoList}/>
+                    <TodoList todoList={todoList} setProgress={setProgress}/>
                   }
                 </Accordion.Body>
               </Accordion.Item>
@@ -633,7 +715,7 @@ function Task() {
             </Accordion>
           </Row>
 
-          <Row className='control-button-row'>
+          {/* <Row className='control-button-row'>
             { onChangeCard &&
             <Button className='save-button' onClick={onUpdateCard}>Save</Button>
             }
@@ -643,7 +725,7 @@ function Task() {
             }
 
             <Button variant='secondary' className='cancel-button' onClick={backToBoard}>Cancel</Button>
-          </Row>
+          </Row> */}
         </Container>
       </Modal.Body>
       <ConfirmModal
