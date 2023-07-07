@@ -35,58 +35,13 @@ import BoardNav from 'components/BoardNav/BoardNav'
 
 const boardSocket = io(socketURL.boardSocket)
 
-
-const userListInit = [
-  { _id: '1',
-    name: 'Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai Minh Mai',
-    email: 'minh@gmail.com',
-    cover: 'https://picsum.photos/90',
-    role: 1
-  },
-
-  { _id: '2',
-    name: 'Anh Mai',
-    cover: 'https://picsum.photos/91',
-    email: 'minh12@gmail.com',
-    role: 0
-  },
-
-  { _id: '3',
-    name: 'Mai Van B',
-    cover: 'https://picsum.photos/92',
-    email: 'anh@gmail.com',
-    role: 1
-  },
-  { _id: '4',
-    name: 'Nguyen Van A',
-    cover: 'https://picsum.photos/90',
-    email: 'van@gmail.com',
-    role: 1
-  },
-
-  { _id: '5',
-    name: 'Minh mai',
-    cover: 'https://picsum.photos/91',
-    email: 'toi@gmail.com',
-    role: 0
-  },
-
-  { _id: '6',
-    name: 'Nay day',
-    cover: 'https://picsum.photos/92',
-    email: 'nay@gmail.com',
-    role: 1
-  }
-]
-
 function BoardContent() {
   const [board, setBoard] = useState({})
   const [columns, setColumns] = useState({})
   const [boardIdSaved, setBoardIdSaved] = useState('')
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
-  const [clickedCard, setClickedCard] = useState({})
+  const [clickedCard, setClickedCard] = useState()
   const [likeBoard, setLikeBoard] = useState(false)
-  const [userList, setUserList] = useState(userListInit)
   const [userListFilter, setUserListFilter] = useState([])
   const [userSearch, setUserSearch] = useState('')
   const [userEmail, setUserEmail] = useState('')
@@ -95,7 +50,9 @@ function BoardContent() {
   const [showAddUserConfirmModal, setShowAddUserConfirmModal] = useState(false)
   const toogleShowAddUserConfirmModal = () => setShowAddUserConfirmModal(!showAddUserConfirmModal)
 
-  const handleToggleSidebar = useOutletContext()
+  const [displayOptions, setDisplayOptions] = useState({})
+
+  // const handleToggleSidebar = useOutletContext()
   const { boardId } = useParams()
 
   const toogleOpenNewColumnForm = () => {
@@ -111,6 +68,10 @@ function BoardContent() {
   const onNewBoardTitleChange = useCallback((e) => setNewBoardTitle(e.target.value), [])
 
   useEffect(() => {
+    console.log('display Options', displayOptions)
+  }, [displayOptions])
+
+  useEffect(() => {
     // const boardId = '62d92931b79a7a225262240a'
     // const boardId = localStorage.getItem('boardId')
     setBoardIdSaved(boardId)
@@ -124,7 +85,30 @@ function BoardContent() {
       boardSocket.emit('onJoinBoard', boardId)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [boardId, clickedCard])
+  }, [boardId])
+
+  useEffect(() => {
+    if (clickedCard) {
+      let newColumns = [...columns]
+
+      const newColumnToUpdate = newColumns.find(column => column._id === clickedCard.columnId)
+      const cardIndex = newColumnToUpdate.cards.findIndex(card => card._id === clickedCard._id)
+      newColumnToUpdate.cards[cardIndex] = clickedCard
+
+
+      const columnIndexToUpdate = newColumns.findIndex(i => i._id === clickedCard.columnId)
+
+      newColumns.splice(columnIndexToUpdate, 1, newColumnToUpdate)
+
+      let newBoard = { ...board }
+      newBoard.columnOrder = newColumns.map(c => c._id)
+      newBoard.columns = newColumns
+      setColumns(newColumns)
+      setBoard(newBoard)
+
+      boardSocket.emit('onColumnUpdateState', boardId, newColumnToUpdate)
+    }
+  }, [clickedCard])
 
   // console.log('Vao user effext dau tien board content test')
   useEffect(() => {
@@ -341,7 +325,7 @@ function BoardContent() {
   }
 
   const onCardClick = (card) => {
-    setClickedCard(card)
+    // setClickedCard(card)
   }
 
   const addNewColumn = () => {
@@ -461,6 +445,7 @@ function BoardContent() {
       <div className="board-nav">
         <BoardNav
           board={board}
+          setDisplayOptions={setDisplayOptions}
         />
       </div>
 
@@ -488,6 +473,7 @@ function BoardContent() {
                 onCardClick={onCardClick}
                 onCardDelete={onCardDelete}
                 onUpdateColumnState={onUpdateColumnState}
+                displayOptions={displayOptions}
               />
             </Draggable>
           ))
@@ -528,7 +514,7 @@ function BoardContent() {
           />
 
         </BootstrapContainer>
-        <Outlet context={{ clickedCard, setClickedCard }}/>
+        <Outlet context={setClickedCard}/>
       </div>
     </div>
 

@@ -42,7 +42,7 @@ function BoardBar() {
         handleToggleSidebar={handleToggleSidebar}
         boardId={boardList[0]? boardList[0].boardId : ''}
       /> */}
-      <Outlet context={handleToggleSidebar}/>
+      <Outlet />
     </div>
   )
   // return (

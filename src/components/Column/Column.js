@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 function Column(props) {
-  const { column, onCardDrop, onUpdateColumnState, onCardClick, onCardDelete } = props
+  const { column, onCardDrop, onUpdateColumnState, onCardClick, onCardDelete, displayOptions } = props
   const cards = mapOrder(column.cards, column.cardOrder, '_id')
 
   const [showConfirmModal, setShowConfirmModal] = useState(false)
@@ -183,7 +183,8 @@ function Column(props) {
                   card={card} 
                   onChangeToTask={onChangeToTask}
                   onCardDelete={onCardDelete}
-                  deleteCard={deleteCard} />
+                  deleteCard={deleteCard}
+                  displayOptions={displayOptions} />
               </Draggable>)
 
             )

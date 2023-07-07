@@ -103,7 +103,7 @@
                   scale: 0.85;
                 }
               }
-          }
+            }
           }
 
           .user-list-row {
@@ -347,6 +347,13 @@
           &:hover {
               background-color: inherit;
           }
+        }
+
+        &.board-filter {
+          .nav-link {
+            padding: 0px 5px;
+          }
+          
         }
         
 

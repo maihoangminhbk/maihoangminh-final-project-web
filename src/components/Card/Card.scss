@@ -21,4 +21,61 @@ $card-border-radius: 5px;
         display: inline-block;
         margin-left: 185px;
     }
+
+    .card-options {
+        
+        .card-deadline {
+            display: inline-block;
+            font-size: smaller;
+            padding: 0px 2px;
+    
+            .icon-deadline {
+                font-size: smaller;
+            }
+            background-color: #FFEDEB;
+            border-radius: 10%;
+        }
+    
+        .card-status {
+            // position: relative;
+            font-size: smaller;
+            display: inline-block;
+            width: fit-content;
+            margin-right: 5px;
+    
+            .badge {
+              // background-color: #d6f0e0;
+              color: #0d6832;
+              border-radius: 50rem!important;
+    
+              &.created {
+                background-color: rgb(225, 223, 223);
+              }
+    
+              &.inprocess {
+                background-color: yellow;
+              }
+    
+              &.done {
+                background-color: blue;
+                color: white;
+              }
+    
+              &.completed {
+                background-color: green;
+                color: white;
+              }
+    
+              &.late {
+                background-color: red;
+                color: black;
+              }
+    
+              &.cancel {
+                background-color: orange;
+                color: black;
+              }
+            }
+        }
+    } 
 }

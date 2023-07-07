@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 
 import { Container, Row, Col, InputGroup, FormControl, Dropdown } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
+
+import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/contentEditable'
 
 import { useParams } from 'react-router-dom'
 import { updateTask, createNewTask, searchUsersToAddTask, searchUsersInTask, addUserToTask, deleteUserFromTask } from 'actions/APICall'
@@ -55,6 +57,9 @@ function TodoList(props) {
 
   const [showDeleteUserConfirmModal, setShowDeleteUserConfirmModal] = useState(false)
   const toogleShowDeleteUserConfirmModal = () => setShowDeleteUserConfirmModal(!showDeleteUserConfirmModal)
+
+  const [todoPercent, setTodoPercent] = useState(0)
+  const handleTodoPercentChange = useCallback((e) => setTodoPercent(e.target.value), [])
 
   const { cardId } = useParams()
 
@@ -121,20 +126,22 @@ function TodoList(props) {
     }
   }, [userSearch, chooseTaskId, addUserMode])
 
-  //   useEffect(() => {
-  //     let doneNumber = 0
-  //     todoList.map(t => {
-  //       if (t.checked) {
-  //         doneNumber++
-  //       }
-  //     }
-  //     )
+  useEffect(() => {
+    let sumWeight = 0
+    let doneWeight = 0
+    todoList.map(t => {
+      if (t.checked) {
+        doneWeight = doneWeight + t.percent
+      }
+      sumWeight = sumWeight + t.percent
+    }
+    )
 
-  //     const percent = doneNumber / todoList.length * 100
-  //     setProgress(Math.round(percent))
+    const percent = doneWeight / sumWeight * 100
+    props.setProgress(Math.round(percent))
 
 
-  //   }, [todoList])
+  }, [props, todoList])
 
   const onNewTodoTitleChange = (e) => {
     setNewTodoTitle(e.target.value)
@@ -391,6 +398,24 @@ function TodoList(props) {
     }
   }
 
+  const handleTaskPercentBlur = (taskId) => {
+    const updateData = {
+      percent: parseInt(todoPercent)
+    }
+
+    updateTask(taskId, updateData).then(newTask => {
+      let newTodoList = [...todoList]
+
+      const currentToDo = newTodoList.find(t => t._id === newTask._id)
+
+      currentToDo.percent = newTask.percent
+
+      setTodoList(newTodoList)
+    }).catch(e => {
+      toast.error(e)
+    })
+  }
+
 
   return (
     <Container className='todo-container'>
@@ -419,7 +444,7 @@ function TodoList(props) {
       <Row className="todo-list-row">
         { todoList && todoList.map((todo) => (
           <Row key={todo._id}>
-            <Col xs={8} md={7} className='todo-list-check'>
+            <Col xs={8} md={6} className='todo-list-check'>
               <Form.Check
                 type='checkbox'
                 label={todo.title}
@@ -428,9 +453,9 @@ function TodoList(props) {
               />
 
             </Col>
-            <Col xs={4} md={5} className='todo-list-options'>
+            <Col xs={4} md={6} className='todo-list-options'>
               <Row>
-                <Col xs={4} sm={2} className='deadline-option'>
+                <Col xs={2} sm={1} className='deadline-option'>
                   <Dropdown className='todo-list-options-dropdown'>
                     <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
                       <GiBackwardTime className='icon-option'/>
@@ -475,7 +500,7 @@ function TodoList(props) {
                     </Dropdown.Menu>
                   </Dropdown>
                 </Col>
-                <Col xs={4} sm={2} className='status-option'>
+                <Col xs={2} sm={2} className='status-option'>
                   <Dropdown className='todo-list-options-dropdown'>
                     <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
                       {/* <div className='icon-option badge'> */}
@@ -501,7 +526,7 @@ function TodoList(props) {
                   </Dropdown>
 
                 </Col>
-                <Col xs={4} sm={2} className='user-option'>
+                <Col xs={2} sm={1} className='user-option'>
                   <Dropdown className='todo-list-options-dropdown' onToggle={() => setChooseTaskId(todo._id)}>
                     <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
                       <FaUserAlt className='icon-option'/>
@@ -582,7 +607,6 @@ function TodoList(props) {
                                 !addUserMode && userBoardList && userBoardList.map(user => (
                                   <Dropdown
                                     key={user._id}
-                                    onToggle={() => console.log('ontoogle')}
                                     className='todo-user-dropdown'
                                   >
                                     <Dropdown.Toggle id="dropdown-basic" size='sm' as={CustomToggle}>
@@ -621,6 +645,25 @@ function TodoList(props) {
                       </Container>
                     </Dropdown.Menu>
                   </Dropdown>
+                </Col>
+                <Col xs={2} sm={6} className='weight-option'>
+                  {/* <div className='task-weight-name'>
+                    Weight
+                  </div> */}
+                  <div className='task-weight'>
+                    <Form.Control
+                      // className='trello-clone-content-editable'
+                      size="md"
+                      type="number"
+                      defaultValue={todo.percent}
+                      // spellCheck="false"
+                      onChange={handleTodoPercentChange}
+                      onBlur={() => handleTaskPercentBlur(todo._id)}
+                      // onMouseDown={e => e.preventDefault()}
+                      onKeyDown={saveContentAfterPressEnter}
+                    />
+                  </div>
+
                 </Col>
               </Row>
             </Col>
