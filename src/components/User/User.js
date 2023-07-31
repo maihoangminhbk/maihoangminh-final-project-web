@@ -119,7 +119,7 @@ function User () {
       role: userRole
     }
 
-    await addUserToWorkplace(user.workplaceId, data).then(() => {
+    await addUserToWorkplace(workplaceId, data).then(() => {
       toast.success('Add user successfull')
     }
     ).catch((error) => {

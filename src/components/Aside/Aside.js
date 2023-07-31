@@ -58,15 +58,18 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
   }, [openNewBoardForm])
 
   useEffect(() => {
-    getUserListInWorkplace(workplaceId).then((users) => {
-      const listAvatar = users.map(user => (
-        user.cover
-      ))
+    if (!user.role) {
+      getUserListInWorkplace(workplaceId).then((users) => {
+        const listAvatar = users.map(user => (
+          user.cover
+        ))
 
-      setUserListAvatar(listAvatar)
-    }).catch((error) => {
-      toast.error(error.message)
-    })
+        setUserListAvatar(listAvatar)
+      }).catch((error) => {
+        toast.error(error.message)
+      })
+    }
+
   }, [workplaceId])
 
   const toogleOpenNewBoardForm = () => {
@@ -255,6 +258,7 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
       </SidebarHeader>
 
       <SidebarContent>
+        { !!user.role &&
         <Menu iconShape="circle">
           <SubMenu
             suffix={<span className="badge yellow"></span>}
@@ -303,7 +307,9 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
 
           </SubMenu>
         </Menu>
+        }
 
+        { !!user.role &&
         <Menu iconShape="circle">
           <MenuItem
             icon={<FaRegCalendarCheck />}
@@ -313,8 +319,10 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
             {'Calendar'}
           </MenuItem>
         </Menu>
+        }
 
         <Menu iconShape="circle">
+          { !user.role &&
           <MenuItem
             icon={<FaUserAlt />}
             suffix={!collapsed ? <UserListAvatar avatarList={userListAvatar} showMore={true} /> : ''}
@@ -322,6 +330,8 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
           >
             {'User'}
           </MenuItem>
+          }
+
           <MenuItem
             icon={<FaRocketchat />}
             // suffix={<span className="badge red">{'inprocess'}</span>}
@@ -336,14 +346,14 @@ const Aside = ({ toggled, handleToggleSidebar, getBoardList }) => {
             {'DashBoard'}</MenuItem>
         </Menu>
 
-        <Menu iconShape="circle">
+        {/* <Menu iconShape="circle">
           <MenuItem
             icon={<FaWhmcs />}
             suffix={<span className="badge red">{'inprocess'}</span>}
           >
             {'Setting'}
           </MenuItem>
-        </Menu>
+        </Menu> */}
 
       </SidebarContent>
 

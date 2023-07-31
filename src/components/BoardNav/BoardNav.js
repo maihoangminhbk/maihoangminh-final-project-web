@@ -216,7 +216,9 @@ function BoardNav(props) {
       }
 
       getSlackWorkspace(data).then(workspace => {
-        setSlackWorkspace(workspace)
+        if (workspace) {
+          setSlackWorkspace(workspace)
+        }
       })
     }
   }, [workplaceId])

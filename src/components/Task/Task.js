@@ -42,7 +42,6 @@ import { toast } from 'react-toastify'
 import TodoList from 'components/TodoList/TodoList'
 
 function Task() {
-  console.log('check')
   const setClickedCardToBoard = useOutletContext()
   const [ clickedCard, setClickedCard ] = useState()
   const [ updatedCard, setUpdatedCard ] = useState()

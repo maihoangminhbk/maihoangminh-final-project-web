@@ -38,6 +38,8 @@ function AppBar() {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const { workplaceId } = useParams()
+
   const { user, deleteUserLocalStorage } = useAuth()
 
   useEffect(() => {
@@ -58,6 +60,12 @@ function AppBar() {
     )
   }, [])
 
+  useEffect(() => {
+    if (workplaceId) {
+      changeWorkplace(workplaceId)
+    }
+  }, [workplaceId])
+
   const toogleOpenNewWorkplaceForm = () => {
     setOpenNewWorkplaceForm(!openNewWorkplaceForm)
   }
@@ -74,6 +82,8 @@ function AppBar() {
     setWorkplaceList(newWorkplaceList)
 
     navigate(`/workplaces/${workplaceId}`)
+    // window.location.reload(false)
+    // setTimeout(navigate(0), 1000)
   }
 
   const logout = async () => {
@@ -119,11 +129,12 @@ function AppBar() {
 
     // Call API
     createWorkplace(newWorkplaceToAdd).then(workplace => {
-      const newWorkplaceList = [...workplaceList, workplace]
-      setWorkplaceList(newWorkplaceList)
+      // const newWorkplaceList = [...workplaceList, workplace]
+      // setWorkplaceList(newWorkplaceList)
 
       setNewWorkplaceTitle('')
       toogleOpenNewWorkplaceForm()
+      navigate(0)
 
     }).catch((error) => {
       setNewWorkplaceTitle('')
@@ -173,10 +184,10 @@ function AppBar() {
                           return <Dropdown.Item key={workplace._id} onClick={() => changeWorkplace(workplace._id)} className='workplace-dropdown-item'>{workplace.title} </Dropdown.Item>
                         })
                       }
-                      { !openNewWorkplaceForm &&
+                      { !user.role && !openNewWorkplaceForm &&
 
                         <div className='add-new-column' onClick={toogleOpenNewWorkplaceForm}>
-                          <i className='fa fa-plus icon' />Add another board
+                          <i className='fa fa-plus icon' />Add another workplace
                         </div>
 
                       }
@@ -203,7 +214,12 @@ function AppBar() {
                 {/* <div className='item home'><i className='fa fa-home' /></div> */}
                 <div className='item board'>
                   <i className='fa fa-columns' />
-                  <strong>Boards</strong>
+                  { !!user.role &&
+                    <strong>Boards</strong>
+                  }
+                  { !user.role &&
+                    <strong>Admin</strong>
+                  }
                 </div>
               </div>
             </Col>

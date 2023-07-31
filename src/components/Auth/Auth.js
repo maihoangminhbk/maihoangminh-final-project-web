@@ -27,6 +27,8 @@ const Auth = () => {
   const [password, setPassword] = useState('')
   const [activeToken, setActiveToken] = useState('')
   const [activeCode, setActiveCode] = useState('')
+  const [role, setRole] = useState(1) // 0: Admin; 1: User
+  const [organizationName, setOrganizationName] = useState('')
 
   const [validated, setValidated] = useState(false)
 
@@ -41,6 +43,7 @@ const Auth = () => {
   const [isActivate, setIsActivate] = useState(false)
 
   const handleFormNameChange = (e) => setName(e.target.value)
+  const handleFormOrganizationNameChange = (e) => setOrganizationName(e.target.value)
   const handleFormUsernameChange = (e) => setUsername(e.target.value)
   const handleFormPasswordChange = (e) => {
     if (e.target.value.length >= 6) {
@@ -49,6 +52,13 @@ const Auth = () => {
       setValidated(false)
     }
     setPassword(e.target.value)
+  }
+  const onRoleChange = () => {
+    if (role == 0) {
+      setRole(1)
+    } else {
+      setRole(0)
+    }
   }
   const handleFormActiveCodeChange = (e) => setActiveCode(e.target.value)
 
@@ -67,7 +77,8 @@ const Auth = () => {
     setLoading(true)
 
     if (isActivate) {
-      const formData = { 'token' : activeToken, 'active_code' : activeCode }
+      const formData = { 'token' : activeToken, 'active_code' : activeCode, 'role': role }
+      if (!role) formData.organizationName = organizationName
       await activate(formData).catch((error) => {
         toast.error(error.message)
         setLoading(false)
@@ -96,11 +107,11 @@ const Auth = () => {
     } else {
       const formData = { 'email' : username, 'password' : password }
       await login(formData).then(user => {
-        let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover }
+        let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover, 'role': user.role }
         saveLocalStorage(saveUser)
         getOwnership().then((ownershipList) => {
           const firstWorkplace = ownershipList.workplaceOrder[0].workplaceId
-          saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
+          saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover, 'role': user.role }
           saveLocalStorage(saveUser)
           toast.success('Login successful')
           navigate(`/workplaces/${firstWorkplace}`)
@@ -130,11 +141,11 @@ const Auth = () => {
 
     setLoading(true)
     await loginWithGoogle(formData).then(user => {
-      let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover }
+      let saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'cover': user.cover, 'role': user.role }
       saveLocalStorage(saveUser)
       getOwnership().then((ownershipList) => {
         const firstWorkplace = ownershipList.workplaceOrder[0].workplaceId
-        saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover }
+        saveUser = { 'name' : user.name, 'email' : user.email, 'token' : user.token, 'workplaceId' : firstWorkplace, 'cover': user.cover, 'role': user.role }
         saveLocalStorage(saveUser)
         toast.success('Login successful')
         toast.info('If this is the first time, check email to get new password')
@@ -181,6 +192,50 @@ const Auth = () => {
                     </div>
                     <Form validated={validated} onSubmit={handleSubmitForm}>
                       <p>Please enter to your account</p>
+
+                      { !isActivate && isSignUp &&
+                        <div className="mb-4">
+                          <Form.Check
+                            required
+                            className='form-control'
+                            size="md"
+                            type="radio"
+                            label="Admin"
+                            style={{ border: 0 }}
+                            checked={!role}
+                            // spellCheck="false"
+                            onClick={onRoleChange}
+                            // onChange={handleFormNameChange}
+                          // onBlur={handleFormTitleBlur}
+                          // onMouseDown={e => e.preventDefault()}
+                          // onKeyDown={saveContentAfterPressEnter}
+                          />
+                          {/* <Form.Label className="form-label" htmlFor="form2Example11">Your name</Form.Label> */}
+                          <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '64.8px' }} /><div className="form-notch-trailing" /></div>
+                        </div>
+                      }
+
+                      { !role && !isActivate && isSignUp &&
+                        <div className="form-outline mb-4">
+                          <Form.Control
+                            className='form-control'
+                            size="md"
+                            type="text"
+                            placeholder="Organization"
+                            style={{ border: 0 }}
+                            value={organizationName}
+                            // spellCheck="false"
+                            onClick={selectAllInlineText}
+                            onChange={handleFormOrganizationNameChange}
+                          // onBlur={handleFormTitleBlur}
+                          // onMouseDown={e => e.preventDefault()}
+                          // onKeyDown={saveContentAfterPressEnter}
+                          />
+                          <Form.Label className="form-label" htmlFor="form2Example11">Organization</Form.Label>
+                          <div className="form-notch"><div className="form-notch-leading" style={{ width: '9px' }} /><div className="form-notch-middle" style={{ width: '80px' }} /><div className="form-notch-trailing" /></div>
+                        </div>
+                      }
+
                       { !isActivate && isSignUp &&
                         <div className="form-outline mb-4">
                           <Form.Control
@@ -304,10 +359,8 @@ const Auth = () => {
                 </div>
                 <div className="col-lg-6 d-flex align-items-center gradient-custom-2">
                   <div className="text-white px-3 py-4 p-md-5 mx-md-4">
-                    <h4 className="mb-4">We are more than just a company</h4>
-                    <p className="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    <h4 className="mb-4">Task management application</h4>
+                    <p className="small mb-0">The application makes it easier for individuals and businesses to manage their work.</p>
                   </div>
                 </div>
               </div>
