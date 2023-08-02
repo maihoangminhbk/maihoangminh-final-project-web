@@ -28,6 +28,8 @@ function Notification () {
 
   const { workplaceId } = useParams()
 
+  const [dropdownShow, setDropdownShow] = useState(false)
+
   useEffect(() => {
     setNotificationListPage(1)
 
@@ -114,10 +116,9 @@ function Notification () {
         Notification
       </Dropdown.Header>
       {/* <Dropdown.Divider /> */}
-      {/* <Dropdown.ItemText
-        className='notification-mark-seen'>
-        <Button>Mark seen</Button>
-      </Dropdown.ItemText> */}
+      {/* <Dropdown.Item>
+        <div>test</div>
+      </Dropdown.Item> */}
       <Tabs
         defaultActiveKey="personal"
         id="fill-tab-example"
@@ -144,14 +145,14 @@ function Notification () {
             >
               {
                 personalNotifications.map(notification => {
-                  return <NotificationItem key={notification._id} data={notification} />
+                  return <NotificationItem key={notification._id} data={notification} onDropdownShow={setDropdownShow} />
                 })
               }
             </InfiniteScroll>
           </div>
         </Tab>
 
-        <Tab eventKey="workplace" title="Workplace">
+        <Tab eventKey="workplace" title="Following">
           <div id="scrollableDiv" className='scrollableDiv'>
             <InfiniteScroll
               dataLength={followingNotifications.length}
@@ -170,7 +171,7 @@ function Notification () {
             >
               {
                 followingNotifications.map(notification => {
-                  return <NotificationItem key={notification._id} data={notification} />
+                  return <NotificationItem key={notification._id} data={notification} onDropdownShow={setDropdownShow} test="test" />
                 })
               }
             </InfiniteScroll>

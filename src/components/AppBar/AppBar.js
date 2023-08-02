@@ -43,6 +43,7 @@ function AppBar() {
   const { user, deleteUserLocalStorage } = useAuth()
 
   useEffect(() => {
+    console.log('workplaceId', workplaceId)
     getOwnership().then((ownershipList) => {
       setOwnership(ownershipList)
       const workplaceOrder = ownershipList.workplaceOrder
@@ -51,7 +52,11 @@ function AppBar() {
 
       workplaceOrder.map((value, index) => {
         getWorkplace(value.workplaceId).then((workplace) => {
-          workplaces = [...workplaces, workplace]
+          if (workplace._id === workplaceId) {
+            workplaces = [workplace, ...workplaces]
+          } else {
+            workplaces = [...workplaces, workplace]
+          }
           setWorkplaceList(workplaces)
         })
       })
@@ -62,9 +67,16 @@ function AppBar() {
 
   useEffect(() => {
     if (workplaceId) {
+      // console.log('workplaceId effect', workplaceId)
       changeWorkplace(workplaceId)
     }
   }, [workplaceId])
+
+  // useEffect(() => {
+  //   if (workplaceList && workplaceList[0].workplaceId !== workplaceId) {
+  //     changeWorkplace(workplaceId)
+  //   }
+  // }, [workplaceList])
 
   const toogleOpenNewWorkplaceForm = () => {
     setOpenNewWorkplaceForm(!openNewWorkplaceForm)

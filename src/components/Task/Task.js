@@ -231,7 +231,7 @@ function Task() {
         }
       ).catch(
         e => {
-          toast.error('Error when update')
+          toast.error(e.message)
         }
       )
     } else {
