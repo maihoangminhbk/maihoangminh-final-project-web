@@ -199,6 +199,12 @@ export const updateTask = async (id, data) => {
   return request.data
 }
 
+export const getCardIdFromTask = async (id) => {
+  const request = await API.get(`/v1/tasks/${id}/get-card-id`)
+
+  return request.data
+}
+
 export const searchUsersToAddTask = async (id, data) => {
   const request = await API.post(`/v1/tasks/${id}/search-users-to-add`, data)
 
