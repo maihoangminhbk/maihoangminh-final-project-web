@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
+import { useAuth } from 'hooks/useAuth'
+
 import { Container, Row, Col, Navbar } from 'react-bootstrap'
 import Accordion from 'react-bootstrap/Accordion'
 
@@ -57,6 +59,7 @@ function DashBoard() {
   const [boardTasksStateChart, setBoardTasksStateChart] = useState()
 
   const { workplaceId } = useParams()
+  const { user } = useAuth()
 
   useEffect(() => {
     dashboardGetCardsStatusFullStatistic(workplaceId).then(result => {
@@ -169,6 +172,7 @@ function DashBoard() {
 
       <Container className='dashboard-container'>
         <Accordion defaultActiveKey="0">
+          { !user.role &&
           <Accordion.Item eventKey="0">
             <Accordion.Header>Workplace Dashboard</Accordion.Header>
             <Accordion.Body>
@@ -231,12 +235,15 @@ function DashBoard() {
               </Row>
             </Accordion.Body>
           </Accordion.Item>
+          }
+          { !!user.role &&
           <Accordion.Item eventKey="1">
             <Accordion.Header>Board Dashboard</Accordion.Header>
             <Accordion.Body>
-                  <BoardDashBoard />
+              <BoardDashBoard />
             </Accordion.Body>
           </Accordion.Item>
+          }
         </Accordion>
       </Container>
     </div>

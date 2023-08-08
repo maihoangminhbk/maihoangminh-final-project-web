@@ -189,6 +189,30 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                     }
                 }
             }
+
+            .board {
+                color: white;
+                .board-dropdown-menu {
+                    width: 200px;
+                    .board-dropdown-header {
+                        text-align: center;
+                        padding-bottom: 0px;
+                        font-weight: bold;
+                    }
+
+                    .board-dropdown-item {
+                        .board-name-row {
+                            margin: 0px;
+                        }
+
+                        .board-addition-row {
+                            // text-align: right   ;
+                            font-size: smaller;
+                        }
+                    }
+
+                }
+            }
         }
 
         .right-column {
@@ -275,6 +299,10 @@ $appbar-bg-color: hsl(311,13.7%,35.8%);
                     font-size: larger;
 
                 }
+            }
+
+            .dropdown-menu {
+                z-index: 1001;
             }
 
         }

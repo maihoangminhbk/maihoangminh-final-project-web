@@ -1,4 +1,4 @@
-const socketBaseURL = 'http://localhost:5551'
+import { socketBaseURL } from 'utilities/constants'
 
 // export const boardSocket = io('http://localhost:5551/v1/board2')
 export const socketURL = {

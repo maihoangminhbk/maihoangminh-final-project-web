@@ -26,6 +26,7 @@ import minhMaiAvatar from 'actions/images/userAvatar.png'
 
 import './BoardNav.scss'
 import DropdownItem from 'react-bootstrap/esm/DropdownItem'
+import { useAuth } from 'hooks/useAuth'
 
 const userListInit = [
   { _id: '1',
@@ -73,6 +74,8 @@ const userListInit = [
 function BoardNav(props) {
 
   const { board } = props
+
+  const { user } = useAuth()
 
   const [likeBoard, setLikeBoard] = useState(false)
   const [addUserMode, setAddUserMode] = useState(false)
@@ -445,7 +448,16 @@ function BoardNav(props) {
           </Dropdown.Toggle>
           <Dropdown.Menu className='board-user-list-menu'>
             <Dropdown.Header className='board-user-list-header'>
-                  Board User
+              { userBoardList && userBoardList.map(getUser => {
+                if (getUser.email === user.email) {
+                  if (getUser.role === 0) {
+                    return 'Board Admin'
+                  } else {
+                    return 'Board User'
+                  }
+                }
+              } )
+              }
             </Dropdown.Header>
             {/* <Dropdown.Divider /> */}
             <BootstrapContainer className='user-container'>

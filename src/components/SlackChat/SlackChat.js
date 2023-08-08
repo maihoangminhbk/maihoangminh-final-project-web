@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useAuth } from 'hooks/useAuth'
+
 import { getSlackAuth, getSlackWorkspace, getSlackConnections, getWorkplace, getSlackChannels, createSlackConnection } from 'actions/APICall'
 import { useParams } from 'react-router-dom'
 import { FcCancel } from 'react-icons/fc'
@@ -32,6 +34,8 @@ function SlackChat() {
   const [onEditConnectionId, setOnEditConnectionId] = useState()
   const [selectedChannel, setSelectedChannel] = useState()
   const [selectedBoard, setSelectedBoard] = useState()
+
+  const { user } = useAuth()
 
 
   useEffect(() => {
@@ -175,6 +179,7 @@ function SlackChat() {
   return (
     <div className='slack-chat'>
       <Container className='slack-chat-container'>
+        { !user.role &&
         <Row className='add-slack-row'>
           <a href={slackUrl ? slackUrl : ''} target='_blank' rel="noreferrer">
             <img
@@ -187,6 +192,7 @@ function SlackChat() {
             />
           </a>
         </Row>
+        }
         <Row className='slack-workspace-row'>
           <i className='slack-workspace-content'><RiSlackFill />{ slackWorkspace ? slackWorkspace.title : '' }</i>
         </Row>

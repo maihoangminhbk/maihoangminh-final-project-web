@@ -27,6 +27,7 @@ import { toast } from 'react-toastify'
 function AppBar() {
 
   const [workplaceList, setWorkplaceList] = useState([])
+  const [boardList, setBoardList] = useState([])
   const [boardId, setBoard] = useState()
   const [ownership, setOwnership] = useState()
   const [searchPlaceholder, setSearchPlaceHolder] = useState()
@@ -92,8 +93,21 @@ function AppBar() {
 
     const newWorkplaceList = arrayMoveImmutable(workplaceList, index, 0)
     setWorkplaceList(newWorkplaceList)
+    if (newWorkplaceList[index]) {
+      setBoardList(newWorkplaceList[index].boardOrder)
+    }
 
     navigate(`/workplaces/${workplaceId}`)
+    // window.location.reload(false)
+    // setTimeout(navigate(0), 1000)
+  }
+
+  const changeBoard = (boardId) => {
+    // const index = boardList.findIndex(board => {
+    //   return board._id === boardId
+    // })
+
+    navigate(`/workplaces/${workplaceId}/boards/${boardId}`)
     // window.location.reload(false)
     // setTimeout(navigate(0), 1000)
   }
@@ -224,15 +238,37 @@ function AppBar() {
                 </div>
                 }
                 {/* <div className='item home'><i className='fa fa-home' /></div> */}
-                <div className='item board'>
-                  <i className='fa fa-columns' />
-                  { !!user.role &&
+                <div className='board-dropdown-action'>
+
+                  <Dropdown>
+                    <Dropdown.Toggle id="dropdown-basic" as={CustomToggle}>
+                      <div className='item board'>
+                        <i className='fa fa-columns' />
+                        { !!user.role &&
                     <strong>Boards</strong>
-                  }
-                  { !user.role &&
+                        }
+                        { !user.role &&
                     <strong>Admin</strong>
-                  }
+                        }
+                      </div>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className='board-dropdown-menu'>
+                      <Dropdown.Header className='board-dropdown-header'>
+                        <div>
+                          Board List
+                        </div>
+                      </Dropdown.Header>
+                      <Dropdown.Divider />
+                      {
+                        boardList && boardList.map((board, index) => {
+                          return <Dropdown.Item key={board.boardId} onClick={() => changeBoard(board.boardId)} className='board-dropdown-item'>{board.title} </Dropdown.Item>
+                        })
+                      }
+                    </Dropdown.Menu>
+                  </Dropdown>
                 </div>
+
               </div>
             </Col>
             <Col sm={2} xs={6} className='col-no-padding d-none d-sm-block'>

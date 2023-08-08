@@ -9,7 +9,7 @@ import './NotificationItem.scss'
 import minhMaiAvatar from 'actions/images/userAvatar.png'
 
 
-import { data, grammar } from './data'
+import { grammar } from './data'
 
 function NotificationItem ({ data, onDropdownShow }) {
   const notificationTime = format(data.createdAt, 'MMMM d, yyyy h:mm aa')

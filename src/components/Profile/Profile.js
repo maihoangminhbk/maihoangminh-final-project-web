@@ -30,7 +30,7 @@ function Profile() {
 
             <Form.Group className="mb-3" controlId="formBasicText">
               <Form.Label>Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter name" disabled={!isEdit}/>
+              <Form.Control type="text" placeholder="Enter name" value={user.name} disabled={!isEdit}/>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
