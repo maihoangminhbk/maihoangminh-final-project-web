@@ -22,7 +22,6 @@ API.interceptors.response.use(function (response) {
   return response
 }, function (error) {
 
-  console.log('api call - respond - error', error)
   if (error.response.status === 400) {
     // NEW:- Throw New Error
     throw new customErrors.BadRequest400Error(error.response.data)
@@ -113,6 +112,12 @@ export const getUserListInBoard = async (id) => {
   return request.data
 }
 
+export const getBoardRole = async (id) => {
+  const request = await API.get(`/v1/boards/${id}/get-board-role`)
+
+  return request.data
+}
+
 export const createColumn = async (data) => {
   const request = await API.post('/v1/columns', data)
 
@@ -151,7 +156,6 @@ export const updateCard = async (id, data) => {
 export const uploadCardImage = async (id, formData, onUploadProgress) => {
   const request = await API.post(`/v1/cards/${id}/image/upload`, formData, onUploadProgress)
 
-  console.log('request - uploadCardImage', request)
 
   return request.data
 }

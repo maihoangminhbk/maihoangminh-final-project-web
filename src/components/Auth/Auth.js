@@ -150,7 +150,11 @@ const Auth = () => {
         toast.success('Login successful')
         toast.info('If this is the first time, check email to get new password')
         navigate(`/workplaces/${firstWorkplace}`)
-      })
+      }).catch((error) => {
+        toast.error(error.message)
+        setLoading(false)
+      }
+      )
     }).catch((error) => {
       toast.error(error.message)
       setLoading(false)

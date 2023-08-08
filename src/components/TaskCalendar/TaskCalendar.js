@@ -57,9 +57,6 @@ export default function ReactBigCalendar() {
 
   }, [workplaceId, boardListFilter])
 
-  useEffect(() => {
-    console.log('board list filter', boardListFilter)
-  }, [boardListFilter])
 
   // const handleSelect = ({ start, end }) => {
   //   console.log(start)

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Outlet, useOutletContext, useParams, useNavigate } from 'react-router-dom'
 
 import { Container as BootstrapContainer, Row, Col, Form, Button, Nav, Navbar, NavDropdown, Dropdown, InputGroup, FormControl } from 'react-bootstrap'
-import { searchUsersInBoard, addUserToBoard, searchUsersToAddBoard, deleteUserFromBoard, updateUserFromBoard, fetchBoardDetails, getSlackConnections, getSlackWorkspace } from 'actions/APICall'
+import { searchUsersInBoard, addUserToBoard, searchUsersToAddBoard, deleteUserFromBoard, updateUserFromBoard, fetchBoardDetails, getSlackConnections, getSlackWorkspace, getBoardRole } from 'actions/APICall'
 
 import { AiFillStar, AiOutlineFilter } from 'react-icons/ai'
 import { RiSlackFill, RiDeleteBin6Fill } from 'react-icons/ri'
@@ -26,7 +26,7 @@ import minhMaiAvatar from 'actions/images/userAvatar.png'
 
 import './BoardNav.scss'
 import DropdownItem from 'react-bootstrap/esm/DropdownItem'
-import { useAuth } from 'hooks/useAuth'
+// import { useAuth } from 'hooks/useAuth'
 
 const userListInit = [
   { _id: '1',
@@ -75,7 +75,7 @@ function BoardNav(props) {
 
   const { board } = props
 
-  const { user } = useAuth()
+  // const { user } = useAuth()
 
   const [likeBoard, setLikeBoard] = useState(false)
   const [addUserMode, setAddUserMode] = useState(false)
@@ -113,6 +113,8 @@ function BoardNav(props) {
   })
 
   const { workplaceId, boardId } = useParams()
+
+  const [boardRole, setBoardRole] = useState(1)
 
   // useEffect(() => {
   //   console.log('userList', userList)
@@ -171,6 +173,10 @@ function BoardNav(props) {
       setUserListAvatar(listAvatar)
     }
     )
+
+    getBoardRole(boardId).then(result => {
+      setBoardRole(result.role)
+    })
   }, [boardId])
 
   useEffect(() => {
@@ -438,7 +444,7 @@ function BoardNav(props) {
       {/* <BootstrapContainer> */}
       <Navbar.Brand className="board-navbar-brand">
         {board && board.title}
-        <AiFillStar className={`board-navbar-brand-icon ${likeBoard ? 'board-navbar-brand-icon-click' : ''}`} onClick={onLikeBoard}/>
+        {/* <AiFillStar className={`board-navbar-brand-icon ${likeBoard ? 'board-navbar-brand-icon-click' : ''}`} onClick={onLikeBoard}/> */}
       </Navbar.Brand>
       <Navbar.Toggle className="board-navbar-toggle" aria-controls="basic-navbar-nav" />
       <Navbar.Collapse className="board-navbar-collapse" id="basic-navbar-nav">
@@ -448,15 +454,8 @@ function BoardNav(props) {
           </Dropdown.Toggle>
           <Dropdown.Menu className='board-user-list-menu'>
             <Dropdown.Header className='board-user-list-header'>
-              { userBoardList && userBoardList.map(getUser => {
-                if (getUser.email === user.email) {
-                  if (getUser.role === 0) {
-                    return 'Board Admin'
-                  } else {
-                    return 'Board User'
-                  }
-                }
-              } )
+              {
+                !boardRole ? 'Board Admin' : 'Board User'
               }
             </Dropdown.Header>
             {/* <Dropdown.Divider /> */}

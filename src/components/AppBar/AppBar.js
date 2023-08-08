@@ -44,7 +44,6 @@ function AppBar() {
   const { user, deleteUserLocalStorage } = useAuth()
 
   useEffect(() => {
-    console.log('workplaceId', workplaceId)
     getOwnership().then((ownershipList) => {
       setOwnership(ownershipList)
       const workplaceOrder = ownershipList.workplaceOrder

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import { Container, Draggable } from 'react-smooth-dnd'
 import { Dropdown, Form, Button } from 'react-bootstrap'
 import { cloneDeep } from 'lodash'
@@ -12,6 +13,8 @@ import { saveContentAfterPressEnter, selectAllInlineText } from 'utilities/conte
 import { createNewCard, updateColumn } from 'actions/APICall'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+
+import { getBoardRole } from 'actions/APICall'
 
 
 function Column(props) {
@@ -34,6 +37,10 @@ function Column(props) {
 
   const navigate = useNavigate()
 
+  const { boardId } = useParams()
+
+  const [boardRole, setBoardRole] = useState(1)
+
   const toogleOpenNewCardForm = () => {
     setOpenNewCardForm(!openNewCardForm)
   }
@@ -41,6 +48,12 @@ function Column(props) {
   const toggleDeleteCard = () => {
     setDeleteCard(!deleteCard)
   }
+
+  useEffect(() => {
+    getBoardRole(boardId).then(result => {
+      setBoardRole(result.role)
+    })
+  })
 
   useEffect(() => {
     setColumnTitle(column.title)
@@ -146,6 +159,7 @@ function Column(props) {
             onKeyDown={saveContentAfterPressEnter}
           />
         </div>
+        { !boardRole &&
         <div className='column-dropdown-actions'>
           <Dropdown>
             <Dropdown.Toggle variant="success" id="dropdown-basic" size='sm' className='dropdown-btn' />
@@ -157,6 +171,7 @@ function Column(props) {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        }
 
       </header>
       <div className="card-list">
@@ -208,14 +223,14 @@ function Column(props) {
 
       </div>
       <footer>
-        { openNewCardForm &&
+        { !boardRole && openNewCardForm &&
           <div className='add_new_card_actions'>
             <Button variant="success" size='sm' onClick={addNewCard}>Add Card</Button>
             <span className='cancel-icon' onClick={toogleOpenNewCardForm}><i className='fa fa-trash icon'></i></span>
           </div>
         }
 
-        { !openNewCardForm &&
+        { !boardRole && !openNewCardForm &&
           <div className='footer-actions' onClick={toogleOpenNewCardForm}>
             <i className='fa fa-plus icon' />Add another card
           </div>

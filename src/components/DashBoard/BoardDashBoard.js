@@ -292,25 +292,32 @@ function DashBoard() {
           user.completed = 0
           user.late = 0
           user.cancel = 0
+          let key
 
           switch (user._id.status) {
           case 0:
             user.created = user.taskCount
+            key = 'created'
             break
           case 1:
             user.inprocess = user.taskCount
+            key = 'inprocess'
             break
           case 2:
             user.done = user.taskCount
+            key = 'done'
             break
           case 3:
             user.completed = user.taskCount
+            key = 'completed'
             break
           case 4:
             user.late = user.taskCount
+            key = 'late'
             break
           case 5:
             user.cancel = user.taskCount
+            key = 'cancel'
             break
 
           default:
@@ -321,7 +328,6 @@ function DashBoard() {
 
           const findResult = convertedResult.find(obj => isEqual(obj._id, user._id))
           if (findResult) {
-            const key = Object.keys(user)[2]
             findResult[key] = user.taskCount
             findResult.taskCount = findResult.taskCount + user.taskCount
           } else {
@@ -332,7 +338,7 @@ function DashBoard() {
 
         if (convertedResult.length < 3) {
           setHasMore(false)
-        } 
+        }
         setUserList(convertedResult)
 
       }

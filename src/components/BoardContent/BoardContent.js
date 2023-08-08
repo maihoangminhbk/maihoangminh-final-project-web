@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import { Outlet, useOutletContext, useParams } from 'react-router-dom'
 
+import { useAuth } from 'hooks/useAuth'
+
 import { Container, Draggable } from 'react-smooth-dnd'
 import './BoardContent.scss'
 import Column from 'components/Column/Column'
@@ -10,7 +12,7 @@ import { mapOrder } from 'utilities/sorts'
 import { applyDrag } from 'utilities/dragDrop'
 import { Container as BootstrapContainer, Row, Col, Form, Button, Nav, Navbar, NavDropdown, Dropdown, InputGroup, FormControl } from 'react-bootstrap'
 import { useCallback } from 'react'
-import { createBoard, fetchBoardDetails, createColumn, updateBoard, updateColumn, updateCard } from 'actions/APICall'
+import { createBoard, fetchBoardDetails, createColumn, updateBoard, updateColumn, updateCard, getBoardRole } from 'actions/APICall'
 import { Bars } from 'react-loading-icons'
 import { FaBars } from 'react-icons/fa'
 import { AiFillStar, AiOutlineFilter } from 'react-icons/ai'
@@ -55,6 +57,8 @@ function BoardContent() {
   // const handleToggleSidebar = useOutletContext()
   const { boardId } = useParams()
 
+  const [boardRole, setBoardRole] = useState(1)
+
   const toogleOpenNewColumnForm = () => {
     setOpenNewColumnForm(!openNewColumnForm)
   }
@@ -68,7 +72,6 @@ function BoardContent() {
   const onNewBoardTitleChange = useCallback((e) => setNewBoardTitle(e.target.value), [])
 
   useEffect(() => {
-    console.log('display Options', displayOptions)
   }, [displayOptions])
 
   useEffect(() => {
@@ -81,6 +84,9 @@ function BoardContent() {
 
       // const boardIdJson = JSON.parse(boardId)
       getBoardById(boardIdJson)
+      getBoardRole(boardId).then(result => {
+        setBoardRole(result.role)
+      })
 
       boardSocket.emit('onJoinBoard', boardId)
     }
@@ -190,7 +196,7 @@ function BoardContent() {
   }, [board, columns])
 
   useEffect(() => {
-    console.log('SOCKET LISTEN')
+    // console.log('SOCKET LISTEN')
     boardSocket.on('onColumnDrop', handleOnColumnDrop)
     boardSocket.on('onColumnAdd', handleOnColumnAdd)
     boardSocket.on('onColumnUpdateState', handleOnColumnUpdateState)
@@ -255,6 +261,11 @@ function BoardContent() {
 
 
   const onColumnDrop = (dropResult) => {
+    if (boardRole) {
+      toast.info('Board Admin only change board')
+      return
+    }
+
     let newColumns = cloneDeep(columns)
     newColumns = applyDrag(newColumns, dropResult)
 
@@ -278,6 +289,11 @@ function BoardContent() {
 
 
   const onCardDrop = (columnId, dropResult) => {
+    if (boardRole) {
+      toast.info('Board Admin only change board')
+      return
+    }
+
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
       let newColumns = cloneDeep(columns)
 
@@ -329,6 +345,11 @@ function BoardContent() {
   }
 
   const addNewColumn = () => {
+    if (boardRole) {
+      toast.info('Board Admin only change board')
+      return
+    }
+
     if (!newColumnTitle) {
       newColumnInputRef.current.focus()
       return
@@ -365,6 +386,10 @@ function BoardContent() {
   }
 
   const onUpdateColumnState = (newColumnToUpdate) => {
+    if (boardRole) {
+      toast.info('Board Admin only change board')
+      return
+    }
 
     const columnIdToUpdate = newColumnToUpdate._id
 
@@ -395,6 +420,10 @@ function BoardContent() {
   }
 
   const onCardDelete = (card) => {
+    if (boardRole) {
+      toast.info('Board Admin only change board')
+      return
+    }
     let newColumns = cloneDeep(columns)
 
     let currentColumn = newColumns.find(c => c._id === card.columnId)
@@ -481,7 +510,7 @@ function BoardContent() {
         </Container>
 
         <BootstrapContainer className='trello-maihoangminh-container'>
-          {!openNewColumnForm &&
+          {!boardRole && !openNewColumnForm &&
         <Row className="add-new-column-row">
           <Col className='add-new-column' onClick={toogleOpenNewColumnForm}>
             <i className='fa fa-plus icon' />Add another column
@@ -489,7 +518,7 @@ function BoardContent() {
         </Row>
           }
 
-          {openNewColumnForm &&
+          {!boardRole && openNewColumnForm &&
         <Row className="add-new-column-row">
           <Col className='enter-new-column'>
             <Form.Control

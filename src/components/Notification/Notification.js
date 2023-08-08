@@ -37,7 +37,6 @@ function Notification () {
       const page = 1
 
       getPersonalNotifications(workplaceId, page).then(result => {
-        console.log('getPersonalNotifications', result)
         if (result && result.length == 0) {
           setHasMore(false)
         } else {
@@ -50,7 +49,6 @@ function Notification () {
       const page = 1
 
       getFollowingNotifications(workplaceId, page).then(result => {
-        console.log('getFollowingNotifications', result)
         if (result && result.length == 0) {
           setHasMore(false)
         } else {
@@ -67,7 +65,6 @@ function Notification () {
       const page = notificationListPage + 1
 
       getPersonalNotifications(workplaceId, page).then(result => {
-        console.log('getPersonalNotifications fetch', result)
         if (result && result.length == 0) {
           setHasMore(false)
         } else {
@@ -85,7 +82,6 @@ function Notification () {
       const page = notificationListPage + 1
 
       getFollowingNotifications(workplaceId, page).then(result => {
-        console.log('getFollowingNotifications fetch', result)
         if (result && result.length == 0) {
           setHasMore(false)
         } else {

@@ -107,7 +107,6 @@ function Task() {
   }, [clickedCard, updatedCard])
 
   useEffect(() => {
-    console.log('onChangeCard', onChangeCard)
     if (onChangeCard) {
       onUpdateCard()
     }
@@ -135,7 +134,6 @@ function Task() {
     }
 
     if (clickedCard) {
-      console.log('clickedCard', clickedCard)
       setCardTitle(clickedCard.title)
       setCardDescription(clickedCard.description)
       setCardStatus(clickedCard.status)
@@ -159,7 +157,6 @@ function Task() {
   }, [cardId])
 
   const onDrop = useCallback((files) => {
-    console.log('upload file', files)
     const formData = new FormData()
     formData.append('file', files[0])
 
@@ -169,7 +166,6 @@ function Task() {
         setFileUpLoad({ fileName: files[0].name, percentCompleted })
       }
     }).then((data) => {
-      console.log('upload image', data)
       setCardImage(data.url)
       clickedCard.imageUrl = data.url
       const newClickedCard = { ...clickedCard }
@@ -408,7 +404,6 @@ function Task() {
       convertStartTime = format(clickedCard.startTime, 'yyyymmdd:HHmm')
       convertEndTime = format(clickedCard.endTime, 'yyyymmdd:HHmm')
     }
-    console.log(convertStartTime)
     const link = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${cardTitle}&details=Event description text&dates=${convertStartTime}/${convertEndTime}`
     return <a href={link} target='_blank' rel="noreferrer">Add to Google Calendar</a>
   }
