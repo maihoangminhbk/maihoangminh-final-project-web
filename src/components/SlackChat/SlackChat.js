@@ -14,10 +14,6 @@ import ConfirmModal from 'components/Common/ConfirmModal'
 import { MODAL_ACTION_CONFIRM } from 'utilities/constants'
 import { toast } from 'react-toastify'
 
-const data = [
-
-]
-
 function SlackChat() {
   const { workplaceId } = useParams()
   const [slackUrl, setSlackUrl] = useState()
@@ -75,10 +71,12 @@ function SlackChat() {
   }, [workplaceId])
 
   useEffect(() => {
-    getWorkplace(workplaceId).then(workplace => {
-      setBoardList(workplace.boardOrder)
+    if (workplaceId) {
+      getWorkplace(workplaceId).then(workplace => {
+        setBoardList(workplace.boardOrder)
+      }
+      )
     }
-    )
   }, [workplaceId])
 
   useEffect(() => {

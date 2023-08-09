@@ -401,8 +401,8 @@ function Task() {
     let convertStartTime
     let convertEndTime
     if (clickedCard && clickedCard.startTime && clickedCard.endTime) {
-      convertStartTime = format(clickedCard.startTime, 'yyyymmdd:HHmm')
-      convertEndTime = format(clickedCard.endTime, 'yyyymmdd:HHmm')
+      convertStartTime = format(clickedCard.startTime, 'yyyyMMdd\'T\'HHmmss')
+      convertEndTime = format(clickedCard.endTime, 'yyyyMMdd\'T\'HHmmss')
     }
     const link = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${cardTitle}&details=Event description text&dates=${convertStartTime}/${convertEndTime}`
     return <a href={link} target='_blank' rel="noreferrer">Add to Google Calendar</a>
